@@ -1,0 +1,208 @@
+###########################################################
+## Ignore Visual Studio, .NET, and user-specific files  ##
+###########################################################
+
+ Ignore Visual Studio settings
+.vs/
+
+# Ignore build outputs
+bin/
+obj/
+# Ignore Visual Studio working files
+.vs/
+.vs/**
+
+# Copilot and temp files
+**/CopilotIndices/
+**/DesignTimeBuild/
+**/v17/
+**/.dtbcache.v2
+**/.futdcache.v2
+**/.suo
+**/DocumentLayout.backup.json
+**/DocumentLayout.json
+**/*.db
+**/*.v2
+**/*.bin
+**/.vs/
+
+
+
+.vs/
+*.user
+*.suo
+*.cache
+*.log
+*.dbmdl
+*.pdb
+*.obj
+*.bin
+*.dll
+*.exe
+*.ncb
+*.sdf
+*.opensdf
+*.VC.db
+*.VC.VC.opendb
+
+# Build results (recursive)
+**/bin/
+**/obj/
+
+# VS user-specific and temp files
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+*.db
+*.bin
+*.v2
+*.dbmdl
+DocumentLayout.backup.json
+DocumentLayout.json
+**/*CopilotIndices
+**/*DesignTimeBuild
+.vs/
+# azure.yaml
+.env
+
+# Visual Studio cache
+.vs/
+.vscode/
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+!.vscode/*.code-snippets
+
+# Build artifacts
+*.dll
+*.pdb
+*.log
+*.cache
+*.tmp
+*.tmp_proj
+*.svclog
+*.tlog
+*.binlog
+*.ilk
+*.meta
+*.obj
+*.ipdb
+*.pgc
+*.pgd
+*.rsp
+*.sbr
+
+# Debug/Release folders (redundant if using bin/obj)
+**/[Dd]ebug*/
+**/[Rr]elease*/
+**/x64/
+**/x86/
+**/[Aa][Rr][Mm]*/
+**/[Ww][Ii][Nn]32/
+
+# Rider
+.idea/
+
+# ReSharper
+_ReSharper*/
+*.DotSettings.user
+
+# Logs
+**/.logs
+*.log
+*.svclog
+
+# Publish folders
+publish/
+*.publishproj
+*.pubxml
+*.azurePubxml
+*.publishsettings
+*.vsix
+
+# Azure
+.azure/*
+!.azure/dev.env
+
+# .NET Core
+artifacts/
+project.lock.json
+project.fragment.lock.json
+
+# Scaffolding
+ScaffoldingReadMe.txt
+
+# MSTest, NUnit, BenchmarkDotNet
+[Tt]est[Rr]esult*/
+BenchmarkDotNet.Artifacts/
+*.coverage
+*.coveragexml
+*.VisualState.xml
+TestResult.xml
+nunit-*.xml
+
+# Package folders and build outputs
+**/[Pp]ackages/*
+!**/[Pp]ackages/build/
+*.nupkg
+*.snupkg
+*.nuget.props
+*.nuget.targets
+
+# Node.js
+node_modules/
+
+# Others
+*.tss
+*.gpState
+*.jfm
+*.pfx
+*.plg
+*.opt
+*.vbw
+*.vbp
+*.dsp
+*.dsw
+*.aps
+*.ncb
+*.bak
+*.tmp
+*.vspscc
+*.vssscc
+*.scc
+*.tli
+*.tlh
+*.tlb
+
+# VS Code local history
+.history/
+.localhistory/
+.vshistory/
+
+# Ignore appsettings except sample
+**/appsettings.*.json
+!**/appsettings.Sample.json
+
+# Ignore Copilot and other temp folders
+Ntuko/CopilotIndices/
+Ntuko/DesignTimeBuild/
+Ntuko/v17/
+
+# JetBrains Rider
+*.sln.iml
+
+# OS and system files
+.DS_Store
+Thumbs.db
+ehthumbs.db
+desktop.ini
+*.bak
+
+# GitLab CI local files
+.gitlab-ci-local
+
+# Ignore imposter temp folder
+**/imposter/**

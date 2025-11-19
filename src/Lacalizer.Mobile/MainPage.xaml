@@ -1,0 +1,57 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Lacalizer.Mobile.MainPage"
+             xmlns:models="clr-namespace:Lacalizer.Mobile.Models"
+            xmlns:viewModels="clr-namespace:Lacalizer.Mobile.ViewModels"
+            xmlns:media="clr-namespace:Lacalizer.Mobile.CustomControls.Media"
+            x:Name="Reels"
+            x:DataType="viewModels:ReelViewModel"
+            Shell.NavBarIsVisible="False">
+
+    <Grid>
+
+        <CollectionView
+     HeightRequest="{Binding Height, Source={x:Reference Reels}}"
+     HorizontalOptions="Fill"
+     VerticalOptions="Center"
+     ItemsSource="{Binding Videos}"
+     Scrolled="ItemsView_OnScrolled">
+
+            <CollectionView.ItemsLayout>
+                <LinearItemsLayout
+         Orientation="Vertical"
+         SnapPointsType="MandatorySingle"
+         SnapPointsAlignment="Center" />
+            </CollectionView.ItemsLayout>
+
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="models:VideoModel">
+                    <Grid
+           HeightRequest="{Binding Height, Source={x:Reference Reels}}"
+           BackgroundColor="{Binding BackgroundColor}"
+           HorizontalOptions="Fill">
+
+                        <media:ExtendedMediaElement
+             Aspect="AspectFill"
+             Source="{Binding VideoUri}"
+             ShouldAutoPlay="False"
+             ShouldLoopPlayback="True"
+             ShouldShowPlaybackControls="False"
+             IsPlaying="{Binding IsPlaying}" />
+
+                        <Label
+             Text="{Binding Title}"
+             VerticalOptions="Center"
+             HorizontalOptions="Center"
+             FontSize="Title" />
+
+                    </Grid>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+
+        </CollectionView>
+
+    </Grid>
+
+</ContentPage>
