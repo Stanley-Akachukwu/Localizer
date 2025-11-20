@@ -1,10 +1,24 @@
-﻿namespace Lacalizer.Mobile
+﻿
+namespace Lacalizer.Mobile;
+public partial class AppShell : Shell
 {
-    public partial class AppShell : Shell
+    public AppShell()
     {
-        public AppShell()
+        InitializeComponent();
+
+        //Routing.RegisterRoute(nameof(MultiBindingPage), typeof(MultiBindingPage));
+        //Routing.RegisterRoute(nameof(PassObjectsPage), typeof(PassObjectsPage));
+        //Routing.RegisterRoute(nameof(AccordionOnePage), typeof(AccordionOnePage));
+        //Routing.RegisterRoute(nameof(AccordionMvvmPage), typeof(AccordionMvvmPage));
+
+        //Routing.RegisterRoute(Routes.MultiBindingPage, typeof(MultiBindingPage));
+        //Routing.RegisterRoute(Routes.PassObjectsPage, typeof(PassObjectsPage));
+        //Routing.RegisterRoute(Routes.AccordionOnePage, typeof(AccordionOnePage));
+        //Routing.RegisterRoute(Routes.AccordionMvvmPage, typeof(AccordionMvvmPage));
+
+        foreach (var route in Routes.RouteTypeMap)
         {
-            InitializeComponent();
+            Routing.RegisterRoute(route.Key, route.Value);
         }
     }
 }

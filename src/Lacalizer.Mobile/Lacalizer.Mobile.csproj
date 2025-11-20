@@ -78,29 +78,14 @@
 	</ItemGroup>
 
 	<!-- Platform specific XAML Android -->
-	<ItemGroup Condition="$(TargetFramework.StartsWith('net')) == true AND $(TargetFramework.Contains('-android')) == true">
-		<MauiXaml Update="Resources\Styles\Platform\SpecialStyles.android.xaml">
-			<Generator>MSBuild:Compile</Generator>
-		</MauiXaml>
-	</ItemGroup>
 	<ItemGroup Condition="$(TargetFramework.StartsWith('net')) == true AND $(TargetFramework.Contains('-android')) != true">
-		<MauiXaml Remove="Resources\Styles\Platform\SpecialStyles.android.xaml" />
 		<None Include="Resources\Styles\Platform\SpecialStyles.android.xaml" Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)" />
-		<Compile Remove="Resources\Styles\Platform\SpecialStyles.android.xaml.cs" />
 		<None Include="Resources\Styles\Platform\SpecialStyles.android.xaml.cs" Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)" />
 	</ItemGroup>
 
 	<!-- Platform specific XAML Windows -->
-	<ItemGroup Condition="$(TargetFramework.StartsWith('net')) == true AND $(TargetFramework.Contains('-windows')) == true">
-		<MauiXaml Update="Resources\Styles\Platform\SpecialStyles.windows.xaml">
-			<Generator>MSBuild:Compile</Generator>
-		</MauiXaml>
-	</ItemGroup>
 	<ItemGroup Condition="$(TargetFramework.StartsWith('net')) == true AND $(TargetFramework.Contains('-windows')) != true">
-		<MauiXaml Remove="Resources\Styles\Platform\SpecialStyles.windows.xaml" />
 		<None Include="Resources\Styles\Platform\SpecialStyles.windows.xaml" Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)" />
-		<Compile Remove="Resources\Styles\Platform\SpecialStyles.windows.xaml.cs" />
-		<None Include="Resources\Styles\Platform\SpecialStyles.windows.xaml.cs" Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -145,7 +130,9 @@
    </ItemGroup>
 
 	<ItemGroup>
-	  <Folder Include="Views\" />
+	  <MauiXaml Update="Views\ReelPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	</ItemGroup>
 
 

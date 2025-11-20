@@ -1,0 +1,58 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage 
+    x:Class="Lacalizer.Mobile.Views.MainPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:models="clr-namespace:Lacalizer.Mobile.Models"
+    xmlns:settings="clr-namespace:Localizer.Mobile.Services.Settings"
+    xmlns:viewModels="clr-namespace:Lacalizer.Mobile.ViewModels"
+    xmlns:media="clr-namespace:Lacalizer.Mobile.CustomControls.Media"
+    x:Name="Main"
+    x:DataType="viewModels:MainViewModel"
+    Shell.BackgroundColor="DarkGreen"
+    Shell.ForegroundColor="White">
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <Style
+        x:Key="LabelStyle"
+        TargetType="Label">
+                <Setter Property="Text" Value="{AppThemeBinding Light=Light, Dark=Dark}" />
+            </Style>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <Shell.TitleView>
+        <HorizontalStackLayout VerticalOptions="Fill">
+            <Label
+        Text="Welcome to Localizer"
+        FontFamily="Strande2"
+        TextColor="White"
+        VerticalTextAlignment="Center"
+        VerticalOptions="CenterAndExpand"
+        HeightRequest="50"
+        FontSize="Medium" />
+        </HorizontalStackLayout>
+    </Shell.TitleView>
+
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Command="{Binding SetLowBrightnessCommand}">
+            <ToolbarItem.IconImageSource>
+                <FontImageSource
+          FontFamily="MaterialIconsOutlined-Regular"
+          Glyph="&#xe51c;"
+          Color="LightBlue"
+          Size="20" />
+            </ToolbarItem.IconImageSource>
+        </ToolbarItem>
+        <ToolbarItem Command="{Binding SetHighBrightnessCommand}">
+            <ToolbarItem.IconImageSource>
+                <FontImageSource
+          FontFamily="MaterialIconsOutlined-Regular"
+          Glyph="&#xe518;"
+          Color="LightPink"
+          Size="32" />
+            </ToolbarItem.IconImageSource>
+        </ToolbarItem>
+    </ContentPage.ToolbarItems>
+</ContentPage>
