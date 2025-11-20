@@ -1,50 +1,164 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="Lacalizer.Mobile.MainPage"
-             xmlns:models="clr-namespace:Lacalizer.Mobile.Models"
-            xmlns:viewModels="clr-namespace:Lacalizer.Mobile.ViewModels"
-            xmlns:media="clr-namespace:Lacalizer.Mobile.CustomControls.Media"
-            x:Name="Reels"
-            x:DataType="viewModels:ReelViewModel"
-            Shell.NavBarIsVisible="False">
+<ContentPage 
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:models="clr-namespace:Lacalizer.Mobile.Models"
+    xmlns:viewModels="clr-namespace:Lacalizer.Mobile.ViewModels"
+    xmlns:media="clr-namespace:Lacalizer.Mobile.CustomControls.Media"
+    x:Class="Lacalizer.Mobile.MainPage"
+    x:Name="Reels"
+    x:DataType="viewModels:ReelViewModel"
+    Shell.NavBarIsVisible="False">
 
     <Grid>
 
         <CollectionView
-     HeightRequest="{Binding Height, Source={x:Reference Reels}}"
-     HorizontalOptions="Fill"
-     VerticalOptions="Center"
-     ItemsSource="{Binding Videos}"
-     Scrolled="ItemsView_OnScrolled">
+            HeightRequest="{Binding Height, Source={x:Reference Reels}}"
+            HorizontalOptions="Fill"
+            VerticalOptions="Center"
+            ItemsSource="{Binding Videos}"
+            Scrolled="ItemsView_OnScrolled">
 
             <CollectionView.ItemsLayout>
                 <LinearItemsLayout
-         Orientation="Vertical"
-         SnapPointsType="MandatorySingle"
-         SnapPointsAlignment="Center" />
+                    Orientation="Vertical"
+                    SnapPointsType="MandatorySingle"
+                    SnapPointsAlignment="Center" />
             </CollectionView.ItemsLayout>
 
             <CollectionView.ItemTemplate>
                 <DataTemplate x:DataType="models:VideoModel">
                     <Grid
-           HeightRequest="{Binding Height, Source={x:Reference Reels}}"
-           BackgroundColor="{Binding BackgroundColor}"
-           HorizontalOptions="Fill">
+                        HeightRequest="{Binding Height, Source={x:Reference Reels}}"
+                        BackgroundColor="{Binding BackgroundColor}"
+                        HorizontalOptions="Fill">
 
+                        <!-- Video Player -->
                         <media:ExtendedMediaElement
-             Aspect="AspectFill"
-             Source="{Binding VideoUri}"
-             ShouldAutoPlay="False"
-             ShouldLoopPlayback="True"
-             ShouldShowPlaybackControls="False"
-             IsPlaying="{Binding IsPlaying}" />
+                            Aspect="AspectFill"
+                            Source="{Binding VideoUri}"
+                            ShouldAutoPlay="False"
+                            ShouldLoopPlayback="True"
+                            ShouldShowPlaybackControls="False"
+                            IsPlaying="{Binding IsPlaying}" />
 
-                        <Label
-             Text="{Binding Title}"
-             VerticalOptions="Center"
-             HorizontalOptions="Center"
-             FontSize="Title" />
+                        <!-- Top Caption & Localize Button -->
+                        <StackLayout
+                            HorizontalOptions="Center"
+                            VerticalOptions="Start"
+                            Margin="0,40,0,0"
+                            Spacing="5">
+
+                            <Label
+                                Text="Eze Adi hurried over his breakfast of cassava served with cold bitter-leaf soup. 
+                                It was all that remained of last night's supper. 
+                                Then he put away the bowls from which he and his mother had eaten, and set off to the village of Ama, three miles away. Eze was going to school for the first time."
+                                HorizontalOptions="Center"
+                                VerticalOptions="Center"
+                                TextColor="White"
+                                FontSize="16"
+                                FontAttributes="Bold"
+                                Padding="20,10" />
+
+                            <ImageButton
+                                Source="localize_16190095"
+                                HeightRequest="36"
+                                WidthRequest="36"
+                                BackgroundColor="#66000000"
+                                CornerRadius="18"
+                                Padding="8" />
+
+                        </StackLayout>
+
+                        <!-- Right Action Buttons -->
+                        <StackLayout
+                            Orientation="Vertical"
+                            Spacing="25"
+                            HorizontalOptions="End"
+                            VerticalOptions="End"
+                            Margin="0,0,20,40">
+
+                            <!-- Participations -->
+                            <StackLayout Orientation="Vertical" Spacing="4" HorizontalOptions="Center">
+                                <ImageButton
+                                    Source="people_16006707"
+                                    HeightRequest="36"
+                                    WidthRequest="36"
+                                    BackgroundColor="#66000000"
+                                    CornerRadius="18"
+                                    Padding="8" />
+                                <Label
+                                    Text="15"
+                                    FontSize="10"
+                                    TextColor="White"
+                                    HorizontalOptions="Center" />
+                            </StackLayout>
+
+                            <!-- Hearts -->
+                            <StackLayout Orientation="Vertical" Spacing="4" HorizontalOptions="Center">
+                                <ImageButton
+                                    Source="heart_10021275"
+                                    HeightRequest="36"
+                                    WidthRequest="36"
+                                    BackgroundColor="#66000000"
+                                    CornerRadius="18"
+                                    Padding="8" />
+                                <Label
+                                    Text="20"
+                                    FontSize="10"
+                                    TextColor="White"
+                                    HorizontalOptions="Center" />
+                            </StackLayout>
+
+                            <!-- Share -->
+                            <StackLayout Orientation="Vertical" Spacing="4" HorizontalOptions="Center">
+                                <ImageButton
+                                    Source="share_2958783"
+                                    HeightRequest="36"
+                                    WidthRequest="36"
+                                    BackgroundColor="#66000000"
+                                    CornerRadius="18"
+                                    Padding="8" />
+                                <Label
+                                    Text="10"
+                                    FontSize="10"
+                                    TextColor="White"
+                                    HorizontalOptions="Center" />
+                            </StackLayout>
+
+                            <!-- TikTok -->
+                            <StackLayout Orientation="Vertical" Spacing="4" HorizontalOptions="Center">
+                                <ImageButton
+                                    Source="tiktok_2549166"
+                                    HeightRequest="36"
+                                    WidthRequest="36"
+                                    BackgroundColor="#66000000"
+                                    CornerRadius="18"
+                                    Padding="8" />
+                                <Label
+                                    Text="5"
+                                    FontSize="10"
+                                    TextColor="White"
+                                    HorizontalOptions="Center" />
+                            </StackLayout>
+
+                            <!-- Facebook -->
+                            <StackLayout Orientation="Vertical" Spacing="4" HorizontalOptions="Center">
+                                <ImageButton
+                                    Source="fbook_13859813"
+                                    HeightRequest="36"
+                                    WidthRequest="36"
+                                    BackgroundColor="#66000000"
+                                    CornerRadius="18"
+                                    Padding="8" />
+                                <Label
+                                    Text="4"
+                                    FontSize="10"
+                                    TextColor="White"
+                                    HorizontalOptions="Center" />
+                            </StackLayout>
+
+                        </StackLayout>
 
                     </Grid>
                 </DataTemplate>
