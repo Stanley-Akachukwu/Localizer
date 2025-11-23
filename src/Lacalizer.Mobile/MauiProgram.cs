@@ -1,4 +1,5 @@
-﻿using CommunityToolkit.Maui;
+﻿using Camera.MAUI;
+using CommunityToolkit.Maui;
 using epj.Expander.Maui;
 using epj.RouteGenerator;
 using Lacalizer.Mobile.Navigation;
@@ -21,7 +22,9 @@ public static class MauiProgram
         var builder = MauiApp.CreateBuilder();
         builder
             .UseMauiApp<App>()
+             .UseMauiCameraView()
             .UseMauiCommunityToolkit()
+            .UseMauiCommunityToolkitCamera()
             .UseMauiCommunityToolkitMediaElement()
             .ConfigureMopups()
             .ConfigureFonts(fonts =>
@@ -36,13 +39,18 @@ public static class MauiProgram
 #if DEBUG
         builder.Logging.AddDebug();
 #endif
-        builder.Services.AddTransient<ReelViewModel>();
         builder.Services.AddSingleton<MainViewModel>();
         builder.Services.AddSingleton<MainPage>();
+
         builder.Services.AddSingleton<IDeviceService>(DeviceService.Instance);
         builder.Services.AddSingleton<IAudioService, AudioService>();
         builder.Services.AddSingleton<INavigationService, NavigationService>();
+
+        builder.Services.AddTransient<ReelViewModel>();
         builder.Services.AddTransient<ReelPage>();
+
+        builder.Services.AddTransient<MVVMCameraViewModel>();
+        builder.Services.AddTransient<MVVMPage>();
 
         var app = builder.Build();
 

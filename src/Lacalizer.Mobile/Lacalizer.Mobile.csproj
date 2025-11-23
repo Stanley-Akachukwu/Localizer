@@ -108,9 +108,10 @@
 		<AndroidGradleIncludePattern Include="Platforms/Android/*.gradle" />
 	</ItemGroup>
 
-	
 
 	<ItemGroup>
+		<PackageReference Include="Camera.MAUI" Version="1.5.1" />
+		<PackageReference Include="CommunityToolkit.Maui.Camera" Version="5.0.0" />
 		<PackageReference Include="Mopups" Version="1.3.4" />
 		<PackageReference Include="epj.RouteGenerator" Version="1.0.5" />
 		<PackageReference Include="epj.Expander.Maui" Version="1.0.4" />
@@ -130,6 +131,12 @@
    </ItemGroup>
 
 	<ItemGroup>
+	  <MauiXaml Update="Views\CameraPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Views\MVVMPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	  <MauiXaml Update="Views\ReelPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
