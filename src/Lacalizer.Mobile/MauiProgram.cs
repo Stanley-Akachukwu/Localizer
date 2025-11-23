@@ -49,8 +49,8 @@ public static class MauiProgram
         builder.Services.AddTransient<ReelViewModel>();
         builder.Services.AddTransient<ReelPage>();
 
-        builder.Services.AddTransient<MVVMCameraViewModel>();
-        builder.Services.AddTransient<MVVMPage>();
+        builder.Services.AddTransient<CameraVewModel>();
+        builder.Services.AddTransient<CameraPage>();
 
         var app = builder.Build();
 

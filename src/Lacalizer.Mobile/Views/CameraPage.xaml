@@ -20,6 +20,16 @@
             <cv:CameraView x:Name="cameraView" WidthRequest="300" HeightRequest="300"
                            CamerasLoaded="cameraView_CamerasLoaded"/>
 
+            <Label 
+             x:Name="lblTopic"
+              Text="{Binding SelectedTopic}"
+              HorizontalOptions="Center"
+              VerticalOptions="Center"
+              TextColor="White"
+              FontSize="16"
+              FontAttributes="Bold"
+              Padding="20,10" />
+
             <Button Text="Start Localizing" Clicked="Button_Clicked" />
 
         </VerticalStackLayout>

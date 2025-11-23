@@ -1,51 +1,48 @@
+using Lacalizer.Mobile.ViewModels;
+
 namespace Lacalizer.Mobile.Views;
 
+[QueryProperty(nameof(Topic), "topic")]
 public partial class CameraPage : ContentPage
 {
-	public CameraPage()
-	{
-		InitializeComponent();
-	}
+    private readonly CameraVewModel _cvm;
+
+    public CameraPage(CameraVewModel cvm)
+    {
+        InitializeComponent();
+        BindingContext = _cvm = cvm;
+    }
+
+    private string _topic;
+    public string Topic
+    {
+        get => _topic;
+        set
+        {
+            _topic = value;
+
+            if (_cvm != null)
+                _cvm.SelectedTopic = value; // update label immediately
+        }
+    }
     private void cameraView_CamerasLoaded(object sender, EventArgs e)
     {
-        cameraView.Camera = cameraView.Cameras.First();
+        Console.WriteLine($"Camera Loaded — topic = {Topic}");
+        cameraView.Camera = cameraView.Cameras.LastOrDefault();
 
         MainThread.BeginInvokeOnMainThread(async () =>
         {
-            await cameraView.StopCameraAsync();
-            await cameraView.StartCameraAsync();
+            
+            if (cameraView.Cameras.Count > 0)
+            {
+                cameraView.Camera = cameraView.Cameras.LastOrDefault();
+                await cameraView.StopCameraAsync();
+                await cameraView.StartCameraAsync();
+            }
         });
     }
 
-    //private async void Button_Clicked(object sender, EventArgs e)
-    //{
-    //    var status = await Permissions.RequestAsync<Permissions.StorageWrite>();
-    //    var cameraStatus = await Permissions.RequestAsync<Permissions.Camera>();
-    //    if (status != PermissionStatus.Granted)
-    //    {
-    //        await DisplayAlert("Permission Denied", "Camera permission is required to record a video.", "OK");
-    //        return;
-    //    }
-
-    //    string fileName = $"{DateTime.Now:yyyyMMddHHmmss}.mp4";
-    //    string folderPath = FileSystem.Current.AppDataDirectory;  
-    //    string filePath = Path.Combine(folderPath, fileName);
-
-    //    try
-    //    {
-    //        var result = await cameraView.StartRecordingAsync(filePath, new Size(1920, 1080));
-    //        await Task.Delay(TimeSpan.FromSeconds(7));
-
-    //        result = await cameraView.StopRecordingAsync();
-    //    }
-    //    catch (Exception ex)
-    //    {
-    //        Console.WriteLine(ex.Message);
-    //        Console.WriteLine(ex.StackTrace);
-    //    }
-
-       
-    //}
+    
 private async void Button_Clicked(object sender, EventArgs e)
 {
     // Request permissions
@@ -65,9 +62,10 @@ private async void Button_Clicked(object sender, EventArgs e)
 
     try
     {
-        // Create folder in Android Movies directory
+          
+            // Create folder in Android Movies directory
 #if ANDROID
-        string folderPath = Android.OS.Environment.GetExternalStoragePublicDirectory(
+            string folderPath = Android.OS.Environment.GetExternalStoragePublicDirectory(
                                 Android.OS.Environment.DirectoryMovies).AbsolutePath;
 #else
         // For Windows or other platforms
@@ -99,5 +97,4 @@ private async void Button_Clicked(object sender, EventArgs e)
         await DisplayAlert("Error", ex.Message, "OK");
     }
 }
-
 }

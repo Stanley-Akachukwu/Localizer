@@ -51,24 +51,15 @@
                          Margin="0,40,0,0"
                          Spacing="5">
 
-                            <Label
-                             Text="Eze Adi hurried over his breakfast of cassava served with cold bitter-leaf soup. 
-                             It was all that remained of last night's supper. 
-                             Then he put away the bowls from which he and his mother had eaten, and set off to the village of Ama, three miles away. Eze was going to school for the first time."
+                            <Label 
+                            x:Name="lblTopic"
+                             Text="{Binding Topic}"
                              HorizontalOptions="Center"
                              VerticalOptions="Center"
                              TextColor="White"
                              FontSize="16"
                              FontAttributes="Bold"
                              Padding="20,10" />
-
-                            <!--<toolkit:CameraView
-                            x:Name="Camera" 
-                            Grid.ColumnSpan="3" 
-                            Grid.Row="0"
-                            SelectedCamera="{Binding SelectedCamera}"
-                            ZoomFactor="{Binding CurrentZoom}"
-                            CameraFlashMode="{Binding FlashMode}" />-->
 
                             <ImageButton
                              Source="localize_16190095"
@@ -78,24 +69,6 @@
                              CornerRadius="18"
                              Padding="8" 
                                Clicked="OnRecordVideoClicked"/>
-
-                            <!--<ImageButton
-                              Source="localize_16190095"
-                              HeightRequest="36"
-                              WidthRequest="36"
-                              BackgroundColor="#66000000"
-                              CornerRadius="18"
-                              Padding="8" 
-                              Command="{Binding RecordVideoCommand , Source={x:Reference Camera}, x:DataType=toolkit:CameraView}"
-                              CommandParameter="{Binding Stream} "/>-->
-
-                            <!--<Button Command="{Binding StartVideoRecordingCommand, Source={x:Reference Camera}, x:DataType=toolkit:CameraView}"
-                            CommandParameter="{Binding Stream}"
-                            Text="StartVideoRecording" />
-
-                            <Button Command="{Binding StopVideoRecordingCommand, Source={x:Reference Camera}, x:DataType=toolkit:CameraView}"
-                             CommandParameter="{Binding Token}"
-                             Text="StopVideoRecording" />-->
 
                             
 
