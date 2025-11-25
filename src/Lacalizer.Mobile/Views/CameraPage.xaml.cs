@@ -1,4 +1,6 @@
+﻿using Azure.Storage.Blobs;
 using Lacalizer.Mobile.ViewModels;
+using System.Diagnostics;
 
 namespace Lacalizer.Mobile.Views;
 
@@ -27,7 +29,7 @@ public partial class CameraPage : ContentPage
     }
     private void cameraView_CamerasLoaded(object sender, EventArgs e)
     {
-        Console.WriteLine($"Camera Loaded � topic = {Topic}");
+        Console.WriteLine($"Camera Loaded — topic = {Topic}");
         cameraView.Camera = cameraView.Cameras.LastOrDefault();
 
         MainThread.BeginInvokeOnMainThread(async () =>
@@ -62,30 +64,37 @@ private async void Button_Clicked(object sender, EventArgs e)
 
     try
     {
-          
-            // Create folder in Android Movies directory
+
+
 #if ANDROID
-            string folderPath = Android.OS.Environment.GetExternalStoragePublicDirectory(
-                                Android.OS.Environment.DirectoryMovies).AbsolutePath;
+            string folderPath = Path.Combine(FileSystem.AppDataDirectory, "Localized");
+            Directory.CreateDirectory(folderPath);
 #else
-        // For Windows or other platforms
-        string folderPath = Path.Combine(FileSystem.Current.AppDataDirectory, "Lacalized");
+                    // For Windows or other platforms
+                    string folderPath = Path.Combine(FileSystem.Current.AppDataDirectory, "Lacalized");
 #endif
-        folderPath = Path.Combine(folderPath, "Lacalized");
-        Directory.CreateDirectory(folderPath);
 
-        // Create timestamped file name
-        string fileName = $"{DateTime.Now:yyyyMMddHHmmss}.mp4";
-        string filePath = Path.Combine(folderPath, fileName);
+            // 2️⃣ Create timestamped filename
+            string fileName = $"{DateTime.Now:yyyyMMddHHmmss}.mp4";
+            string filePath = Path.Combine(folderPath, fileName);
 
-        // Start recording
-        var result = await cameraView.StartRecordingAsync(filePath, new Size(1920, 1080));
+            // 3️⃣ Start recording
+            var result = await cameraView.StartRecordingAsync(filePath, new Size(1920, 1080));
 
-        // Record for 7 seconds (adjust as needed)
-        await Task.Delay(TimeSpan.FromSeconds(7));
+            // ⏱ Record duration
+            await Task.Delay(TimeSpan.FromSeconds(7));
 
-        // Stop recording
-        result = await cameraView.StopRecordingAsync();
+            // 4️⃣ Stop recording
+            result = await cameraView.StopRecordingAsync();
+
+            // Ensure file exists before uploading
+            if (!File.Exists(filePath))
+                throw new Exception("Video file not found. Recording may have failed.");
+
+            // 5️⃣ Upload to Azurite Blob Storage
+            await UploadToAzuriteAsync(filePath, fileName);
+
+            Console.WriteLine($"Uploaded successfully: {fileName}");
 
         await DisplayAlert("Recording Complete", $"Video saved at: {filePath}", "OK");
 
@@ -97,4 +106,55 @@ private async void Button_Clicked(object sender, EventArgs e)
         await DisplayAlert("Error", ex.Message, "OK");
     }
 }
+    private async Task UploadToAzuriteAsync(string filePath, string blobName)
+    {
+        try
+        {
+            string connectionString;
+
+#if ANDROID
+            connectionString =
+            "AccountName=devstoreaccount1;" +
+            "AccountKey=Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw==;" +
+            "DefaultEndpointsProtocol=http;" +
+            "BlobEndpoint=http://192.168.1.227:10000/devstoreaccount1;" +
+            "QueueEndpoint=http://192.168.1.227:10001/devstoreaccount1;" +
+            "TableEndpoint=http://192.168.1.227:10002/devstoreaccount1;";
+
+#else
+        // Windows or MAUI WinUI
+        connectionString =
+        "AccountName=devstoreaccount1;" +
+        "AccountKey=Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw==;" +
+        "DefaultEndpointsProtocol=http;" +
+        "BlobEndpoint=http://127.0.0.1:10000/devstoreaccount1;" +
+        "QueueEndpoint=http://127.0.0.1:10001/devstoreaccount1;" +
+        "TableEndpoint=http://127.0.0.1:10002/devstoreaccount1;";
+#endif
+
+            string containerName = "videos";
+            string subFolder = "localized";
+
+            var service = new BlobServiceClient(connectionString);
+            var container = service.GetBlobContainerClient(containerName);
+            await container.CreateIfNotExistsAsync();
+
+            string blobPath = $"{subFolder}/{blobName}";
+            var blob = container.GetBlobClient(blobPath);
+
+            using FileStream fs = File.OpenRead(filePath);
+            await blob.UploadAsync(fs, overwrite: true);
+
+            Debug.WriteLine($"Uploaded to Azurite: {blobPath}");
+
+            // 🔥 Delete local file after upload
+            if (File.Exists(filePath))
+                File.Delete(filePath);
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine("UPLOAD ERROR: " + ex);
+        }
+    }
+
 }

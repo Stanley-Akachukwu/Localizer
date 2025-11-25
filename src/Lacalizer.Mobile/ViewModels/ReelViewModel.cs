@@ -21,11 +21,10 @@ public partial class ReelViewModel : ObservableObject
         [
             new VideoModel("First",
             "Eze Adi hurried over his breakfast of cassava served with cold bitter-leaf soup. \r\nIt was all that remained of last night's supper. \r\nThen he put away the bowls from which he and his mother had eaten, and set off to the village of Ama, three miles away. Eze was going to school for the first time.",
-            FrogVideo,
-            Colors.Aqua),
+            FrogVideo),
             new VideoModel("Second",
             "A simulator is a machine, program, or device that imitates a real-life situation, typically for training, experimentation, or entertainment.",
-            BuckVideo, Colors.Red),
+            BuckVideo),
         ];
     }
 }
