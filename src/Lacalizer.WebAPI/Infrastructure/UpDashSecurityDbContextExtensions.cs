@@ -83,6 +83,7 @@ public static class DbInitializer
                         DateUpdated = DateTime.UtcNow,
                         UpdatedByUserId = v.UpdatedByUserId,
                         UID = v.VideoUri,
+                        VideoType = v.VideoType
                     };
 
                     videoItems.Add(videoItem);

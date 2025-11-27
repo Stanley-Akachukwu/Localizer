@@ -2,6 +2,7 @@
 using Lacalizer.WebAPI.Application.Commands.Videos;
 using Lacalizer.WebAPI.Application.Queries;
 using Lacalizer.WebAPI.Dtos;
+using Lacalizer.WebAPI.Entites.Enums;
 using Lacalizer.WebAPI.Services.Validations;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -109,5 +110,6 @@ public record VideoPaginationQuery(
     int PageSize = 10,
     string? Language = null,
     string? Title = null,
+    VideoType VideoType = VideoType.TOPIC,
     DateTimeOffset? DateCreated = null
 ) : PaginationQuery(PageIndex, PageSize);

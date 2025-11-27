@@ -1,5 +1,6 @@
 ﻿using Lacalizer.WebAPI.Apis;
 using Lacalizer.WebAPI.Dtos;
+using Lacalizer.WebAPI.Entites.Enums;
 using Lacalizer.WebAPI.Entites.Videos;
 using Lacalizer.WebAPI.Infrastructure;
 using Microsoft.EntityFrameworkCore;
@@ -91,7 +92,6 @@ public class VideoItemQueries : IVideoItemQueries
                 "Invalid pagination parameters.",
                 StatusCodes.Status400BadRequest);
 
-        // Generate a unique cache key based on query parameters
         var cacheKey = $"Videos_{req.Language}_{req.Title}_{req.DateCreated?.ToString("yyyyMMdd")}_{req.PageIndex}_{req.PageSize}";
 
         if (_cache.TryGetValue(cacheKey, out PaginatedItems<SingleVideoItemDto> cachedItems))
@@ -111,6 +111,9 @@ public class VideoItemQueries : IVideoItemQueries
 
             if (req.DateCreated.HasValue)
                 query = query.Where(v => v.DateCreated.Value.Date == req.DateCreated.Value.Date);
+
+            if (req.VideoType != VideoType.NONE)
+                query = query.Where(v => v.VideoType == req.VideoType);
 
             var totalCount = await query.CountAsync(ct);
 
