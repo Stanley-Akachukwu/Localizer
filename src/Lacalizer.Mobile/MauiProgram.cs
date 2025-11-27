@@ -3,14 +3,18 @@ using CommunityToolkit.Maui;
 using epj.Expander.Maui;
 using epj.RouteGenerator;
 using Lacalizer.Mobile.Navigation;
+using Lacalizer.Mobile.Services.Videos;
 using Lacalizer.Mobile.ViewModels;
 using Lacalizer.Mobile.Views;
 using Localizer.Mobile.Services;
 using Localizer.Mobile.Services.Audio;
 using Localizer.Mobile.Services.Device;
 using Localizer.Mobile.Services.Device.Platform;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Mopups.Hosting;
+using System;
+using System.Reflection;
 
 namespace Lacalizer.Mobile;
 
@@ -36,6 +40,15 @@ public static class MauiProgram
                 fonts.AddFont("Strande2.ttf", "Strande2");
             });
 
+
+        var getAssembly = Assembly.GetExecutingAssembly();
+        using var appjson = getAssembly.GetManifestResourceStream("Lacalizer.Mobile.appsettings.json");
+        var newConfig = new ConfigurationBuilder()
+            .AddJsonStream(appjson)
+            .Build();
+        builder.Configuration.AddConfiguration(newConfig);
+         
+
 #if DEBUG
         builder.Logging.AddDebug();
 #endif
@@ -51,6 +64,14 @@ public static class MauiProgram
 
         builder.Services.AddTransient<CameraVewModel>();
         builder.Services.AddTransient<CameraPage>();
+
+        builder.Services.AddMemoryCache();  
+
+        builder.Services.AddHttpClient<IVideoService, VideoService>(client =>
+        {
+            client.BaseAddress = new Uri("https://f38nk8m5-7078.uks1.devtunnels.ms/");
+        });
+
 
         var app = builder.Build();
 

@@ -1,0 +1,6 @@
+@Lacalizer.WebAPI_HostAddress = http://localhost:5168
+
+GET {{Lacalizer.WebAPI_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

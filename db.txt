@@ -1,0 +1,27 @@
+EntityFrameworkCore\Add-Migration InitialBaseline -Context LocalizeContext -IgnoreChanges
+EntityFrameworkCore\Add-Migration AddVideoTypeMig  -Context LocalizeContext 
+
+
+EntityFrameworkCore\Update-Database -Context LocalizeContext
+
+Remove-Migration -Context LocalizeContext
+
++-------------------------------------Connect to local postgres container from pgadmin container -------------------+
+           In the Connection tab, enter the details:
+           Host=localhost;Port=59570;Username=postgres;Password=cXuMTd.x2{A8b}P}Sep8P.
+
+Host name/address: container name : localupdashdb
+
+Port: 5432
+
+Maintenance database: postgres
+
+Username: postgres (or your custom user) : postgres
+
+Password: <db password>
+
+Click Save. If all the details are correct and the networks are aligned, pgAdmin will connect successfully.
+
+In summary: Use the container name postgres on port 5432 from within your pgAdmin container.
+ 
++-------------------------------------Connect to azure postgres container from pgadmin container -------------------+

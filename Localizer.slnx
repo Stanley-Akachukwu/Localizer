@@ -1,8 +1,12 @@
 <Solution>
   <Folder Name="/Solution Items/">
+    <File Path="db.txt" />
     <File Path="Research.txt" />
   </Folder>
   <Project Path="src/Lacalizer.Mobile/Lacalizer.Mobile.csproj">
     <Deploy />
   </Project>
+  <Project Path="src/Lacalizer.WebAPI/Lacalizer.WebAPI.csproj" />
+  <Project Path="src/Orchestration/Lacalizer/Lacalizer.AppHost/Lacalizer.AppHost.csproj" />
+  <Project Path="src/Orchestration/Lacalizer/Lacalizer.ServiceDefaults/Lacalizer.ServiceDefaults.csproj" />
 </Solution>

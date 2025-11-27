@@ -1,0 +1,36 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <GenerateDocumentationFile>False</GenerateDocumentationFile>
+    <DocumentationFile>$(OutputPath)$(AssemblyName).xml)</DocumentationFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Asp.Versioning.Http" Version="8.1.0" />
+    <PackageReference Include="Aspire.Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.5.2" />
+    <PackageReference Include="FluentValidation" Version="12.1.0" />
+    <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="12.1.0" />
+    <PackageReference Include="MediatR" Version="13.1.0" />
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.0" />
+    <!--<PackageReference Include="Microsoft.AspNetCore.Routing" Version="2.3.0" />-->
+	  <PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.0" />
+	  <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="10.0.0" />
+	  <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="10.0.0">
+		  <PrivateAssets>all</PrivateAssets>
+		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+	  </PackageReference>
+	  <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="10.0.0" />
+	  
+	  <PackageReference Include="NUlid" Version="1.7.3" />
+	  
+	  <PackageReference Include="Swashbuckle.AspNetCore" Version="10.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Orchestration\Lacalizer\Lacalizer.ServiceDefaults\Lacalizer.ServiceDefaults.csproj" />
+  </ItemGroup>
+
+</Project>

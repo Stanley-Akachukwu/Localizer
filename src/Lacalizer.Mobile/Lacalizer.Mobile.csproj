@@ -108,17 +108,25 @@
 		<AndroidGradleIncludePattern Include="Platforms/Android/*.gradle" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <None Remove="appsettings.json" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <EmbeddedResource Include="appsettings.json">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </EmbeddedResource>
+	</ItemGroup>
+
 
 	<ItemGroup>
 		<PackageReference Include="Azure.Storage.Blobs" Version="12.26.0" />
 		<PackageReference Include="Camera.MAUI" Version="1.5.1" />
 		<PackageReference Include="CommunityToolkit.Maui.Camera" Version="5.0.0" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.0" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="10.0.0" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="10.0.0">
-			<PrivateAssets>all</PrivateAssets>
-			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-		</PackageReference>
+		<PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="10.0.0" />
+		<PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="10.0.0" />
+		<PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="10.0.0" />
+		<PackageReference Include="Microsoft.Extensions.Http" Version="10.0.0" />
 		<PackageReference Include="Mopups" Version="1.3.4" />
 		<PackageReference Include="epj.RouteGenerator" Version="1.0.5" />
 		<PackageReference Include="epj.Expander.Maui" Version="1.0.4" />
@@ -129,7 +137,6 @@
 		<PackageReference Include="Microsoft.Maui.Controls" Version="10.0.10" />
 		<PackageReference Include="Microsoft.Maui.Essentials" Version="10.0.10" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="10.0.0" />
-		<PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="10.0.0" />
 		<PackageReference Include="NUlid" Version="1.7.3" />
 	</ItemGroup>
 

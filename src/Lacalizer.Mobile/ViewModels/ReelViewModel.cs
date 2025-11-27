@@ -1,30 +1,43 @@
 ﻿
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using Lacalizer.Mobile.Models;
+using Lacalizer.Mobile.Services.Videos;
 using System.Collections.ObjectModel;
 
 namespace Lacalizer.Mobile.ViewModels;
 
 public partial class ReelViewModel : ObservableObject
 {
-    private const string FrogVideo = "https://github.com/ewerspej/maui-samples/blob/main/assets/frog.mp4?raw=true";
-    private const string BuckVideo = "https://github.com/ewerspej/maui-samples/blob/main/assets/bigbuckbunny.mp4?raw=true";
+    private readonly IVideoService _videoService;
+
+    private bool _isLoading;
+    public bool IsLoading
+    {
+        get => _isLoading;
+        set { _isLoading = value; OnPropertyChanged(); }
+    }
 
     [ObservableProperty]
     private ObservableCollection<VideoModel> _videos;
     [ObservableProperty]
     private string selectedTopic;
 
-    public ReelViewModel()
+    public ReelViewModel(IVideoService videoService)
     {
-        Videos =
-        [
-            new VideoModel("First",
-            "Eze Adi hurried over his breakfast of cassava served with cold bitter-leaf soup. \r\nIt was all that remained of last night's supper. \r\nThen he put away the bowls from which he and his mother had eaten, and set off to the village of Ama, three miles away. Eze was going to school for the first time.",
-            FrogVideo),
-            new VideoModel("Second",
-            "A simulator is a machine, program, or device that imitates a real-life situation, typically for training, experimentation, or entertainment.",
-            BuckVideo),
-        ];
+        _videoService = videoService;
+
+        LoadVideosCommand = new AsyncRelayCommand(LoadVideosAsync);
+    }
+
+    public IAsyncRelayCommand LoadVideosCommand { get; }
+
+    private async Task LoadVideosAsync()
+    {
+        IsLoading = true;
+        var items = await _videoService.GetVideosAsync(1, 100);
+        Videos = new ObservableCollection<VideoModel>(items);
+        IsLoading = false;
+        
     }
 }

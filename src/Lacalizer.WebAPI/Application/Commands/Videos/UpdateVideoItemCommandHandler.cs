@@ -1,0 +1,68 @@
+﻿using FluentValidation;
+using Lacalizer.WebAPI.Dtos;
+using Lacalizer.WebAPI.Infrastructure;
+using MediatR;
+
+namespace Lacalizer.WebAPI.Application.Commands.Videos;
+
+public record UpdateVideoItemCommand(
+    string Id,
+    string Language,
+    string Title,
+    string Topic,
+    string BlobName) : IRequest<LocalizerApiResponse<UpdateVideoItemResult>>;
+public class UpdateVideoItemResult
+{
+    public string Id { get; set; } = string.Empty;
+    public string BlobName { get; set; } = string.Empty;
+}
+public class UpdateVideoItemCommandHandler : IRequestHandler<UpdateVideoItemCommand, LocalizerApiResponse<UpdateVideoItemResult>>
+{
+    private readonly LocalizeContext _db;
+
+    public UpdateVideoItemCommandHandler(LocalizeContext db)
+    {
+        _db = db;
+    }
+
+    public async Task<LocalizerApiResponse<UpdateVideoItemResult>> Handle(UpdateVideoItemCommand request, CancellationToken cancellationToken)
+    {
+        var existing = await _db.VideoItems.FindAsync(new object[] { request.Id }, cancellationToken);
+        if (existing == null)
+        {
+            return LocalizerApiResponse<UpdateVideoItemResult>.Failure($"Video item with ID {request.Id} not found.", StatusCodes.Status404NotFound);
+        }
+
+        existing.Language = request.Language;
+        existing.Title = request.Title;
+        existing.Topic = request.Topic;
+        existing.VideoUri = request.BlobName;
+
+        _db.VideoItems.Update(existing);
+        await _db.SaveChangesAsync(cancellationToken);
+
+        return new LocalizerApiResponse<UpdateVideoItemResult>
+        {
+            IsSuccess = true,
+            Data = new UpdateVideoItemResult
+            {
+                Id = existing.Id,
+                BlobName = existing.VideoUri
+            },
+            StatusCode = 201,
+            ResponseMessage = "Video item updated successfully."
+        };
+    }
+}
+
+public class UpdateVideoItemCommandValidator : AbstractValidator<UpdateVideoItemCommand>
+{
+    public UpdateVideoItemCommandValidator()
+    {
+        RuleFor(x => x.Id).NotEmpty();
+        RuleFor(x => x.Language).NotEmpty();
+        RuleFor(x => x.Title).NotEmpty();
+        RuleFor(x => x.Topic).NotEmpty();
+        RuleFor(x => x.BlobName).NotEmpty();
+    }
+}

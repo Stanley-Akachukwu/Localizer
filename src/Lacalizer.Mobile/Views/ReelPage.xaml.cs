@@ -1,5 +1,7 @@
+using Lacalizer.Mobile.Models;
 using Lacalizer.Mobile.Navigation;
 using Lacalizer.Mobile.ViewModels;
+using System.Collections.ObjectModel;
 
 namespace Lacalizer.Mobile.Views;
 
@@ -14,6 +16,28 @@ public partial class ReelPage : ContentPage
         _navigationService = navigationService;
 
     }
+    protected override async void OnAppearing()
+    {
+        base.OnAppearing();
+
+        if (_vm == null)
+        {
+            Console.WriteLine("ReelViewModel is null!");
+            return;
+        }
+
+        if (_vm.LoadVideosCommand == null)
+        {
+            Console.WriteLine("LoadVideosCommand is null!");
+            return;
+        }
+
+        if (_vm.Videos == null) _vm.Videos = new ObservableCollection<VideoModel>();
+
+        if (_vm.Videos.Count == 0)
+            await _vm.LoadVideosCommand.ExecuteAsync(null);
+    }
+
 
     private void ItemsView_OnScrolled(object sender, ItemsViewScrolledEventArgs e)
     {

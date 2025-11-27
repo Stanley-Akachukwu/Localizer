@@ -170,5 +170,16 @@
 
         </CollectionView>
 
+        <Grid
+        BackgroundColor="#80000000"  
+            IsVisible="{Binding IsLoading}">
+            <ActivityIndicator
+            IsRunning="{Binding IsLoading}"
+            Color="White"
+            HorizontalOptions="Center"
+            VerticalOptions="Center"
+            WidthRequest="60"
+            HeightRequest="60"/>
+        </Grid>
     </Grid>
 </ContentPage>
