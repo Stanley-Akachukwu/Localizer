@@ -1,4 +1,4 @@
-﻿using Lacalizer.WebAPI.Entites.Enums;
+﻿using Lacalizer.Shared.Enums;
 
 namespace Lacalizer.WebAPI.Entites.Videos;
 

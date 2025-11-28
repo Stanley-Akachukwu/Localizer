@@ -1,5 +1,5 @@
 ﻿using FluentValidation;
-using Lacalizer.WebAPI.Dtos;
+using Lacalizer.Shared.Dtos;
 using Lacalizer.WebAPI.Infrastructure;
 using MediatR;
 using System.Net.Mail;

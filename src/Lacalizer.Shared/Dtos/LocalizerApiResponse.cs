@@ -1,5 +1,5 @@
-﻿namespace Lacalizer.WebAPI.Dtos;
- 
+﻿namespace Lacalizer.Shared.Dtos;
+
 
 public class LocalizerApiResponse<T>
 {

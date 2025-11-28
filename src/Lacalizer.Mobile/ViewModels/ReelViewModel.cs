@@ -35,7 +35,7 @@ public partial class ReelViewModel : ObservableObject
     private async Task LoadVideosAsync()
     {
         IsLoading = true;
-        var items = await _videoService.GetVideosAsync(1, 100);
+        var items = await _videoService.GetTopicVideosAsync(1, 100);
         Videos = new ObservableCollection<VideoModel>(items);
         IsLoading = false;
         

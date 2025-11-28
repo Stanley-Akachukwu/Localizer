@@ -1,4 +1,6 @@
 ﻿using Lacalizer.Mobile.Models;
+using Lacalizer.Shared.Dtos;
+using Lacalizer.Shared.Enums;
 using Microsoft.Extensions.Caching.Memory;
 using System.Net.Http.Json;
 using System.Text.Json;
@@ -7,7 +9,7 @@ namespace Lacalizer.Mobile.Services.Videos;
 
 public interface IVideoService
 {
-    Task<List<VideoModel>> GetVideosAsync(int pageIndex, int pageSize, CancellationToken ct = default);
+    Task<List<VideoModel>> GetTopicVideosAsync(int pageIndex, int pageSize, CancellationToken ct = default);
 }
 
 public class VideoService : IVideoService
@@ -21,7 +23,7 @@ public class VideoService : IVideoService
         _cache = cache;
     }
 
-    public async Task<List<VideoModel>> GetVideosAsync(
+    public async Task<List<VideoModel>> GetTopicVideosAsync(
     int pageIndex,
     int pageSize,
     CancellationToken ct = default)
@@ -33,7 +35,7 @@ public class VideoService : IVideoService
             if (_cache.TryGetValue(cacheKey, out List<VideoModel> cachedVideos))
                 return cachedVideos;
 
-            var url = $"api/videoitems?PageIndex={pageIndex}&PageSize={pageSize}";
+            var url = $"api/videoitems?PageIndex={pageIndex}&PageSize={pageSize}&VideoType={VideoType.TOPIC}";
 
             using var response = await _client.GetAsync(url, ct);
             response.EnsureSuccessStatusCode();
@@ -44,7 +46,7 @@ public class VideoService : IVideoService
             };
 
             var rsp = await response.Content
-                .ReadFromJsonAsync<ApiResponse<PaginatedVideos>>(options, ct);
+                .ReadFromJsonAsync<LocalizerApiResponse<PaginatedItems<VideoDto>>>(options, ct);
 
             if (rsp is null || rsp.Data is null)
                 return new List<VideoModel>();
@@ -71,39 +73,5 @@ public class VideoService : IVideoService
         }
     }
 
-    //public async Task<List<VideoModel>> GetVideosAsync(int pageIndex, int pageSize, CancellationToken ct = default)
-    //{
-    //    try
-    //    {
-    //        string cacheKey = $"videos-{pageIndex}-{pageSize}";
-
-    //        if (_cache.TryGetValue(cacheKey, out List<VideoModel> cachedVideos))
-    //            return cachedVideos;
-
-    //        var url = $"api/videoitems?PageIndex={pageIndex}&PageSize={pageSize}";
-
-    //        var response = await _client.GetAsync(url, ct);
-    //        response.EnsureSuccessStatusCode();
-
-    //        var json = await response.Content.ReadAsStringAsync(ct);
-
-    //        var rsp = System.Text.Json.JsonSerializer.Deserialize<ApiResponse<PaginatedVideos>>(json,
-    //            new System.Text.Json.JsonSerializerOptions { PropertyNameCaseInsensitive = true });
-
-
-    //        var items = rsp.Data.Data
-    //        .Select(v => new VideoModel(v.Title, v.Topic, v.VideoUri))
-    //        .ToList();
-
-    //        _cache.Set(cacheKey, items, TimeSpan.FromMinutes(10));
-
-    //        return items;
-    //    }
-    //    catch (Exception exp)
-    //    {
-
-    //        throw;
-    //    }
-    //}
 }
 

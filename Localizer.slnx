@@ -6,6 +6,7 @@
   <Project Path="src/Lacalizer.Mobile/Lacalizer.Mobile.csproj">
     <Deploy />
   </Project>
+  <Project Path="src/Lacalizer.Shared/Lacalizer.Shared.csproj" Id="f9bdbbf4-3169-489d-84e1-65e545f0d4e4" />
   <Project Path="src/Lacalizer.WebAPI/Lacalizer.WebAPI.csproj" />
   <Project Path="src/Orchestration/Lacalizer/Lacalizer.AppHost/Lacalizer.AppHost.csproj" />
   <Project Path="src/Orchestration/Lacalizer/Lacalizer.ServiceDefaults/Lacalizer.ServiceDefaults.csproj" />

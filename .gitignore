@@ -196,6 +196,8 @@ Lacalizer/v17/
 Localizer/Lacalizer/CopilotIndices/
 Localizer/Lacalizer/DesignTimeBuild/
 Localizer/Lacalizer/v17/
+# Ignore pgAdmin data folder
+src/Orchestration/Lacalizer/Lacalizer.AppHost/pgadmin-data/
 # JetBrains Rider
 *.sln.iml
 

@@ -1,4 +1,4 @@
-﻿namespace Lacalizer.WebAPI.Entites.Enums;
+﻿namespace Lacalizer.Shared.Enums;
 
 public enum VideoType
 {

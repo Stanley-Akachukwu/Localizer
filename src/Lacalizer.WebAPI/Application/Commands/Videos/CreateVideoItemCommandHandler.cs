@@ -1,6 +1,5 @@
 ﻿using FluentValidation;
-using Lacalizer.WebAPI.Dtos;
-using Lacalizer.WebAPI.Entites;
+using Lacalizer.Shared.Dtos;
 using Lacalizer.WebAPI.Entites.Videos;
 using Lacalizer.WebAPI.Infrastructure;
 using MediatR;

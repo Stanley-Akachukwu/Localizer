@@ -1,5 +1,5 @@
 ﻿using FluentValidation;
-using Lacalizer.WebAPI.Dtos;
+using Lacalizer.Shared.Dtos;
 
 namespace Lacalizer.WebAPI.Services.Validations;
 public interface IValidationService

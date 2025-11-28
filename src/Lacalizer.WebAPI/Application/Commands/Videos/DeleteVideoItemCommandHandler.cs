@@ -1,9 +1,7 @@
-﻿using FluentValidation;
-using Microsoft.EntityFrameworkCore;
-using Lacalizer.WebAPI.Dtos;
+﻿using Microsoft.EntityFrameworkCore;
 using Lacalizer.WebAPI.Infrastructure;
-using Lacalizer.WebAPI.Services.Validations;
 using MediatR;
+using Lacalizer.Shared.Dtos;
 
 namespace Lacalizer.WebAPI.Application.Commands.Videos;
 

@@ -1,8 +1,8 @@
 ﻿using FluentValidation;
+using Lacalizer.Shared.Dtos;
+using Lacalizer.Shared.Enums;
 using Lacalizer.WebAPI.Application.Commands.Videos;
 using Lacalizer.WebAPI.Application.Queries;
-using Lacalizer.WebAPI.Dtos;
-using Lacalizer.WebAPI.Entites.Enums;
 using Lacalizer.WebAPI.Services.Validations;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;

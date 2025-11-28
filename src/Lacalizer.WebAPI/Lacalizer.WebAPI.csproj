@@ -30,7 +30,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Lacalizer.Shared\Lacalizer.Shared.csproj" />
     <ProjectReference Include="..\Orchestration\Lacalizer\Lacalizer.ServiceDefaults\Lacalizer.ServiceDefaults.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Models\" />
   </ItemGroup>
 
 </Project>
