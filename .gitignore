@@ -187,10 +187,15 @@ node_modules/
 !**/appsettings.Sample.json
 
 # Ignore Copilot and other temp folders
-Ntuko/CopilotIndices/
-Ntuko/DesignTimeBuild/
-Ntuko/v17/
-
+Localizer/CopilotIndices/
+Localizer/DesignTimeBuild/
+Localizer/v17/
+Lacalizer/CopilotIndices/
+Lacalizer/DesignTimeBuild/
+Lacalizer/v17/
+Localizer/Lacalizer/CopilotIndices/
+Localizer/Lacalizer/DesignTimeBuild/
+Localizer/Lacalizer/v17/
 # JetBrains Rider
 *.sln.iml
 
