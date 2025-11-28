@@ -1,7 +1,7 @@
 ﻿using Localizer.Mobile.Services.Device.Platform;
 using Localizer.Mobile.Services.Settings;
-using Microsoft.Extensions.DependencyInjection;
 using System.ComponentModel;
+using System.Diagnostics;
 
 namespace Lacalizer.Mobile;
 
@@ -10,7 +10,20 @@ public partial class App : Application
     public App()
     {
         InitializeComponent();
+        AppDomain.CurrentDomain.UnhandledException += (s, e) =>
+        {
+            var ex = e.ExceptionObject as Exception;
+            Debug.WriteLine($"Unhandled exception: {ex}");
+            // NO UI CALLS HERE
+        };
 
+        // Catch unobserved task exceptions
+        TaskScheduler.UnobservedTaskException += (sender, eventArgs) =>
+        {
+            var exception = eventArgs.Exception;
+            System.Diagnostics.Debug.WriteLine($"Unobserved task exception: {exception}");
+            eventArgs.SetObserved(); // Prevents crashes
+        };
         // let's set the initial theme already during the app start
         SetTheme();
 

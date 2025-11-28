@@ -40,6 +40,10 @@ public class VideoService : IVideoService
             using var response = await _client.GetAsync(url, ct);
             response.EnsureSuccessStatusCode();
 
+            var content = await response.Content.ReadAsStringAsync(ct);
+            if (string.IsNullOrWhiteSpace(content))
+                return new List<VideoModel>();
+
             var options = new JsonSerializerOptions
             {
                 PropertyNameCaseInsensitive = true
@@ -55,7 +59,7 @@ public class VideoService : IVideoService
                 .Select(v => new VideoModel(
                     v.Title,
                     v.Topic,
-                    v.VideoUri        
+                    v.VideoUri
                 ))
                 .ToList();
 
@@ -72,6 +76,7 @@ public class VideoService : IVideoService
             return new List<VideoModel>();
         }
     }
+
 
 }
 

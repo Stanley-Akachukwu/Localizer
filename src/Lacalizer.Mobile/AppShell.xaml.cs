@@ -1,24 +1,23 @@
 ﻿
+using Lacalizer.Mobile.Navigation;
+
 namespace Lacalizer.Mobile;
 public partial class AppShell : Shell
 {
+    private readonly INavigationService _navigationService;
     public AppShell()
     {
         InitializeComponent();
-
-        //Routing.RegisterRoute(nameof(MultiBindingPage), typeof(MultiBindingPage));
-        //Routing.RegisterRoute(nameof(PassObjectsPage), typeof(PassObjectsPage));
-        //Routing.RegisterRoute(nameof(AccordionOnePage), typeof(AccordionOnePage));
-        //Routing.RegisterRoute(nameof(AccordionMvvmPage), typeof(AccordionMvvmPage));
-
-        //Routing.RegisterRoute(Routes.MultiBindingPage, typeof(MultiBindingPage));
-        //Routing.RegisterRoute(Routes.PassObjectsPage, typeof(PassObjectsPage));
-        //Routing.RegisterRoute(Routes.AccordionOnePage, typeof(AccordionOnePage));
-        //Routing.RegisterRoute(Routes.AccordionMvvmPage, typeof(AccordionMvvmPage));
-
         foreach (var route in Routes.RouteTypeMap)
         {
             Routing.RegisterRoute(route.Key, route.Value);
+        }
+    }
+    private async void Shell_Loaded(object sender, EventArgs e)
+    {
+        if (Current?.CurrentState?.Location.OriginalString == "/")
+        {
+            await GoToAsync(Routes.MainPage); 
         }
     }
 }

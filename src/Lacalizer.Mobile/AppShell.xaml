@@ -6,6 +6,7 @@
     xmlns:views="clr-namespace:Lacalizer.Mobile.Views"
     xmlns:local="clr-namespace:Lacalizer.Mobile"
     Title="Lacalizer.Mobile"
+     Loaded="Shell_Loaded"
      Shell.FlyoutBehavior="Disabled">
 
     <TabBar>
