@@ -22,14 +22,15 @@
 
 
             <Label 
-             x:Name="lblTopic"
-              Text="{Binding SelectedTopic}"
-              HorizontalOptions="Center"
-              VerticalOptions="Center"
-              TextColor="White"
-              FontSize="16"
-              FontAttributes="Bold"
-              Padding="20,10" />
+    x:Name="lblTopic"
+    Text="{Binding SelectedTopic}"
+    HorizontalOptions="Center"
+    VerticalOptions="Center"
+    TextColor="White"
+    BackgroundColor="Black"
+    FontSize="16"
+    FontAttributes="Bold"
+    Padding="20,10" />
 
             <Button Text="Start Localize" Command="{Binding StartLocalizeCommand}" />
 
