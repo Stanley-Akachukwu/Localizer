@@ -12,18 +12,15 @@ public partial class App : Application
         InitializeComponent();
         AppDomain.CurrentDomain.UnhandledException += (s, e) =>
         {
-            var ex = e.ExceptionObject as Exception;
-            Debug.WriteLine($"Unhandled exception: {ex}");
-            // NO UI CALLS HERE
+            Console.WriteLine("AppDomain");
         };
-
-        // Catch unobserved task exceptions
-        TaskScheduler.UnobservedTaskException += (sender, eventArgs) =>
+        TaskScheduler.UnobservedTaskException += (s, e) =>
         {
-            var exception = eventArgs.Exception;
-            System.Diagnostics.Debug.WriteLine($"Unobserved task exception: {exception}");
-            eventArgs.SetObserved(); // Prevents crashes
+            Console.WriteLine("TaskScheduler");
         };
+        Dispatcher.Dispatch(new Action(() => { Console.WriteLine("test"); }));
+        Application.Current.Dispatcher.Dispatch(new Action(() => { Console.WriteLine("test"); }));
+
         // let's set the initial theme already during the app start
         SetTheme();
 
@@ -62,5 +59,20 @@ public partial class App : Application
                 DeviceService.Instance.SetStatusBarColor(Colors.Black, false);
                 break;
         }
+    }
+
+    protected override void OnStart()
+    {
+        base.OnStart();
+    }
+
+    protected override void OnResume()
+    {
+        base.OnResume();
+    }
+
+    protected override void OnSleep()
+    {
+        base.OnSleep();
     }
 }

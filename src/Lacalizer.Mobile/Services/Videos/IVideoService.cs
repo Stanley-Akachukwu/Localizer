@@ -10,6 +10,7 @@ namespace Lacalizer.Mobile.Services.Videos;
 public interface IVideoService
 {
     Task<List<VideoModel>> GetTopicVideosAsync(int pageIndex, int pageSize, CancellationToken ct = default);
+    Task<VideoModel?> CreateVideoAsync(VideoCreateRequest request, CancellationToken ct = default);
 }
 
 public class VideoService : IVideoService
@@ -77,6 +78,47 @@ public class VideoService : IVideoService
         }
     }
 
+    public async Task<VideoModel?> CreateVideoAsync(
+        VideoCreateRequest request,
+        CancellationToken ct = default)
+    {
+        try
+        {
+            var url = "api/videoitems";
+
+            using var response = await _client.PostAsJsonAsync(url, request, ct);
+
+            response.EnsureSuccessStatusCode();
+
+            var options = new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true
+            };
+
+            var rsp = await response.Content
+                .ReadFromJsonAsync<LocalizerApiResponse<VideoDto>>(options, ct);
+
+            if (rsp == null || rsp.Data == null)
+                return null;
+
+            return new VideoModel(
+                rsp.Data.Title,
+                rsp.Data.Topic,
+                rsp.Data.VideoUri
+            );
+        }
+        catch (TaskCanceledException)
+        {
+            return null;
+        }
+        catch (Exception)
+        {
+            return null;
+        }
+    }
 
 }
 
+public record VideoCreateRequest(string Title, string Topic, string VideoUri, string Language ="Igbo");
+
+ 

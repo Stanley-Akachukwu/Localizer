@@ -32,12 +32,35 @@ public partial class ReelViewModel : ObservableObject
 
     public IAsyncRelayCommand LoadVideosCommand { get; }
 
-    private async Task LoadVideosAsync()
+    private async Task LoadVideosAsync()  
     {
-        IsLoading = true;
-        var items = await _videoService.GetTopicVideosAsync(1, 100);
-        Videos = new ObservableCollection<VideoModel>(items);
-        IsLoading = false;
-        
+        NetworkAccess accessType = Connectivity.Current.NetworkAccess;
+
+        if (accessType != NetworkAccess.Internet)
+        {
+            await Application.Current.MainPage.DisplayAlertAsync("No Internet", "Please check your internet connection.", "OK");
+            return;
+        }
+
+        try
+        {
+            IsLoading = true;
+            var items = await _videoService.GetTopicVideosAsync(1, 100);
+            Videos = new ObservableCollection<VideoModel>(items);
+            IsLoading = false; 
+        }
+        catch (HttpRequestException e)
+        {
+            await Application.Current.MainPage.DisplayAlertAsync("API Error", $"An error occurred: {e.Message}", "OK");
+            IsLoading = false; 
+            return; 
+        }
+    }
+
+
+    [RelayCommand]
+    async Task GoBack()
+    {
+        await Shell.Current.GoToAsync("..");
     }
 }

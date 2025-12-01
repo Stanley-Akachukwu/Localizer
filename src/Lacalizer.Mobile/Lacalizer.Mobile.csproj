@@ -151,7 +151,13 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <MauiXaml Update="Views\CameraPage.xaml">
+	  <Compile Update="Views\LocalizePage.xaml.cs">
+	    <DependentUpon>LocalizePage.xaml</DependentUpon>
+	  </Compile>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <MauiXaml Update="Views\LocalizePage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Views\ReelPage.xaml">

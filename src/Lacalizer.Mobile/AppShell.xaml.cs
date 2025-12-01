@@ -13,11 +13,5 @@ public partial class AppShell : Shell
             Routing.RegisterRoute(route.Key, route.Value);
         }
     }
-    private async void Shell_Loaded(object sender, EventArgs e)
-    {
-        if (Current?.CurrentState?.Location.OriginalString == "/")
-        {
-            await GoToAsync(Routes.MainPage); 
-        }
-    }
+    
 }

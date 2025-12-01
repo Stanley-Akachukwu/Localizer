@@ -58,7 +58,7 @@ public partial class ReelPage : ContentPage
     private async void OnRecordVideoClicked(object sender, EventArgs e)
     {
         // string topic = lblTopic.Text;
-        await _navigationService.GoToAsync($"{Routes.CameraPage}?topic={_vm.SelectedTopic}");
+        await _navigationService.GoToAsync($"{Routes.LocalizePage}?topic={_vm.SelectedTopic}");
     }
 
 

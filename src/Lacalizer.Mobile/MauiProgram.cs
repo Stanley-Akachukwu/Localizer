@@ -62,8 +62,8 @@ public static class MauiProgram
         builder.Services.AddTransient<ReelViewModel>();
         builder.Services.AddTransient<ReelPage>();
 
-        builder.Services.AddTransient<CameraVewModel>();
-        builder.Services.AddTransient<CameraPage>();
+        builder.Services.AddTransient<LocalizeVewModel>();
+        builder.Services.AddTransient<LocalizePage>();
 
         builder.Services.AddMemoryCache();  
 

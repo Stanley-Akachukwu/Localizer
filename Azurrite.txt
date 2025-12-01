@@ -1,0 +1,11 @@
+﻿✅ 2. Start Azurite (NPM example)
+
+Run:
+
+azurite  
+---------------------------------------------------------------------------------------
+Your Windows Local IP: 192.168.1.227
+azurite --blobHost 0.0.0.0 --blobPort 10000 --location c:\azurite --debug c:\azurite\debug.log
+
+netsh advfirewall firewall add rule name="Azurite Blob 10000" dir=in action=allow protocol=TCP localport=10000
+
