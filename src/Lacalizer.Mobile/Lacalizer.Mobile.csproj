@@ -154,10 +154,16 @@
 	  <Compile Update="Views\LocalizePage.xaml.cs">
 	    <DependentUpon>LocalizePage.xaml</DependentUpon>
 	  </Compile>
+	  <Compile Update="Views\ParticipationPage.xaml.cs">
+	    <DependentUpon>ParticipationPage.xaml</DependentUpon>
+	  </Compile>
 	</ItemGroup>
 
 	<ItemGroup>
 	  <MauiXaml Update="Views\LocalizePage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Views\ParticipationPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Views\ReelPage.xaml">

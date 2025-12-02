@@ -14,11 +14,5 @@ public partial class MainPage
         InitializeComponent();
         BindingContext = viewModel;
     }
-
-    //protected override async void OnAppearing()
-    //{
-    //    base.OnAppearing();
-    //    await _navigationService.GoToAsync(nameof(ReelPage));
-    //}
 }
 

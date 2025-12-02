@@ -15,6 +15,7 @@ public class SingleVideoItemDto
     public string Title { get; set; } = string.Empty;
     public string Topic { get; set; } = string.Empty;
     public string VideoUri { get; set; } = string.Empty;
+    public string? VideoTopicId { get; set; }
 }
 
 public interface IVideoItemQueries
@@ -94,7 +95,7 @@ public class VideoItemQueries : IVideoItemQueries
 
         var cacheKey = $"Videos_{req.Language}_{req.Title}_{req.DateCreated?.ToString("yyyyMMdd")}_{req.PageIndex}_{req.PageSize}";
 
-        if (_cache.TryGetValue(cacheKey, out PaginatedItems<SingleVideoItemDto> cachedItems))
+        if (_cache.TryGetValue(cacheKey, out PaginatedItems<SingleVideoItemDto> cachedItems) && req.VideoType != VideoType.PARTICIPATION)
         {
             return LocalizerApiResponse<PaginatedItems<SingleVideoItemDto>>.Success(cachedItems, StatusCodes.Status200OK);
         }
@@ -102,6 +103,9 @@ public class VideoItemQueries : IVideoItemQueries
         try
         {
             IQueryable<VideoItem> query = _dbContext.VideoItems;
+
+            if (!string.IsNullOrWhiteSpace(req.VideoTopicId) && req.VideoType==VideoType.PARTICIPATION)
+                query = query.Where(v => v.VideoTopicId == req.VideoTopicId);
 
             if (!string.IsNullOrWhiteSpace(req.Language))
                 query = query.Where(v => v.Language == req.Language);
@@ -134,7 +138,8 @@ public class VideoItemQueries : IVideoItemQueries
                     Language = v.Language,
                     Title = v.Title,
                     Topic = v.Topic,
-                    VideoUri = v.VideoUri
+                    VideoTopicId = v.VideoTopicId,
+                    VideoUri = v.VideoType == VideoType.TOPIC? v.VideoUri: "https://github.com/ewerspej/maui-samples/blob/main/assets/bigbuckbunny.mp4?raw=true"
                 })
                 .ToListAsync(ct);
 

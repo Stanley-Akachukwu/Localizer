@@ -65,6 +65,9 @@ public static class MauiProgram
         builder.Services.AddTransient<LocalizeVewModel>();
         builder.Services.AddTransient<LocalizePage>();
 
+        builder.Services.AddTransient<ParticipationViewModel>();
+        builder.Services.AddTransient<ParticipationPage>();
+
         builder.Services.AddMemoryCache();  
 
         builder.Services.AddHttpClient<IVideoService, VideoService>(client =>

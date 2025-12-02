@@ -4,21 +4,22 @@ using Lacalizer.Shared.Enums;
 using Lacalizer.WebAPI.Entites.Videos;
 using Lacalizer.WebAPI.Infrastructure;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using NUlid;
 
 namespace Lacalizer.WebAPI.Application.Commands.Videos;
 
-public record CreateVideoItemCommand(
+public record CreateParticipatoryVideoItemCommand(
     string Language,
     string Title,
     string Topic,
-    string VideoUri) : IRequest<LocalizerApiResponse<CreateVideoItemResult>>;
+    string VideoUri, string TopicId) : IRequest<LocalizerApiResponse<CreateVideoItemResult>>;
 public class CreateVideoItemResult
 {
     public string Id { get; set; } = string.Empty;
     public string VideoUri { get; set; } = string.Empty;
 }
-public class CreateVideoItemCommandHandler : IRequestHandler<CreateVideoItemCommand, LocalizerApiResponse<CreateVideoItemResult>>
+public class CreateVideoItemCommandHandler : IRequestHandler<CreateParticipatoryVideoItemCommand, LocalizerApiResponse<CreateVideoItemResult>>
 {
     private readonly LocalizeContext _db;
     private static readonly Ulid SystemUserId = Ulid.Empty;
@@ -27,12 +28,27 @@ public class CreateVideoItemCommandHandler : IRequestHandler<CreateVideoItemComm
         _db = db;
     }
 
-    public async Task<LocalizerApiResponse<CreateVideoItemResult>> Handle(CreateVideoItemCommand request, CancellationToken cancellationToken)
+    public async Task<LocalizerApiResponse<CreateVideoItemResult>> Handle(CreateParticipatoryVideoItemCommand request, CancellationToken ct)
     {
-        var id = Ulid.NewUlid().ToString();
+        var id = Ulid.NewUlid().ToString();//"TOPIC01KAZM0HZ2JZPFBW643KT15T4G"
+
+        var videoTopic = await _db.VideoTopics
+                                  .FirstOrDefaultAsync(v => v.Id.Trim() == request.TopicId.Trim(), ct);
+
+        if (videoTopic == null)
+        {
+            return new LocalizerApiResponse<CreateVideoItemResult>
+            {
+                IsSuccess = false,
+                ErrorMessage = "Video topic not found.",
+                StatusCode = 404
+            };
+        }
+
         var videoItem = new VideoItem
         {
             Id = id,
+            VideoTopicId = videoTopic.Id,
             Language = request.Language,
             Title = request.Title,
             Topic = request.Topic,
@@ -47,8 +63,8 @@ public class CreateVideoItemCommandHandler : IRequestHandler<CreateVideoItemComm
             VideoType = VideoType.PARTICIPATION
         };
 
-        await _db.VideoItems.AddAsync(videoItem, cancellationToken);
-        await _db.SaveChangesAsync(cancellationToken);
+        await _db.VideoItems.AddAsync(videoItem, ct);
+        await _db.SaveChangesAsync(ct);
 
         return new LocalizerApiResponse<CreateVideoItemResult>
         {
@@ -65,7 +81,7 @@ public class CreateVideoItemCommandHandler : IRequestHandler<CreateVideoItemComm
 }
 
 
-public class CreateVideoItemCommandValidator : AbstractValidator<CreateVideoItemCommand>
+public class CreateVideoItemCommandValidator : AbstractValidator<CreateParticipatoryVideoItemCommand>
 {
     public CreateVideoItemCommandValidator()
     {

@@ -3,6 +3,7 @@ using Azure.Storage.Blobs.Models;
 using Camera.MAUI;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Lacalizer.Mobile.Navigation;
 using Lacalizer.Mobile.Services.Videos;
 
 namespace Lacalizer.Mobile.ViewModels;
@@ -10,15 +11,19 @@ namespace Lacalizer.Mobile.ViewModels;
 public partial class LocalizeVewModel : ObservableObject
 {
     private readonly IVideoService _videoService;
-
-    public LocalizeVewModel(IVideoService videoService)
+    private readonly INavigationService _navigationService;
+    public LocalizeVewModel(IVideoService videoService, INavigationService navigationService)
     {
         _videoService = videoService;
+        _navigationService = navigationService;
         StartLocalizeCommand = new AsyncRelayCommand(StartLocalizeAsync);
     }
 
     [ObservableProperty]
     private string selectedTopic;
+
+    [ObservableProperty]
+    private string videoTopicId;
 
     public IAsyncRelayCommand StartLocalizeCommand { get; }
 
@@ -68,7 +73,7 @@ public partial class LocalizeVewModel : ObservableObject
 
             await UploadToAzuriteAsync(filePath, fileName);
 
-            await Application.Current.MainPage.DisplayAlertAsync("Recording Complete", $"Video saved: {filePath}", "OK");
+            await _navigationService.GoToAsync($"{Routes.ParticipationPage}?videoTopicId={VideoTopicId}");
         }
         catch (Exception ex)
         {
@@ -119,12 +124,7 @@ public partial class LocalizeVewModel : ObservableObject
 
     private async Task SaveVideoItemAsync(string videoUrl)
     {
-        var newVideo = await _videoService.CreateVideoAsync(
-            new VideoCreateRequest(
-                "Localized Video",
-                SelectedTopic,
-                videoUrl
-            )
-        );
+        await _videoService
+            .CreateVideoAsync(new VideoCreateRequest("Localized Video",SelectedTopic,videoUrl, "Igbo", VideoTopicId));
     }
 }

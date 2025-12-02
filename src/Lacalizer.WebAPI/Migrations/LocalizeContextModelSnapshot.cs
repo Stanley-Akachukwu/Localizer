@@ -78,6 +78,9 @@ namespace Lacalizer.WebAPI.Migrations
                         .HasMaxLength(128)
                         .HasColumnType("character varying(128)");
 
+                    b.Property<string>("VideoTopicId")
+                        .HasColumnType("text");
+
                     b.Property<int>("VideoType")
                         .HasColumnType("integer");
 
@@ -87,7 +90,84 @@ namespace Lacalizer.WebAPI.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("VideoItem", "video");
+                    b.HasIndex("VideoTopicId");
+
+                    b.ToTable("VideoItems", "video");
+                });
+
+            modelBuilder.Entity("Lacalizer.WebAPI.Entites.Videos.VideoTopic", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("text");
+
+                    b.Property<string>("CreatedByUserId")
+                        .HasMaxLength(128)
+                        .HasColumnType("character varying(128)");
+
+                    b.Property<DateTimeOffset?>("DateCreated")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTimeOffset?>("DateDeleted")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTimeOffset?>("DateUpdated")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("DeletedByUserId")
+                        .HasMaxLength(128)
+                        .HasColumnType("character varying(128)");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(250)
+                        .HasColumnType("character varying(250)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("Tags")
+                        .HasMaxLength(150)
+                        .HasColumnType("character varying(150)");
+
+                    b.Property<string>("TargetLanguage")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Topic")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("UID")
+                        .HasMaxLength(250)
+                        .HasColumnType("character varying(250)");
+
+                    b.Property<string>("UpdatedByUserId")
+                        .HasMaxLength(128)
+                        .HasColumnType("character varying(128)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("VideoTopics", "video");
+                });
+
+            modelBuilder.Entity("Lacalizer.WebAPI.Entites.Videos.VideoItem", b =>
+                {
+                    b.HasOne("Lacalizer.WebAPI.Entites.Videos.VideoTopic", "VideoTopic")
+                        .WithMany("VideoItems")
+                        .HasForeignKey("VideoTopicId");
+
+                    b.Navigation("VideoTopic");
+                });
+
+            modelBuilder.Entity("Lacalizer.WebAPI.Entites.Videos.VideoTopic", b =>
+                {
+                    b.Navigation("VideoItems");
                 });
 #pragma warning restore 612, 618
         }

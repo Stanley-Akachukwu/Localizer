@@ -27,10 +27,10 @@ public static class VideoItemApi
                  .WithName("GetVideoById")
                  .WithSummary("Get single video by ID");
 
-        v1.MapPost("/", CreateVideoItemAsync)
-           .WithName("CreateVideoItem")
-           .WithSummary("Create video item")
-           .WithDescription("Creates a new video item");
+        v1.MapPost("/", CreateParticipatoryVideoItemAsync)
+           .WithName("CreateParticipatoryVideoItem")
+           .WithSummary("Create Particpatory video item")
+           .WithDescription("Creates a new particpatory video item");
 
         v1.MapPut("/", UpdateVideoItemAsync)
            .WithName("UpdateVideoItem")
@@ -69,14 +69,14 @@ public static class VideoItemApi
     }
 
 
-    private static Task<LocalizerApiResponse<CreateVideoItemResult>> CreateVideoItemAsync(
-    CreateVideoItemCommand cmd,
-    IValidator<CreateVideoItemCommand> validator,
+    private static Task<LocalizerApiResponse<CreateVideoItemResult>> CreateParticipatoryVideoItemAsync(
+    CreateParticipatoryVideoItemCommand cmd,
+    IValidator<CreateParticipatoryVideoItemCommand> validator,
     IValidationService validatorService,
     IMediator mediator)
     {
         return MediatorValidationHelper.ExecuteAsync<
-            CreateVideoItemCommand,
+            CreateParticipatoryVideoItemCommand,
             CreateVideoItemResult>(cmd, validator, validatorService, mediator);
     }
 
@@ -111,5 +111,6 @@ public record VideoPaginationQuery(
     string? Language = null,
     string? Title = null,
     VideoType VideoType = VideoType.TOPIC,
-    DateTimeOffset? DateCreated = null
+    DateTimeOffset? DateCreated = null,
+    string? VideoTopicId = null
 ) : PaginationQuery(PageIndex, PageSize);

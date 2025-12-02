@@ -1,13 +1,12 @@
-﻿
-using CommunityToolkit.Mvvm.ComponentModel;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Lacalizer.Mobile.Models;
 using Lacalizer.Mobile.Services.Videos;
 using System.Collections.ObjectModel;
 
 namespace Lacalizer.Mobile.ViewModels;
-
-public partial class ReelViewModel : ObservableObject
+ 
+public partial class ParticipationViewModel : ObservableObject
 {
     private readonly IVideoService _videoService;
 
@@ -22,9 +21,11 @@ public partial class ReelViewModel : ObservableObject
     private ObservableCollection<VideoModel> _videos;
     [ObservableProperty]
     private string selectedTopic;
+
     [ObservableProperty]
     private string videoTopicId;
-    public ReelViewModel(IVideoService videoService)
+
+    public ParticipationViewModel(IVideoService videoService)
     {
         _videoService = videoService;
 
@@ -33,7 +34,7 @@ public partial class ReelViewModel : ObservableObject
 
     public IAsyncRelayCommand LoadVideosCommand { get; }
 
-    private async Task LoadVideosAsync()  
+    private async Task LoadVideosAsync()
     {
         NetworkAccess accessType = Connectivity.Current.NetworkAccess;
 
@@ -46,15 +47,15 @@ public partial class ReelViewModel : ObservableObject
         try
         {
             IsLoading = true;
-            var items = await _videoService.GetTopicVideosAsync(1, 100);
+            var items = await _videoService.GetParticipationVideosAsync(1, 100, VideoTopicId);
             Videos = new ObservableCollection<VideoModel>(items);
-            IsLoading = false; 
+            IsLoading = false;
         }
         catch (HttpRequestException e)
         {
             await Application.Current.MainPage.DisplayAlertAsync("API Error", $"An error occurred: {e.Message}", "OK");
-            IsLoading = false; 
-            return; 
+            IsLoading = false;
+            return;
         }
     }
 

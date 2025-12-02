@@ -46,10 +46,22 @@ public static class DbInitializer
             Console.WriteLine($"Seeding ...");
 
 
+            //var videoTopicSeed = await VideoTopicSeedAsync(dbContext, sysInitId, ct);
+            //if (videoTopicSeed)
+            //{
+            //    if (videoTopicSeed) tables.Add("videoTopicSeed");
+            //}
+
+
             var videoItemSeed = await VideoItemSeedAsync(dbContext, sysInitId, ct);
-            dbContext.SaveChanges();
-            if (videoItemSeed) tables.Add("videoItemSeed");
+            if (videoItemSeed)
+            {
+                if (videoItemSeed) tables.Add("videoItemSeed");
+            }
+
+            await dbContext.SaveChangesAsync();
             Console.WriteLine($"Seeded: {tables.Count} tables");
+            
         }
         catch (NpgsqlException ex)
         {
@@ -59,6 +71,7 @@ public static class DbInitializer
 
     private static async Task<bool> VideoItemSeedAsync(LocalizeContext dbContext, string sysInitId, CancellationToken ct)
     {
+       
         try
         {
             Console.WriteLine($"Seeding videos roles...");
@@ -72,6 +85,7 @@ public static class DbInitializer
                     var videoItem = new VideoItem
                     {
                         Id = v.Id!,
+                        VideoTopicId = v.VideoTopicId,
                         Description = v.Title,
                         Language = v.Language,
                         Topic = v.Topic,
@@ -103,5 +117,48 @@ public static class DbInitializer
 
         return false;
     }
+    private static async Task<bool> VideoTopicSeedAsync(LocalizeContext dbContext, string sysInitId, CancellationToken ct)
+    {
+        
+        try
+        {
+            Console.WriteLine($"Seeding videos roles...");
+            var videoTopics = new List<VideoTopic>();
+            var topicSeeds = await VideoTopicSeed.GetDefaultVideoTopicAsync(ct);
 
+            foreach (var v in topicSeeds)
+            {
+                if (!await dbContext.VideoTopics.AnyAsync(i => i.Id == v.Id, ct))
+                {
+                    var videoTopic = new VideoTopic
+                    {
+                        Id = v.Id!,
+                        TargetLanguage = v.TargetLanguage,
+                        Title = v.Title,
+                        Topic = v.Topic,
+                        Description = v.Title,
+                        IsActive = true,
+                        CreatedByUserId = v.CreatedByUserId,
+                        DateCreated = DateTime.UtcNow,
+                        DateUpdated = DateTime.UtcNow,
+                        UpdatedByUserId = v.CreatedByUserId,
+                        UID = $"{v.Id}-{v.Title}",
+                    };
+                    videoTopics.Add(videoTopic);
+                }
+            }
+
+            if (videoTopics.Any())
+            {
+                await dbContext.VideoTopics.AddRangeAsync(videoTopics, ct);
+                return true;
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.Error.WriteLine($"Seeding Default videoTopics...: {ex.Message}");
+        }
+
+        return false;
+    }
 }

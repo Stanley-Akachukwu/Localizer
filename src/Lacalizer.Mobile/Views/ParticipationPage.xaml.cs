@@ -1,20 +1,29 @@
 using Lacalizer.Mobile.Models;
-using Lacalizer.Mobile.Navigation;
 using Lacalizer.Mobile.ViewModels;
 using System.Collections.ObjectModel;
 
 namespace Lacalizer.Mobile.Views;
 
-public partial class ReelPage : ContentPage
+[QueryProperty(nameof(VideoTopicId), "videoTopicId")]
+public partial class ParticipationPage : ContentPage
 {
-    private readonly ReelViewModel _vm;
-    private readonly INavigationService _navigationService;
-    public ReelPage(ReelViewModel vm, INavigationService navigationService)
+    private readonly ParticipationViewModel _vm;
+    public ParticipationPage(ParticipationViewModel vm)
     {
         InitializeComponent();
         BindingContext = _vm = vm;
-        _navigationService = navigationService;
 
+    }
+
+    public string VideoTopicId
+    {
+        get => (BindingContext as ParticipationViewModel)?.VideoTopicId;
+        set
+        {
+            var vm = BindingContext as ParticipationViewModel;
+            if (vm != null)
+                vm.VideoTopicId = value;
+        }
     }
     protected override async void OnAppearing()
     {
@@ -22,7 +31,7 @@ public partial class ReelPage : ContentPage
 
         if (_vm == null)
         {
-            Console.WriteLine("ReelViewModel is null!");
+            Console.WriteLine("ParticipationViewModel is null!");
             return;
         }
 
@@ -41,13 +50,12 @@ public partial class ReelPage : ContentPage
 
     private void ItemsView_OnScrolled(object sender, ItemsViewScrolledEventArgs e)
     {
-        
+
         var itemIndex = e.CenterItemIndex;
 
         _vm.Videos[itemIndex].IsPlaying = true;
         _vm.SelectedTopic = _vm.Videos[itemIndex].Topic;
         _vm.VideoTopicId = _vm.Videos[itemIndex].VideoTopicId;
-
         foreach (var myModel in _vm.Videos)
         {
             if (myModel != _vm.Videos[itemIndex])
@@ -56,12 +64,6 @@ public partial class ReelPage : ContentPage
             }
         }
     }
-
-    private async void OnRecordVideoClicked(object sender, EventArgs e)
-    {
-        await _navigationService.GoToAsync($"{Routes.LocalizePage}?topic={_vm.SelectedTopic}&videoTopicId={_vm.VideoTopicId}");
-    }
-
 
     protected override void OnDisappearing()
     {

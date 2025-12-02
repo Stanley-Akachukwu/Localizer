@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage 
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Lacalizer.Mobile.Views.ParticipationPage"
+             Title="ParticipationPage"
+            xmlns:models="clr-namespace:Lacalizer.Mobile.Models"
+            xmlns:viewModels="clr-namespace:Lacalizer.Mobile.ViewModels"
+            xmlns:media="clr-namespace:Lacalizer.Mobile.CustomControls.Media"
+            x:Name="Participations"
+            x:DataType="viewModels:ParticipationViewModel"
+            Shell.NavBarIsVisible="False">
+
+    <Grid>
+
+        <CollectionView
+         HeightRequest="{Binding Height, Source={x:Reference Participations}}"
+         HorizontalOptions="Fill"
+         VerticalOptions="Center"
+         ItemsSource="{Binding Videos}"
+         Scrolled="ItemsView_OnScrolled">
+
+            <CollectionView.ItemsLayout>
+                <LinearItemsLayout
+                 Orientation="Vertical"
+                 SnapPointsType="MandatorySingle"
+                 SnapPointsAlignment="Center" />
+            </CollectionView.ItemsLayout>
+
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="models:VideoModel">
+                    <Grid
+                     HeightRequest="{Binding Height, Source={x:Reference Participations}}"
+                     BackgroundColor="{Binding BackgroundColor}"
+                     HorizontalOptions="Fill">
+
+                        <!-- Video Player -->
+                        <media:ExtendedMediaElement
+                         Aspect="AspectFill"
+                         Source="{Binding VideoUri}"
+                         ShouldAutoPlay="False"
+                         ShouldLoopPlayback="True"
+                         ShouldShowPlaybackControls="False"
+                         IsPlaying="{Binding IsPlaying}" />
+
+                        <!-- Top Caption & Localize Button -->
+                        <StackLayout
+                         HorizontalOptions="Center"
+                         VerticalOptions="Start"
+                         Margin="0,40,0,0"
+                         Spacing="5">
+
+                            <Label 
+                            x:Name="lblTopic"
+                             Text="{Binding Topic}"
+                             HorizontalOptions="Center"
+                             VerticalOptions="Center"
+                             TextColor="White"
+                             FontSize="16"
+                             FontAttributes="Bold"
+                             Padding="20,10" />
+
+                            
+                        </StackLayout>
+
+                        <!-- Right Action Buttons -->
+                        <StackLayout
+                         Orientation="Vertical"
+                         Spacing="25"
+                         HorizontalOptions="End"
+                         VerticalOptions="End"
+                         Margin="0,0,20,40">
+
+                            <!-- Participations -->
+                            <StackLayout Orientation="Vertical" Spacing="4" HorizontalOptions="Center">
+                                <ImageButton
+                                 Source="people_16006707"
+                                 HeightRequest="36"
+                                 WidthRequest="36"
+                                 BackgroundColor="#66000000"
+                                 CornerRadius="18"
+                                 Padding="8" />
+                                <Label
+                                 Text="15"
+                                 FontSize="10"
+                                 TextColor="White"
+                                 HorizontalOptions="Center" />
+                            </StackLayout>
+
+                            <!-- Hearts -->
+                            <StackLayout Orientation="Vertical" Spacing="4" HorizontalOptions="Center">
+                                <ImageButton
+                                 Source="heart_10021275"
+                                 HeightRequest="36"
+                                 WidthRequest="36"
+                                 BackgroundColor="#66000000"
+                                 CornerRadius="18"
+                                 Padding="8" />
+                                <Label
+                                 Text="20"
+                                 FontSize="10"
+                                 TextColor="White"
+                                 HorizontalOptions="Center" />
+                            </StackLayout>
+
+                            <!-- Share -->
+                            <StackLayout Orientation="Vertical" Spacing="4" HorizontalOptions="Center">
+                                <ImageButton
+                                 Source="share_2958783"
+                                 HeightRequest="36"
+                                 WidthRequest="36"
+                                 BackgroundColor="#66000000"
+                                 CornerRadius="18"
+                                 Padding="8" />
+                                <Label
+                                 Text="10"
+                                 FontSize="10"
+                                 TextColor="White"
+                                 HorizontalOptions="Center" />
+                            </StackLayout>
+
+                            <!-- TikTok -->
+                            <StackLayout Orientation="Vertical" Spacing="4" HorizontalOptions="Center">
+                                <ImageButton
+                                 Source="tiktok_2549166"
+                                 HeightRequest="36"
+                                 WidthRequest="36"
+                                 BackgroundColor="#66000000"
+                                 CornerRadius="18"
+                                 Padding="8" />
+                                <Label
+                                 Text="5"
+                                 FontSize="10"
+                                 TextColor="White"
+                                 HorizontalOptions="Center" />
+                            </StackLayout>
+
+                            <!-- Facebook -->
+                            <StackLayout Orientation="Vertical" Spacing="4" HorizontalOptions="Center">
+                                <ImageButton
+                                 Source="fbook_13859813"
+                                 HeightRequest="36"
+                                 WidthRequest="36"
+                                 BackgroundColor="#66000000"
+                                 CornerRadius="18"
+                                 Padding="8" />
+                                <Label
+                                 Text="4"
+                                 FontSize="10"
+                                 TextColor="White"
+                                 HorizontalOptions="Center" />
+                            </StackLayout>
+
+                        </StackLayout>
+
+                    </Grid>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+
+        </CollectionView>
+
+        <Grid
+        BackgroundColor="#80000000"  
+            IsVisible="{Binding IsLoading}">
+            <ActivityIndicator
+            IsRunning="{Binding IsLoading}"
+            Color="White"
+            HorizontalOptions="Center"
+            VerticalOptions="Center"
+            WidthRequest="60"
+            HeightRequest="60"/>
+        </Grid>
+    </Grid>
+</ContentPage>

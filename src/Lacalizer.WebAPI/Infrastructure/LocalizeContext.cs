@@ -10,18 +10,21 @@ namespace Lacalizer.WebAPI.Infrastructure;
 public class LocalizeContext(DbContextOptions<LocalizeContext> options) : DbContext(options)
 {
     public DbSet<VideoItem> VideoItems { get; set; }
+    public DbSet<VideoTopic> VideoTopics { get; set; }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
-        modelBuilder.Entity<VideoItem>().ToTable("VideoItem", DbSchemaConstants.VIDEO);
-        
+        modelBuilder.Entity<VideoItem>().ToTable("VideoItems", DbSchemaConstants.VIDEO);
+        modelBuilder.Entity<VideoTopic>().ToTable("VideoTopics", DbSchemaConstants.VIDEO);
+
         //modelBuilder.Entity<Domain.UpdashOrders.Order>()
         //    .HasOne(c => c.Amount)
         //    .WithOne(a => a.Order)
         //    .HasForeignKey<Domain.UpdashOrders.Order>(c => c.AmountId);
 
 
-      //  modelBuilder.ApplyConfiguration(new UpDashUserConfiguration());
+        //  modelBuilder.ApplyConfiguration(new UpDashUserConfiguration());
 
 
 

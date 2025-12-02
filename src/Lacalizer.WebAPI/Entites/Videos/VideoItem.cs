@@ -13,5 +13,7 @@ public class VideoItem : BaseEntity<string>
     public string Title { get; set; } = string.Empty;
     public string Topic { get; set; } = string.Empty;
     public string VideoUri { get; set; } = string.Empty;
+    public string? VideoTopicId { get; set; } = NUlid.Ulid.Empty.ToString();
+    public VideoTopic? VideoTopic { get; set; } 
     public VideoType VideoType { get; set; } = VideoType.PARTICIPATION;
 }
