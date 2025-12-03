@@ -75,7 +75,7 @@
                             <!-- Participations -->
                             <StackLayout Orientation="Vertical" Spacing="4" HorizontalOptions="Center">
                                 <ImageButton
-                                 Source="people_16006707"
+                                 Source="participations"
                                  HeightRequest="36"
                                  WidthRequest="36"
                                  BackgroundColor="#66000000"
@@ -91,7 +91,7 @@
                             <!-- Hearts -->
                             <StackLayout Orientation="Vertical" Spacing="4" HorizontalOptions="Center">
                                 <ImageButton
-                                 Source="heart_10021275"
+                                 Source="likes"
                                  HeightRequest="36"
                                  WidthRequest="36"
                                  BackgroundColor="#66000000"
@@ -107,7 +107,7 @@
                             <!-- Share -->
                             <StackLayout Orientation="Vertical" Spacing="4" HorizontalOptions="Center">
                                 <ImageButton
-                                 Source="share_2958783"
+                                 Source="share"
                                  HeightRequest="36"
                                  WidthRequest="36"
                                  BackgroundColor="#66000000"
@@ -123,7 +123,7 @@
                             <!-- TikTok -->
                             <StackLayout Orientation="Vertical" Spacing="4" HorizontalOptions="Center">
                                 <ImageButton
-                                 Source="tiktok_2549166"
+                                 Source="tiktok"
                                  HeightRequest="36"
                                  WidthRequest="36"
                                  BackgroundColor="#66000000"
@@ -139,7 +139,7 @@
                             <!-- Facebook -->
                             <StackLayout Orientation="Vertical" Spacing="4" HorizontalOptions="Center">
                                 <ImageButton
-                                 Source="fbook_13859813"
+                                 Source="fbook"
                                  HeightRequest="36"
                                  WidthRequest="36"
                                  BackgroundColor="#66000000"

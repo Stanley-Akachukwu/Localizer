@@ -30,7 +30,7 @@ public class CreateVideoItemCommandHandler : IRequestHandler<CreateParticipatory
 
     public async Task<LocalizerApiResponse<CreateVideoItemResult>> Handle(CreateParticipatoryVideoItemCommand request, CancellationToken ct)
     {
-        var id = Ulid.NewUlid().ToString();//"TOPIC01KAZM0HZ2JZPFBW643KT15T4G"
+        var id = Ulid.NewUlid().ToString(); 
 
         var videoTopic = await _db.VideoTopics
                                   .FirstOrDefaultAsync(v => v.Id.Trim() == request.TopicId.Trim(), ct);

@@ -69,97 +69,93 @@
                              CornerRadius="18"
                              Padding="8" 
                                Clicked="OnRecordVideoClicked"/>
-
-                            
-
                         </StackLayout>
 
                         <!-- Right Action Buttons -->
                         <StackLayout
-                         Orientation="Vertical"
-                         Spacing="25"
-                         HorizontalOptions="End"
-                         VerticalOptions="End"
-                         Margin="0,0,20,40">
+                      Orientation="Vertical"
+                      Spacing="25"
+                      HorizontalOptions="End"
+                      VerticalOptions="End"
+                      Margin="0,0,20,40">
 
                             <!-- Participations -->
                             <StackLayout Orientation="Vertical" Spacing="4" HorizontalOptions="Center">
                                 <ImageButton
-                                 Source="people_16006707"
-                                 HeightRequest="36"
-                                 WidthRequest="36"
-                                 BackgroundColor="#66000000"
-                                 CornerRadius="18"
-                                 Padding="8" />
+                      Source="participations"
+                      HeightRequest="36"
+                      WidthRequest="36"
+                      BackgroundColor="#66000000"
+                      CornerRadius="18"
+                      Padding="8" />
                                 <Label
-                                 Text="15"
-                                 FontSize="10"
-                                 TextColor="White"
-                                 HorizontalOptions="Center" />
+                      Text="15"
+                      FontSize="10"
+                      TextColor="White"
+                      HorizontalOptions="Center" />
                             </StackLayout>
 
                             <!-- Hearts -->
                             <StackLayout Orientation="Vertical" Spacing="4" HorizontalOptions="Center">
                                 <ImageButton
-                                 Source="heart_10021275"
-                                 HeightRequest="36"
-                                 WidthRequest="36"
-                                 BackgroundColor="#66000000"
-                                 CornerRadius="18"
-                                 Padding="8" />
+              Source="likes"
+              HeightRequest="36"
+              WidthRequest="36"
+              BackgroundColor="#66000000"
+              CornerRadius="18"
+              Padding="8" />
                                 <Label
-                                 Text="20"
-                                 FontSize="10"
-                                 TextColor="White"
-                                 HorizontalOptions="Center" />
+              Text="20"
+              FontSize="10"
+              TextColor="White"
+              HorizontalOptions="Center" />
                             </StackLayout>
 
                             <!-- Share -->
                             <StackLayout Orientation="Vertical" Spacing="4" HorizontalOptions="Center">
                                 <ImageButton
-                                 Source="share_2958783"
-                                 HeightRequest="36"
-                                 WidthRequest="36"
-                                 BackgroundColor="#66000000"
-                                 CornerRadius="18"
-                                 Padding="8" />
+          Source="share"
+          HeightRequest="36"
+          WidthRequest="36"
+          BackgroundColor="#66000000"
+          CornerRadius="18"
+          Padding="8" />
                                 <Label
-                                 Text="10"
-                                 FontSize="10"
-                                 TextColor="White"
-                                 HorizontalOptions="Center" />
+          Text="10"
+          FontSize="10"
+          TextColor="White"
+          HorizontalOptions="Center" />
                             </StackLayout>
 
-                            <!-- TikTok -->
                             <StackLayout Orientation="Vertical" Spacing="4" HorizontalOptions="Center">
                                 <ImageButton
-                                 Source="tiktok_2549166"
-                                 HeightRequest="36"
-                                 WidthRequest="36"
-                                 BackgroundColor="#66000000"
-                                 CornerRadius="18"
-                                 Padding="8" />
+                                  Source="comments"
+                                  HeightRequest="36"
+                                  WidthRequest="36"
+                                  BackgroundColor="#66000000"
+                                  CornerRadius="18"
+                                  Padding="8" />
                                 <Label
-                                 Text="5"
-                                 FontSize="10"
-                                 TextColor="White"
-                                 HorizontalOptions="Center" />
+                                  Text="5"
+                                  FontSize="10"
+                                  TextColor="White"
+                                  HorizontalOptions="Center" />
                             </StackLayout>
 
                             <!-- Facebook -->
                             <StackLayout Orientation="Vertical" Spacing="4" HorizontalOptions="Center">
                                 <ImageButton
-                                 Source="fbook_13859813"
-                                 HeightRequest="36"
-                                 WidthRequest="36"
-                                 BackgroundColor="#66000000"
-                                 CornerRadius="18"
-                                 Padding="8" />
+          Source="fbook"
+          HeightRequest="36"
+          WidthRequest="36"
+          BackgroundColor="#66000000"
+          CornerRadius="18"
+          Padding="8" />
                                 <Label
-                                 Text="4"
-                                 FontSize="10"
-                                 TextColor="White"
-                                 HorizontalOptions="Center" />
+          Text="4"
+          FontSize="10"
+          TextColor="White"
+          HorizontalOptions="Center" />
                             </StackLayout>
 
                         </StackLayout>
