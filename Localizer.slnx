@@ -3,6 +3,7 @@
     <File Path="Azurrite.txt" />
     <File Path="db.txt" />
     <File Path="Research.txt" />
+    <File Path="Rough.txt" />
   </Folder>
   <Project Path="src/Lacalizer.Mobile/Lacalizer.Mobile.csproj">
     <Deploy />

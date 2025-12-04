@@ -1,85 +1,55 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage 
-             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
-             xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="Lacalizer.Mobile.Views.ReelPage"
-             Title="ReelPage"
-            xmlns:models="clr-namespace:Lacalizer.Mobile.Models"
-            xmlns:viewModels="clr-namespace:Lacalizer.Mobile.ViewModels"
-            xmlns:media="clr-namespace:Lacalizer.Mobile.CustomControls.Media"
-            x:Name="Reels"
-            x:DataType="viewModels:ReelViewModel"
-            Shell.NavBarIsVisible="False">
+    xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:viewModels="clr-namespace:Lacalizer.Mobile.ViewModels"
+    Title="ReelPage"
+    xmlns:models="clr-namespace:Lacalizer.Mobile.Models"
+    xmlns:media="clr-namespace:Lacalizer.Mobile.CustomControls.Media"
+    x:Class="Lacalizer.Mobile.Views.ReelPage"
+    x:Name="Reels"
+    x:DataType="viewModels:ReelViewModel"
+    Shell.NavBarIsVisible="False">
 
     <Grid>
 
+        <!-- VIDEO FEED -->
         <CollectionView
-         HeightRequest="{Binding Height, Source={x:Reference Reels}}"
-         HorizontalOptions="Fill"
-         VerticalOptions="Center"
-         ItemsSource="{Binding Videos}"
-         Scrolled="ItemsView_OnScrolled">
+            ItemsSource="{Binding Videos}"
+            HorizontalOptions="Fill"
+            VerticalOptions="Fill"
+            Scrolled="ItemsView_OnScrolled">
 
             <CollectionView.ItemsLayout>
                 <LinearItemsLayout
-                 Orientation="Vertical"
-                 SnapPointsType="MandatorySingle"
-                 SnapPointsAlignment="Center" />
+                    Orientation="Vertical"
+                    SnapPointsType="MandatorySingle"
+                    SnapPointsAlignment="Center" />
             </CollectionView.ItemsLayout>
 
             <CollectionView.ItemTemplate>
                 <DataTemplate x:DataType="models:VideoModel">
-                    <Grid
-                     HeightRequest="{Binding Height, Source={x:Reference Reels}}"
-                     BackgroundColor="{Binding BackgroundColor}"
-                     HorizontalOptions="Fill">
 
-                        <!-- Video Player -->
-                        <media:ExtendedMediaElement
-                         Aspect="AspectFill"
-                         Source="{Binding VideoUri}"
-                         ShouldAutoPlay="False"
-                         ShouldLoopPlayback="True"
-                         ShouldShowPlaybackControls="False"
-                         IsPlaying="{Binding IsPlaying}" />
+                    <Grid>
 
-                        <!-- Top Caption & Localize Button -->
+                        <!-- VIDEO PLAYER -->
+                        <media:ExtendedMediaElement 
+                            Source="{Binding VideoUri}"
+                            Aspect="AspectFill"
+                            IsPlaying="{Binding IsPlaying}"
+                            ShouldAutoPlay="False"
+                            ShouldLoopPlayback="True"
+                            ShouldShowPlaybackControls="False" />
+
+                        <!-- ACTION BUTTONS RIGHT SIDE -->
                         <StackLayout
-                         HorizontalOptions="Center"
-                         VerticalOptions="Start"
-                         Margin="0,40,0,0"
-                         Spacing="5">
+                            Orientation="Vertical"
+                            Spacing="25"
+                            HorizontalOptions="End"
+                            VerticalOptions="End"
+                            Margin="0,0,20,40">
 
-                            <Label 
-                            x:Name="lblTopic"
-                             Text="{Binding Topic}"
-                             HorizontalOptions="Center"
-                             VerticalOptions="Center"
-                             TextColor="White"
-                             FontSize="16"
-                             FontAttributes="Bold"
-                             Padding="20,10" />
-
-                            <ImageButton
-                             Source="localize_16190095"
-                             HeightRequest="36"
-                             WidthRequest="36"
-                             BackgroundColor="#66000000"
-                             CornerRadius="18"
-                             Padding="8" 
-                               Clicked="OnRecordVideoClicked"/>
-                        </StackLayout>
-
-                        <!-- Right Action Buttons -->
-                        <StackLayout
-                      Orientation="Vertical"
-                      Spacing="25"
-                      HorizontalOptions="End"
-                      VerticalOptions="End"
-                      Margin="0,0,20,40">
-
-                          
                             <!-- PARTICIPANTS -->
                             <StackLayout Spacing="4">
                                 <ImageButton
@@ -140,6 +110,8 @@
 
         </CollectionView>
 
+
+        <!-- DARK BACKDROP WHEN COMMENTS OPEN -->
         <BoxView
             Color="#80000000"
             IsVisible="{Binding Videos[0].IsCommentsVisible}"
@@ -185,7 +157,7 @@
                     </CollectionView>
 
                     <Grid ColumnDefinitions="*,Auto">
-                        <Entry Placeholder="Add a comment..."  FontSize="18" TextColor="Black"/>
+                        <Entry Placeholder="Add a comment..." />
                         <Button Grid.Column="1" Text="Send" />
                     </Grid>
 
@@ -195,19 +167,6 @@
 
         </Frame>
 
-        <Grid
-        BackgroundColor="#80000000"  
-            IsVisible="{Binding IsLoading}">
-            <ActivityIndicator
-            IsRunning="{Binding IsLoading}"
-            Color="White"
-            HorizontalOptions="Center"
-            VerticalOptions="Center"
-            WidthRequest="60"
-            HeightRequest="60"/>
-        </Grid>
     </Grid>
+
 </ContentPage>
-    
-    
-    
