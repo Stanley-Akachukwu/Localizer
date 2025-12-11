@@ -5,7 +5,21 @@ Run:
 azurite  
 ---------------------------------------------------------------------------------------
 Your Windows Local IP: 192.168.1.227
-azurite --blobHost 0.0.0.0 --blobPort 10000 --location c:\azurite --debug c:\azurite\debug.log
 
 netsh advfirewall firewall add rule name="Azurite Blob 10000" dir=in action=allow protocol=TCP localport=10000
+azurite --blobHost 0.0.0.0 --blobPort 10000 --location c:\azurite --debug c:\azurite\debug.log
+
+azurite `
+  --blobHost 0.0.0.0 --blobPort 10000 `
+  --queueHost 0.0.0.0 --queuePort 10001 `
+  --tableHost 0.0.0.0 --tablePort 10002 `
+  --location c:\azurite `
+  --debug c:\azurite\debug.logg
+
+
+  As Admin:
+  New-NetFirewallRule -DisplayName "Azurite Blob" -Direction Inbound -Protocol TCP -LocalPort 10000 -Action Allow
+New-NetFirewallRule -DisplayName "Azurite Queue" -Direction Inbound -Protocol TCP -LocalPort 10001 -Action Allow
+New-NetFirewallRule -DisplayName "Azurite Table" -Direction Inbound -Protocol TCP -LocalPort 10002 -Action Allow
+
 

@@ -9,9 +9,9 @@ namespace Lacalizer.Mobile.Services.Videos;
 
 public interface IVideoService
 {
-    Task<List<VideoModel>> GetTopicVideosAsync(int pageIndex, int pageSize, CancellationToken ct = default);
-    Task<VideoModel?> CreateVideoAsync(VideoCreateRequest request, CancellationToken ct = default);
-    Task<List<VideoModel>> GetParticipationVideosAsync(int pageIndex, int pageSize, string? videoTopicId, CancellationToken ct = default);
+    Task<List<ReelVideoModel>> GetTopicVideosAsync(int pageIndex, int pageSize, CancellationToken ct = default);
+    Task<ReelVideoModel?> CreateVideoAsync(VideoCreateRequest request, CancellationToken ct = default);
+    Task<List<ParticipationVideoModel>> GetParticipationVideosAsync(int pageIndex, int pageSize, string? videoTopicId, CancellationToken ct = default);   
 }
 
 public class VideoService : IVideoService
@@ -25,7 +25,7 @@ public class VideoService : IVideoService
         _cache = cache;
     }
 
-    public async Task<List<VideoModel>> GetTopicVideosAsync(
+    public async Task<List<ReelVideoModel>> GetTopicVideosAsync(
     int pageIndex,
     int pageSize,
     CancellationToken ct = default)
@@ -34,7 +34,7 @@ public class VideoService : IVideoService
         {
             string cacheKey = $"videos-{pageIndex}-{pageSize}-{VideoType.TOPIC}";
 
-            if (_cache.TryGetValue(cacheKey, out List<VideoModel> cachedVideos))
+            if (_cache.TryGetValue(cacheKey, out List<ReelVideoModel> cachedVideos))
                 return cachedVideos;
 
             var url = $"api/videoitems?PageIndex={pageIndex}&PageSize={pageSize}&VideoType={VideoType.TOPIC}";
@@ -44,7 +44,7 @@ public class VideoService : IVideoService
 
             var content = await response.Content.ReadAsStringAsync(ct);
             if (string.IsNullOrWhiteSpace(content))
-                return new List<VideoModel>();
+                return new List<ReelVideoModel>();
 
             var options = new JsonSerializerOptions
             {
@@ -55,10 +55,10 @@ public class VideoService : IVideoService
                 .ReadFromJsonAsync<LocalizerApiResponse<PaginatedItems<VideoDto>>>(options, ct);
 
             if (rsp is null || rsp.Data is null)
-                return new List<VideoModel>();
+                return new List<ReelVideoModel>();
 
             var items = rsp.Data.Data
-                .Select(v => new VideoModel(
+                .Select(v => new ReelVideoModel(
                     v.Title,
                     v.Topic,
                     v.VideoUri,
@@ -72,15 +72,15 @@ public class VideoService : IVideoService
         }
         catch (TaskCanceledException)
         {
-            return new List<VideoModel>();
+            return new List<ReelVideoModel>();
         }
         catch (Exception exp)
         {
-            return new List<VideoModel>();
+            return new List<ReelVideoModel>();
         }
     }
 
-    public async Task<List<VideoModel>> GetParticipationVideosAsync(
+    public async Task<List<ParticipationVideoModel>> GetParticipationVideosAsync(
     int pageIndex,
     int pageSize,string? videoTopicId,
     CancellationToken ct = default)
@@ -94,7 +94,7 @@ public class VideoService : IVideoService
 
             var content = await response.Content.ReadAsStringAsync(ct);
             if (string.IsNullOrWhiteSpace(content))
-                return new List<VideoModel>();
+                return new List<ParticipationVideoModel>();
 
             var options = new JsonSerializerOptions
             {
@@ -105,10 +105,10 @@ public class VideoService : IVideoService
                 .ReadFromJsonAsync<LocalizerApiResponse<PaginatedItems<VideoDto>>>(options, ct);
 
             if (rsp is null || rsp.Data is null)
-                return new List<VideoModel>();
+                return new List<ParticipationVideoModel>();
 
             var items = rsp.Data.Data
-                .Select(v => new VideoModel(
+                .Select(v => new ParticipationVideoModel(
                     v.Title,
                     v.Topic,
                     v.VideoUri,
@@ -120,14 +120,14 @@ public class VideoService : IVideoService
         }
         catch (TaskCanceledException)
         {
-            return new List<VideoModel>();
+            return new List<ParticipationVideoModel>();
         }
         catch (Exception exp)
         {
-            return new List<VideoModel>();
+            return new List<ParticipationVideoModel>();
         }
     }
-    public async Task<VideoModel?> CreateVideoAsync(
+    public async Task<ReelVideoModel?> CreateVideoAsync(
         VideoCreateRequest request,
         CancellationToken ct = default)
     {
@@ -150,7 +150,7 @@ public class VideoService : IVideoService
             if (rsp == null || rsp.Data == null)
                 return null;
 
-            return new VideoModel(
+            return new ReelVideoModel(
                 rsp.Data.Title,
                 rsp.Data.Topic,
                 rsp.Data.VideoUri,
@@ -165,8 +165,7 @@ public class VideoService : IVideoService
         {
             return null;
         }
-    }
-
+    }    
 }
 
 public record VideoCreateRequest(string Title, string Topic, string VideoUri, string Language ,string TopicId);

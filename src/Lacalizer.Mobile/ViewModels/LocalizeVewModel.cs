@@ -71,17 +71,27 @@ public partial class LocalizeVewModel : ObservableObject
             if (!File.Exists(filePath))
                 throw new Exception("Recorded video file not found.");
 
-            await UploadToAzuriteAsync(filePath, fileName);
+            var uploadResult = await UploadToAzuriteAsync(filePath, fileName);
+            if (!uploadResult)
+            {
+                await Application.Current.MainPage.DisplayAlertAsync("Video UPLOAD ERROR", "Failed to upload.", "OK");
 
-            await _navigationService.GoToAsync($"{Routes.ParticipationPage}?videoTopicId={VideoTopicId}");
+                await _navigationService.GoToAsync(Routes.ReelPage);
+            }
+            else
+            {
+                await _navigationService.GoToAsync($"{Routes.ParticipationPage}?videoTopicId={VideoTopicId}");
+            }
         }
         catch (Exception ex)
         {
-            await Application.Current.MainPage.DisplayAlertAsync("Error", ex.Message, "OK");
+            await Application.Current.MainPage.DisplayAlertAsync("Video Processing ERROR", "Failed to process.", "OK");
+
+            await _navigationService.GoToAsync(Routes.ReelPage);
         }
     }
 
-    private async Task UploadToAzuriteAsync(string filePath, string blobName)
+    private async Task<bool> UploadToAzuriteAsync(string filePath, string blobName)
     {
         try
         {
@@ -92,6 +102,8 @@ public partial class LocalizeVewModel : ObservableObject
     "BlobEndpoint=http://192.168.1.227:10000/devstoreaccount1;" +
     "QueueEndpoint=http://192.168.1.227:10001/devstoreaccount1;" +
     "TableEndpoint=http://192.168.1.227:10002/devstoreaccount1;";
+
+
 
             string containerName = "videos";
             string subfolder = "localized";
@@ -115,10 +127,11 @@ public partial class LocalizeVewModel : ObservableObject
                 File.Delete(filePath);
 
             await SaveVideoItemAsync(blob.Uri.ToString());
+            return true;
         }
         catch (Exception ex)
         {
-            await Application.Current.MainPage.DisplayAlertAsync("UPLOAD ERROR", ex.Message, "OK");
+            return false;
         }
     }
 
@@ -126,5 +139,11 @@ public partial class LocalizeVewModel : ObservableObject
     {
         await _videoService
             .CreateVideoAsync(new VideoCreateRequest("Localized Video",SelectedTopic,videoUrl, "Igbo", VideoTopicId));
+    }
+    
+    [RelayCommand]
+    private async Task BackAsync()
+    {
+        await _navigationService.GoToAsync(Routes.ReelPage);
     }
 }

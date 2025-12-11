@@ -41,7 +41,7 @@ public partial class ParticipationPage : ContentPage
             return;
         }
 
-        if (_vm.Videos == null) _vm.Videos = new ObservableCollection<VideoModel>();
+        if (_vm.Videos == null) _vm.Videos = new ObservableCollection<ParticipationVideoModel>();
 
         if (_vm.Videos.Count == 0)
             await _vm.LoadVideosCommand.ExecuteAsync(null);

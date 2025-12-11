@@ -1,3 +1,4 @@
+using Lacalizer.Mobile.Helpers;
 using Lacalizer.Mobile.Models;
 using Lacalizer.Mobile.Navigation;
 using Lacalizer.Mobile.ViewModels;
@@ -14,11 +15,13 @@ public partial class ReelPage : ContentPage
         InitializeComponent();
         BindingContext = _vm = vm;
         _navigationService = navigationService;
-
+        this.RegisterBackHandler();
     }
+    
     protected override async void OnAppearing()
     {
         base.OnAppearing();
+
 
         if (_vm == null)
         {
@@ -32,7 +35,7 @@ public partial class ReelPage : ContentPage
             return;
         }
 
-        if (_vm.Videos == null) _vm.Videos = new ObservableCollection<VideoModel>();
+        if (_vm.Videos == null) _vm.Videos = new ObservableCollection<ReelVideoModel>();
 
         if (_vm.Videos.Count == 0)
             await _vm.LoadVideosCommand.ExecuteAsync(null);
@@ -41,12 +44,11 @@ public partial class ReelPage : ContentPage
 
     private void ItemsView_OnScrolled(object sender, ItemsViewScrolledEventArgs e)
     {
-        
         var itemIndex = e.CenterItemIndex;
-
         _vm.Videos[itemIndex].IsPlaying = true;
         _vm.SelectedTopic = _vm.Videos[itemIndex].Topic;
         _vm.VideoTopicId = _vm.Videos[itemIndex].VideoTopicId;
+
 
         foreach (var myModel in _vm.Videos)
         {
@@ -56,12 +58,6 @@ public partial class ReelPage : ContentPage
             }
         }
     }
-
-    private async void OnRecordVideoClicked(object sender, EventArgs e)
-    {
-        await _navigationService.GoToAsync($"{Routes.LocalizePage}?topic={_vm.SelectedTopic}&videoTopicId={_vm.VideoTopicId}");
-    }
-
 
     protected override void OnDisappearing()
     {

@@ -1,4 +1,6 @@
-﻿using Lacalizer.Mobile.ViewModels;
+﻿using Lacalizer.Mobile.Helpers;
+using Lacalizer.Mobile.Navigation;
+using Lacalizer.Mobile.ViewModels;
 
 namespace Lacalizer.Mobile.Views;
 
@@ -8,12 +10,15 @@ namespace Lacalizer.Mobile.Views;
 
 public partial class LocalizePage : ContentPage
 {
-    public LocalizePage(LocalizeVewModel vm)
+    private readonly INavigationService _navigationService;
+    public LocalizePage(LocalizeVewModel vm, INavigationService navigationService)
     {
         InitializeComponent();
         BindingContext = vm;
+        _navigationService = navigationService;
+        this.RegisterBackHandler();
     }
-
+     
     public string Topic
     {
         get => (BindingContext as LocalizeVewModel)?.SelectedTopic;

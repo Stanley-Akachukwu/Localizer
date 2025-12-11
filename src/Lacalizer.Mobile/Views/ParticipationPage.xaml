@@ -15,141 +15,84 @@
     <Grid>
 
         <CollectionView
-         HeightRequest="{Binding Height, Source={x:Reference Participations}}"
-         HorizontalOptions="Fill"
-         VerticalOptions="Center"
-         ItemsSource="{Binding Videos}"
-         Scrolled="ItemsView_OnScrolled">
+      HeightRequest="{Binding Height, Source={x:Reference Participations}}"
+      HorizontalOptions="Fill"
+      VerticalOptions="Center"
+      ItemsSource="{Binding Videos}"
+      Scrolled="ItemsView_OnScrolled">
 
             <CollectionView.ItemsLayout>
                 <LinearItemsLayout
-                 Orientation="Vertical"
-                 SnapPointsType="MandatorySingle"
-                 SnapPointsAlignment="Center" />
+              Orientation="Vertical"
+              SnapPointsType="MandatorySingle"
+              SnapPointsAlignment="Center" />
             </CollectionView.ItemsLayout>
 
             <CollectionView.ItemTemplate>
-                <DataTemplate x:DataType="models:VideoModel">
+                <DataTemplate x:DataType="models:ParticipationVideoModel">
                     <Grid
-                     HeightRequest="{Binding Height, Source={x:Reference Participations}}"
-                     BackgroundColor="{Binding BackgroundColor}"
-                     HorizontalOptions="Fill">
+                  HeightRequest="{Binding Height, Source={x:Reference Participations}}"
+                  BackgroundColor="{Binding BackgroundColor}"
+                  HorizontalOptions="Fill">
 
                         <!-- Video Player -->
                         <media:ExtendedMediaElement
-                         Aspect="AspectFill"
-                         Source="{Binding VideoUri}"
-                         ShouldAutoPlay="False"
-                         ShouldLoopPlayback="True"
-                         ShouldShowPlaybackControls="False"
-                         IsPlaying="{Binding IsPlaying}" />
+                      Aspect="AspectFill"
+                      Source="{Binding VideoUri}"
+                      ShouldAutoPlay="False"
+                      ShouldLoopPlayback="True"
+                      ShouldShowPlaybackControls="False"
+                      IsPlaying="{Binding IsPlaying}" />
 
-                        <!-- Top Caption & Localize Button -->
-                        <StackLayout
-                         HorizontalOptions="Center"
-                         VerticalOptions="Start"
-                         Margin="0,40,0,0"
-                         Spacing="5">
-
-                            <Label 
-                            x:Name="lblTopic"
-                             Text="{Binding Topic}"
-                             HorizontalOptions="Center"
-                             VerticalOptions="Center"
-                             TextColor="White"
-                             FontSize="16"
-                             FontAttributes="Bold"
-                             Padding="20,10" />
-
-                            
-                        </StackLayout>
 
                         <!-- Right Action Buttons -->
                         <StackLayout
-                         Orientation="Vertical"
-                         Spacing="25"
-                         HorizontalOptions="End"
-                         VerticalOptions="End"
-                         Margin="0,0,20,40">
+                   Orientation="Vertical"
+                   Spacing="25"
+                   HorizontalOptions="End"
+                   VerticalOptions="End"
+                   Margin="0,0,20,40">
 
-                            <!-- Participations -->
-                            <StackLayout Orientation="Vertical" Spacing="4" HorizontalOptions="Center">
-                                <ImageButton
-                                 Source="participations"
-                                 HeightRequest="36"
-                                 WidthRequest="36"
-                                 BackgroundColor="#66000000"
-                                 CornerRadius="18"
-                                 Padding="8" />
-                                <Label
-                                 Text="15"
-                                 FontSize="10"
-                                 TextColor="White"
-                                 HorizontalOptions="Center" />
-                            </StackLayout>
 
-                            <!-- Hearts -->
-                            <StackLayout Orientation="Vertical" Spacing="4" HorizontalOptions="Center">
+                           
+
+                            <!-- LIKES -->
+                            <StackLayout Spacing="4">
                                 <ImageButton
                                  Source="likes"
+                                 Command="{Binding IncreaseLikesCommand}"
                                  HeightRequest="36"
-                                 WidthRequest="36"
-                                 BackgroundColor="#66000000"
-                                 CornerRadius="18"
-                                 Padding="8" />
-                                <Label
-                                 Text="20"
-                                 FontSize="10"
-                                 TextColor="White"
-                                 HorizontalOptions="Center" />
+                                 WidthRequest="36" />
+                                <Label Text="{Binding LikesCount}"
+                                    TextColor="White"
+                                    FontSize="10"
+                                    HorizontalOptions="Center"/>
                             </StackLayout>
 
-                            <!-- Share -->
-                            <StackLayout Orientation="Vertical" Spacing="4" HorizontalOptions="Center">
+                            <!-- SHARE -->
+                            <StackLayout Spacing="4">
                                 <ImageButton
                                  Source="share"
+                                 Command="{Binding IncreaseShareCommand}"
                                  HeightRequest="36"
-                                 WidthRequest="36"
-                                 BackgroundColor="#66000000"
-                                 CornerRadius="18"
-                                 Padding="8" />
-                                <Label
-                                 Text="10"
-                                 FontSize="10"
-                                 TextColor="White"
-                                 HorizontalOptions="Center" />
+                                 WidthRequest="36" />
+                                <Label Text="{Binding ShareCount}"
+                                    TextColor="White"
+                                    FontSize="10"
+                                    HorizontalOptions="Center"/>
                             </StackLayout>
 
-                            <!-- TikTok -->
-                            <StackLayout Orientation="Vertical" Spacing="4" HorizontalOptions="Center">
+                            <!-- COMMENTS -->
+                            <StackLayout Spacing="4">
                                 <ImageButton
-                                 Source="tiktok"
+                                 Source="comments"
+                                 Command="{Binding OpenCommentsCommand}"
                                  HeightRequest="36"
-                                 WidthRequest="36"
-                                 BackgroundColor="#66000000"
-                                 CornerRadius="18"
-                                 Padding="8" />
-                                <Label
-                                 Text="5"
-                                 FontSize="10"
-                                 TextColor="White"
-                                 HorizontalOptions="Center" />
-                            </StackLayout>
-
-                            <!-- Facebook -->
-                            <StackLayout Orientation="Vertical" Spacing="4" HorizontalOptions="Center">
-                                <ImageButton
-                                 Source="fbook"
-                                 HeightRequest="36"
-                                 WidthRequest="36"
-                                 BackgroundColor="#66000000"
-                                 CornerRadius="18"
-                                 Padding="8" />
-                                <Label
-                                 Text="4"
-                                 FontSize="10"
-                                 TextColor="White"
-                                 HorizontalOptions="Center" />
+                                 WidthRequest="36" />
+                                <Label Text="{Binding CommentCount}"
+                                    TextColor="White"
+                                    FontSize="10"
+                                    HorizontalOptions="Center"/>
                             </StackLayout>
 
                         </StackLayout>
@@ -160,16 +103,92 @@
 
         </CollectionView>
 
+        <BoxView
+         Color="#80000000"
+         IsVisible="{Binding Videos[0].IsCommentsVisible}"
+         InputTransparent="False"
+         />
+
+        <!-- COMMENTS PANEL -->
+        <Frame
+         x:Name="CommentPanel"
+         IsVisible="False"
+         BackgroundColor="White"
+         CornerRadius="20"
+         Padding="20"
+         TranslationY="500"
+         VerticalOptions="End"
+         HeightRequest="450"
+         HasShadow="True"
+         BindingContext="{Binding SelectedVideo}">
+
+            <Grid RowDefinitions="Auto,*">
+
+                <!-- CLOSE BUTTON -->
+                <ImageButton
+Grid.Row="0"
+Source="close"
+Command="{Binding Source={x:Reference Participations}, Path=BindingContext.SelectedVideo.CloseCommentsCommand}"
+HorizontalOptions="End"
+HeightRequest="30"
+WidthRequest="30"/>
+
+                <!-- COMMENTS CONTENT -->
+                <VerticalStackLayout 
+Grid.Row="1"
+Spacing="10">
+
+                    <Label Text="Comments"
+       FontSize="18"
+       TextColor="Black"
+       FontAttributes="Bold" />
+
+                    <CollectionView ItemsSource="{Binding Comments}">
+                        <CollectionView.EmptyView>
+                            <Label Text="No comments yet."
+               TextColor="Gray"
+               FontSize="14" />
+                        </CollectionView.EmptyView>
+
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate>
+                                <Label Text="{Binding .}"
+                   FontSize="14"
+                   TextColor="Black"/>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+
+                    <Grid ColumnDefinitions="*,Auto">
+                        <Entry 
+        Text="{Binding Source={x:Reference Participations}, Path=BindingContext.SelectedVideo.NewComment}"
+        Placeholder="Add a comment..."
+        FontSize="18"
+        TextColor="Black" />
+
+                        <Button 
+        Grid.Column="1"
+        Text="Send"
+        Command="{Binding Source={x:Reference Participations}, Path=BindingContext.SelectedVideo.SendCommentCommand}" />
+                    </Grid>
+
+                </VerticalStackLayout>
+
+            </Grid>
+
+        </Frame>
+
         <Grid
-        BackgroundColor="#80000000"  
-            IsVisible="{Binding IsLoading}">
+     BackgroundColor="#80000000"  
+         IsVisible="{Binding IsLoading}">
             <ActivityIndicator
-            IsRunning="{Binding IsLoading}"
-            Color="White"
-            HorizontalOptions="Center"
-            VerticalOptions="Center"
-            WidthRequest="60"
-            HeightRequest="60"/>
+         IsRunning="{Binding IsLoading}"
+         Color="White"
+         HorizontalOptions="Center"
+         VerticalOptions="Center"
+         WidthRequest="60"
+         HeightRequest="60"/>
         </Grid>
     </Grid>
+    
 </ContentPage>

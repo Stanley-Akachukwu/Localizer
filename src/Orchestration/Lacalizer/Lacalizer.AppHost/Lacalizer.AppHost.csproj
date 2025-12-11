@@ -16,6 +16,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <ProjectReference Include="..\..\..\Lacalizer.Mobile\Lacalizer.Mobile.csproj">
+	    <SetTargetFramework>TargetFramework=net10.0</SetTargetFramework>
+	  </ProjectReference>
 	  <ProjectReference Include="..\..\..\Lacalizer.WebAPI\Lacalizer.WebAPI.csproj" />
 	</ItemGroup>
 </Project>

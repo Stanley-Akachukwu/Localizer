@@ -29,7 +29,7 @@
             </CollectionView.ItemsLayout>
 
             <CollectionView.ItemTemplate>
-                <DataTemplate x:DataType="models:VideoModel">
+                <DataTemplate x:DataType="models:ReelVideoModel">
                     <Grid
                      HeightRequest="{Binding Height, Source={x:Reference Reels}}"
                      BackgroundColor="{Binding BackgroundColor}"
@@ -62,13 +62,14 @@
                              Padding="20,10" />
 
                             <ImageButton
-                             Source="localize_16190095"
-                             HeightRequest="36"
-                             WidthRequest="36"
-                             BackgroundColor="#66000000"
-                             CornerRadius="18"
-                             Padding="8" 
-                               Clicked="OnRecordVideoClicked"/>
+                            Source="localize"
+                            HeightRequest="36"
+                            WidthRequest="36"
+                            BackgroundColor="#66000000"
+                            CornerRadius="18"
+                            Padding="8"
+                             Command="{Binding Source={x:Reference Reels}, Path=BindingContext.RecordVideoCommand}" />
+
                         </StackLayout>
 
                         <!-- Right Action Buttons -->
@@ -156,42 +157,63 @@
             TranslationY="500"
             VerticalOptions="End"
             HeightRequest="450"
-            HasShadow="True">
+            HasShadow="True"
+            BindingContext="{Binding SelectedVideo}">
 
             <Grid RowDefinitions="Auto,*">
 
                 <!-- CLOSE BUTTON -->
                 <ImageButton
-                    Source="close"
-                    Command="{Binding CloseCommentsCommand}"
-                    HorizontalOptions="End"
-                    HeightRequest="30"
-                    WidthRequest="30"/>
+        Grid.Row="0"
+        Source="close"
+        Command="{Binding Source={x:Reference Reels}, Path=BindingContext.SelectedVideo.CloseCommentsCommand}"
+        HorizontalOptions="End"
+        HeightRequest="30"
+        WidthRequest="30"/>
 
                 <!-- COMMENTS CONTENT -->
-                <VerticalStackLayout Grid.Row="1" Spacing="10">
+                <VerticalStackLayout 
+        Grid.Row="1"
+        Spacing="10">
 
                     <Label Text="Comments"
-                           FontSize="18"
-                           TextColor="Black"
-                           FontAttributes="Bold" />
+               FontSize="18"
+               TextColor="Black"
+               FontAttributes="Bold" />
 
-                    <CollectionView>
+                    <CollectionView ItemsSource="{Binding Comments}">
                         <CollectionView.EmptyView>
                             <Label Text="No comments yet."
-                                   TextColor="Gray"
-                                   FontSize="14" />
+                       TextColor="Gray"
+                       FontSize="14" />
                         </CollectionView.EmptyView>
+
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate>
+                                <Label Text="{Binding .}"
+                           FontSize="14"
+                           TextColor="Black"/>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
                     </CollectionView>
 
                     <Grid ColumnDefinitions="*,Auto">
-                        <Entry Placeholder="Add a comment..."  FontSize="18" TextColor="Black"/>
-                        <Button Grid.Column="1" Text="Send" />
+                        <Entry 
+                Text="{Binding Source={x:Reference Reels}, Path=BindingContext.SelectedVideo.NewComment}"
+                Placeholder="Add a comment..."
+                FontSize="18"
+                TextColor="Black" />
+
+                        <Button 
+                Grid.Column="1"
+                Text="Send"
+                Command="{Binding Source={x:Reference Reels}, Path=BindingContext.SelectedVideo.SendCommentCommand}" />
                     </Grid>
 
                 </VerticalStackLayout>
 
             </Grid>
+
 
         </Frame>
 

@@ -2,76 +2,20 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Lacalizer.Mobile.Models;
+using Lacalizer.Mobile.Navigation;
 using Lacalizer.Mobile.Services.Videos;
 using System.Collections.ObjectModel;
 
 namespace Lacalizer.Mobile.ViewModels;
 
-//public partial class ReelViewModel : ObservableObject
-//{
-//    private readonly IVideoService _videoService;
-
-//    private bool _isLoading;
-//    public bool IsLoading
-//    {
-//        get => _isLoading;
-//        set { _isLoading = value; OnPropertyChanged(); }
-//    }
-
-//    [ObservableProperty]
-//    private ObservableCollection<VideoModel> _videos;
-//    [ObservableProperty]
-//    private string selectedTopic;
-//    [ObservableProperty]
-//    private string videoTopicId;
-//    public ReelViewModel(IVideoService videoService)
-//    {
-//        _videoService = videoService;
-
-//        LoadVideosCommand = new AsyncRelayCommand(LoadVideosAsync);
-//    }
-
-//    public IAsyncRelayCommand LoadVideosCommand { get; }
-
-//    private async Task LoadVideosAsync()  
-//    {
-//        NetworkAccess accessType = Connectivity.Current.NetworkAccess;
-
-//        if (accessType != NetworkAccess.Internet)
-//        {
-//            await Application.Current.MainPage.DisplayAlertAsync("No Internet", "Please check your internet connection.", "OK");
-//            return;
-//        }
-
-//        try
-//        {
-//            IsLoading = true;
-//            var items = await _videoService.GetTopicVideosAsync(1, 100);
-//            Videos = new ObservableCollection<VideoModel>(items);
-//            IsLoading = false; 
-//        }
-//        catch (HttpRequestException e)
-//        {
-//            await Application.Current.MainPage.DisplayAlertAsync("API Error", $"An error occurred: {e.Message}", "OK");
-//            IsLoading = false; 
-//            return; 
-//        }
-//    }
-
-
-//    [RelayCommand]
-//    async Task GoBack()
-//    {
-//        await Shell.Current.GoToAsync("..");
-//    }
-//}
 
 public partial class ReelViewModel : ObservableObject
 {
     private readonly IVideoService _videoService;
+    private readonly INavigationService _navigationService;
 
     [ObservableProperty]
-    private ObservableCollection<VideoModel> videos;
+    private ObservableCollection<ReelVideoModel> videos;
 
     [ObservableProperty]
     private bool isLoading;
@@ -79,11 +23,23 @@ public partial class ReelViewModel : ObservableObject
     private string selectedTopic;
     [ObservableProperty]
     private string videoTopicId;
-    public ReelViewModel(IVideoService videoService)
+    [ObservableProperty]
+    private ReelVideoModel selectedVideo;
+    public ReelViewModel(IVideoService videoService, INavigationService navigationService)
     {
         _videoService = videoService;
+        _navigationService = navigationService;
         LoadVideosCommand = new AsyncRelayCommand(LoadVideosAsync);
     }
+
+    [RelayCommand]
+    private async Task RecordVideoAsync()
+    {
+        await _navigationService.GoToAsync(
+            $"{Routes.LocalizePage}?topic={SelectedTopic}&videoTopicId={VideoTopicId}"
+        );
+    }
+
 
     public IAsyncRelayCommand LoadVideosCommand { get; }
 
@@ -91,6 +47,13 @@ public partial class ReelViewModel : ObservableObject
     {
         try
         {
+            NetworkAccess accessType = Connectivity.Current.NetworkAccess;
+
+            if (accessType != NetworkAccess.Internet)
+            {
+                await Application.Current.MainPage.DisplayAlertAsync("No Internet", "Please check your internet connection.", "OK");
+                return;
+            }
             IsLoading = true;
 
             var items = await _videoService.GetTopicVideosAsync(1, 100);
@@ -102,9 +65,17 @@ public partial class ReelViewModel : ObservableObject
                 vid.CommentCount = Random.Shared.Next(1, 20);
                 vid.ShareCount = Random.Shared.Next(1, 10);
                 vid.ParticipantsCount = Random.Shared.Next(1, 30);
+                vid.ParentViewModel = this;
+                vid.VideoService = _videoService;
             }
 
-            Videos = new ObservableCollection<VideoModel>(items);
+            Videos = new ObservableCollection<ReelVideoModel>(items);
+        }
+        catch (HttpRequestException e)
+        {
+            await Application.Current.MainPage.DisplayAlertAsync("API Error", $"An error occurred: {e.Message}", "OK");
+            IsLoading = false;
+            return;
         }
         finally
         {
@@ -113,8 +84,46 @@ public partial class ReelViewModel : ObservableObject
     }
 
     [RelayCommand]
-    private async Task GoBack()
+    private async Task OpenCommentsAsync(ReelVideoModel video)
     {
-        await Shell.Current.GoToAsync("..");
+        SelectedVideo = video;     // ⬅ Important!
+
+        video.IsCommentsVisible = true;
+        video.IsPlaying = false;
+
+        var panel = Shell.Current.CurrentPage.FindByName<Frame>("CommentPanel");
+        if (panel != null)
+        {
+            panel.IsVisible = true;
+            await panel.TranslateToAsync(0, 0, 250, Easing.SinOut);
+        }
+    }
+
+    
+    [RelayCommand]
+    private async Task CloseCommentsAsync()
+    {
+        if (SelectedVideo == null)
+            return;
+
+        var panel = Shell.Current.CurrentPage.FindByName<Frame>("CommentPanel");
+
+        if (panel != null)
+        {
+            await panel.TranslateToAsync(0, 500, 250, Easing.SinIn);
+            panel.IsVisible = false;
+        }
+
+        SelectedVideo.IsCommentsVisible = false;
+        SelectedVideo.IsPlaying = true;
+
+        SelectedVideo = null;
+    }
+
+
+    [RelayCommand]
+    private async Task BackAsync()
+    {
+        await _navigationService.GoToAsync(Routes.ReelPage);
     }
 }
