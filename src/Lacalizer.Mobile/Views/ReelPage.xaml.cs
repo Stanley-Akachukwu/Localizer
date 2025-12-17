@@ -3,6 +3,7 @@ using Lacalizer.Mobile.Models;
 using Lacalizer.Mobile.Navigation;
 using Lacalizer.Mobile.ViewModels;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 
 namespace Lacalizer.Mobile.Views;
 
@@ -59,13 +60,47 @@ public partial class ReelPage : ContentPage
         }
     }
 
+    protected override void OnBindingContextChanged()
+    {
+        base.OnBindingContextChanged();
+        if (BindingContext is ReelViewModel vm)
+        {
+            vm.PropertyChanged += OnViewModelPropertyChanged;
+        }
+    }
+
+    private async void OnViewModelPropertyChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        if (_vm.SelectedVideo == null)
+            return;
+
+        if (e.PropertyName == nameof(_vm.SelectedVideo.IsCommentsVisible))
+        {
+            if (CommentPanel == null)
+                return;
+
+            if (_vm.SelectedVideo.IsCommentsVisible)
+            {
+                CommentPanel.IsVisible = true;
+                await CommentPanel.TranslateTo(0, 0, 250, Easing.SinOut);
+            }
+            else
+            {
+                await CommentPanel.TranslateTo(0, 500, 250, Easing.SinIn);
+                CommentPanel.IsVisible = false;
+            }
+        }
+    }
+
     protected override void OnDisappearing()
     {
         base.OnDisappearing();
 
+        if (_vm?.Videos == null)
+            return;
+
         foreach (var video in _vm.Videos)
-        {
             video.IsPlaying = false;
-        }
     }
+
 }

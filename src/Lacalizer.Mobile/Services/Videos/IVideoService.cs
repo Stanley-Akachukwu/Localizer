@@ -62,7 +62,7 @@ public class VideoService : IVideoService
                     v.Title,
                     v.Topic,
                     v.VideoUri,
-                    v.VideoTopicId
+                    v.VideoTopicId,null,null,null
                 ))
                 .ToList();
 
@@ -154,7 +154,7 @@ public class VideoService : IVideoService
                 rsp.Data.Title,
                 rsp.Data.Topic,
                 rsp.Data.VideoUri,
-                rsp.Data.Id
+                rsp.Data.Id, null, null, null
             );
         }
         catch (TaskCanceledException)

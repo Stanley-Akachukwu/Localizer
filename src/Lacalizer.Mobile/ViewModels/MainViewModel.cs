@@ -32,4 +32,7 @@ public partial class MainViewModel : ObservableObject
 
     [ObservableProperty]
     private double _radius = 100.0;
+
+    [ObservableProperty]
+    private bool isVideoPlaying;
 }

@@ -8,6 +8,7 @@
             xmlns:models="clr-namespace:Lacalizer.Mobile.Models"
             xmlns:viewModels="clr-namespace:Lacalizer.Mobile.ViewModels"
             xmlns:media="clr-namespace:Lacalizer.Mobile.CustomControls.Media"
+             xmlns:local="clr-namespace:Lacalizer.Mobile.Views"
             x:Name="Reels"
             x:DataType="viewModels:ReelViewModel"
             Shell.NavBarIsVisible="False">
@@ -149,73 +150,106 @@
 
         <!-- COMMENTS PANEL -->
         <Frame
-            x:Name="CommentPanel"
-            IsVisible="False"
-            BackgroundColor="White"
-            CornerRadius="20"
-            Padding="20"
-            TranslationY="500"
-            VerticalOptions="End"
-            HeightRequest="450"
-            HasShadow="True"
-            BindingContext="{Binding SelectedVideo}">
+    x:Name="CommentPanel"
+    IsVisible="False"
+    BackgroundColor="White"
+    CornerRadius="20"
+    Padding="20"
+    TranslationY="500"
+    VerticalOptions="End"
+    HeightRequest="450"
+    HasShadow="True"
+    BindingContext="{Binding SelectedVideo}">
 
             <Grid RowDefinitions="Auto,*">
 
                 <!-- CLOSE BUTTON -->
                 <ImageButton
-        Grid.Row="0"
-        Source="close"
-        Command="{Binding Source={x:Reference Reels}, Path=BindingContext.SelectedVideo.CloseCommentsCommand}"
-        HorizontalOptions="End"
-        HeightRequest="30"
-        WidthRequest="30"/>
+            Grid.Row="0"
+            Source="close"
+            Command="{Binding Source={x:Reference Reels}, Path=BindingContext.SelectedVideo.CloseCommentsCommand}"
+            HorizontalOptions="End"
+            HeightRequest="30"
+            WidthRequest="30"/>
 
-                <!-- COMMENTS CONTENT -->
-                <VerticalStackLayout 
-        Grid.Row="1"
-        Spacing="10">
+                <!-- FIXED COMMENTS SECTION -->
+                <Grid Grid.Row="1" RowDefinitions="Auto,*,Auto" RowSpacing="10">
 
-                    <Label Text="Comments"
-               FontSize="18"
-               TextColor="Black"
-               FontAttributes="Bold" />
+                    <!-- Header -->
+                    <Label Grid.Row="0"
+                   Text="Comments"
+                   FontSize="18"
+                   TextColor="Black"
+                   FontAttributes="Bold"/>
 
-                    <CollectionView ItemsSource="{Binding Comments}">
+                    <!-- COMMENTS LIST -->
+                    <CollectionView Grid.Row="1"
+                            ItemsSource="{Binding Source={x:Reference Reels}, Path=BindingContext.SelectedVideo.Comments}">
                         <CollectionView.EmptyView>
                             <Label Text="No comments yet."
-                       TextColor="Gray"
-                       FontSize="14" />
+                           TextColor="Gray"
+                           FontSize="14" />
                         </CollectionView.EmptyView>
-
                         <CollectionView.ItemTemplate>
-                            <DataTemplate>
-                                <Label Text="{Binding .}"
-                           FontSize="14"
-                           TextColor="Black"/>
+                            <DataTemplate x:DataType="models:VideoComment">
+                                <local:ThreadedCommentView
+        BindingContext="{Binding}"
+        ReplyCommand="{Binding Source={x:Reference Reels},
+                               Path=BindingContext.SelectedVideo.StartReplyCommand}" />
                             </DataTemplate>
+
                         </CollectionView.ItemTemplate>
                     </CollectionView>
 
-                    <Grid ColumnDefinitions="*,Auto">
-                        <Entry 
-                Text="{Binding Source={x:Reference Reels}, Path=BindingContext.SelectedVideo.NewComment}"
-                Placeholder="Add a comment..."
-                FontSize="18"
-                TextColor="Black" />
+                    <!-- REPLYING TO FRAME -->
+                    <Frame Grid.Row="2"
+            IsVisible="{Binding ReplyingTo}"
+            BackgroundColor="#EEF2FF"
+            CornerRadius="12"
+            Padding="8"
+            Margin="0,6,0,0">
 
-                        <Button 
-                Grid.Column="1"
-                Text="Send"
-                Command="{Binding Source={x:Reference Reels}, Path=BindingContext.SelectedVideo.SendCommentCommand}" />
+                        <HorizontalStackLayout Spacing="6">
+                            <Label
+            Text="{Binding ReplyingTo.Author,
+                           StringFormat='Replying to @{0}'}"
+            FontSize="12"
+            TextColor="#4338CA" />
+
+                            <Button
+            Text=""
+            FontSize="12"
+            BackgroundColor="Transparent"
+            Command="{Binding CancelReplyCommand}" />
+                        </HorizontalStackLayout>
+                    </Frame>
+
+
+
+                    <Grid Grid.Row="2" ColumnDefinitions="*,Auto">
+
+                        <Entry x:Name="CommentEntry"
+                    Text="{Binding Source={x:Reference Reels}, Path=BindingContext.SelectedVideo.NewComment}"
+                    Placeholder="Add a comment..."
+                    FontSize="18"
+                    TextColor="Black" />
+
+                        
+                        <ImageButton
+                        Grid.Column="1"
+                        Source="send"  
+                        HeightRequest="22"
+                        WidthRequest="22"
+                        BackgroundColor="Transparent"
+                        Command="{Binding Source={x:Reference Reels}, Path=BindingContext.SelectedVideo.SendCommentCommand}" />
+
                     </Grid>
 
-                </VerticalStackLayout>
+                </Grid>
 
             </Grid>
-
-
         </Frame>
+
 
         <Grid
         BackgroundColor="#80000000"  

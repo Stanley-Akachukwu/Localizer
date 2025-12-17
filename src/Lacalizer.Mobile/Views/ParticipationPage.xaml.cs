@@ -69,9 +69,10 @@ public partial class ParticipationPage : ContentPage
     {
         base.OnDisappearing();
 
+        if (_vm?.Videos == null)
+            return;
+
         foreach (var video in _vm.Videos)
-        {
             video.IsPlaying = false;
-        }
     }
 }

@@ -83,12 +83,12 @@ public partial class ParticipationVideoModel : ObservableObject
         if (string.IsNullOrWhiteSpace(NewComment))
             return;
 
-        var commentDto = new VideoCommentDto
-        {
-            Comment = NewComment,
-            VideoTopicId = VideoTopicId
-        };
-        await CommentService.PostCommentAsync(commentDto);
+        //var commentDto = new VideoCommentDto
+        //{
+        //    Content = NewComment,
+        //    VideoTopicId = VideoTopicId
+        //};
+        //await CommentService.PostCommentAsync(commentDto);
 
         Comments.Add(NewComment);
         CommentCount++;

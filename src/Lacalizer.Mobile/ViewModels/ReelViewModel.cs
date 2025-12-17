@@ -3,6 +3,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Lacalizer.Mobile.Models;
 using Lacalizer.Mobile.Navigation;
+using Lacalizer.Mobile.Services.Comments;
 using Lacalizer.Mobile.Services.Videos;
 using System.Collections.ObjectModel;
 
@@ -13,6 +14,8 @@ public partial class ReelViewModel : ObservableObject
 {
     private readonly IVideoService _videoService;
     private readonly INavigationService _navigationService;
+    private readonly ICommentService _commentService;
+
 
     [ObservableProperty]
     private ObservableCollection<ReelVideoModel> videos;
@@ -25,10 +28,11 @@ public partial class ReelViewModel : ObservableObject
     private string videoTopicId;
     [ObservableProperty]
     private ReelVideoModel selectedVideo;
-    public ReelViewModel(IVideoService videoService, INavigationService navigationService)
+    public ReelViewModel(IVideoService videoService, INavigationService navigationService, ICommentService commentService)
     {
         _videoService = videoService;
         _navigationService = navigationService;
+        _commentService = commentService;
         LoadVideosCommand = new AsyncRelayCommand(LoadVideosAsync);
     }
 
@@ -61,12 +65,13 @@ public partial class ReelViewModel : ObservableObject
             // Add default counter values
             foreach (var vid in items)
             {
-                vid.LikesCount = Random.Shared.Next(1, 50);
-                vid.CommentCount = Random.Shared.Next(1, 20);
-                vid.ShareCount = Random.Shared.Next(1, 10);
-                vid.ParticipantsCount = Random.Shared.Next(1, 30);
+                vid.LikesCount = 0;
+                vid.CommentCount = 0;
+                vid.ShareCount = 0;
+                vid.ParticipantsCount = 0;
                 vid.ParentViewModel = this;
                 vid.VideoService = _videoService;
+                vid.CommentService = _commentService;
             }
 
             Videos = new ObservableCollection<ReelVideoModel>(items);

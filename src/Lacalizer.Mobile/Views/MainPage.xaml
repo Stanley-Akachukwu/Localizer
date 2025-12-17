@@ -12,47 +12,38 @@
     Shell.BackgroundColor="DarkGreen"
     Shell.ForegroundColor="White">
 
+    <!-- 🔹 RESOURCES (UNCHANGED) -->
     <ContentPage.Resources>
         <ResourceDictionary>
-            <Style
-        x:Key="LabelStyle"
-        TargetType="Label">
+            <Style x:Key="LabelStyle" TargetType="Label">
                 <Setter Property="Text" Value="{AppThemeBinding Light=Light, Dark=Dark}" />
             </Style>
         </ResourceDictionary>
     </ContentPage.Resources>
 
-    <Shell.TitleView>
-        <HorizontalStackLayout VerticalOptions="Fill">
-            <Label
-        Text="Welcome to Localizer"
-        FontFamily="Strande2"
-        TextColor="White"
-        VerticalTextAlignment="Center"
-        VerticalOptions="CenterAndExpand"
-        HeightRequest="50"
-        FontSize="Medium" />
-        </HorizontalStackLayout>
-    </Shell.TitleView>
+    <!-- 🔹 PAGE CONTENT (NEW) -->
+    <ContentPage.Content>
+        <Grid>
 
-    <ContentPage.ToolbarItems>
-        <ToolbarItem Command="{Binding SetLowBrightnessCommand}">
-            <ToolbarItem.IconImageSource>
-                <FontImageSource
-          FontFamily="MaterialIconsOutlined-Regular"
-          Glyph="&#xe51c;"
-          Color="LightBlue"
-          Size="20" />
-            </ToolbarItem.IconImageSource>
-        </ToolbarItem>
-        <ToolbarItem Command="{Binding SetHighBrightnessCommand}">
-            <ToolbarItem.IconImageSource>
-                <FontImageSource
-          FontFamily="MaterialIconsOutlined-Regular"
-          Glyph="&#xe518;"
-          Color="LightPink"
-          Size="32" />
-            </ToolbarItem.IconImageSource>
-        </ToolbarItem>
-    </ContentPage.ToolbarItems>
+            <!-- 🎥 VIDEO BACKGROUND https://github.com/ewerspej/maui-samples/blob/main/assets/bigbuckbunny.mp4  -->
+            <media:ExtendedMediaElement
+                Aspect="AspectFill"
+                Source="https://github.com/Stanley-Akachukwu/sa-video-reviews/blob/master/Listen.mp4?raw=true"
+                ShouldAutoPlay="True"
+                ShouldLoopPlayback="True"
+                ShouldShowPlaybackControls="False"
+                IsPlaying="{Binding IsVideoPlaying}"
+                ZIndex="0" />
+            
+
+            <!-- 📝 FLOATING WORDS OVERLAY -->
+            <AbsoluteLayout
+                x:Name="OverlayLayer"
+                ZIndex="1"
+                InputTransparent="True" />
+
+
+        </Grid>
+    </ContentPage.Content>
+
 </ContentPage>

@@ -70,7 +70,7 @@ public static class MauiProgram
         //builder.Services.AddTransient<ParticipationViewModel>();
         //builder.Services.AddTransient<ParticipationPage>();
 
-        //builder.Services.AddMemoryCache();  
+        //builder.Services.AddMemoryCache();
 
         //builder.Services.AddHttpClient<IVideoService, VideoService>(client =>
         //{

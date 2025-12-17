@@ -1,12 +1,12 @@
 ﻿
-using Lacalizer.Shared.Dtos;
+using Lacalizer.Mobile.Models;
 using Microsoft.Extensions.Caching.Memory;
 
 namespace Lacalizer.Mobile.Services.Comments;
 
 public interface ICommentService
 {
-    Task PostCommentAsync(VideoCommentDto commentDto);
+    Task<VideoComment> PostCommentAsync(VideoComment commentDto);
 }
 
 public class CommentService : ICommentService
@@ -19,11 +19,12 @@ public class CommentService : ICommentService
         _client = client;
         _cache = cache;
     }
-    public async Task PostCommentAsync(VideoCommentDto commentDto)
+    public async Task<VideoComment> PostCommentAsync(VideoComment commentDto)
     {
 
         //var response = await _client.PostAsJsonAsync("/api/comments", payload);
 
         //response.EnsureSuccessStatusCode();
+        return await Task.FromResult(commentDto);
     }
 }

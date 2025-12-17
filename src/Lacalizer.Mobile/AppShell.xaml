@@ -7,22 +7,28 @@
     xmlns:local="clr-namespace:Lacalizer.Mobile"
     Title="Lacalizer.Mobile"
      Shell.FlyoutBehavior="Disabled">
-
+    
     <TabBar>
+
         <Tab Title="Home"
-         Icon="{FontImage FontFamily='MaterialIcons-Regular',
-                        Glyph='&#xe88a;'}">
-            <ShellContent ContentTemplate="{DataTemplate views:MainPage}"
-                      Route="MainPage" />
+         Icon="home.png">
+            <ShellContent
+            ContentTemplate="{DataTemplate views:MainPage}"
+            Route="MainPage" />
         </Tab>
 
-        <Tab Title="Localizer"
-         Icon="{FontImage FontFamily='MaterialIcons-Regular',
-                        Glyph='&#xe3b3;'}">
-            <ShellContent ContentTemplate="{DataTemplate views:ReelPage}"
-                      Route="Reel" />
+        <Tab Title="Start"
+         Icon="start.png">
+            <ShellContent
+            ContentTemplate="{DataTemplate views:ReelPage}"
+            Route="Reel" />
         </Tab>
+
     </TabBar>
 
 
+
 </Shell>
+
+    
+    
