@@ -16,4 +16,8 @@ public class VideoItem : BaseEntity<string>
     public string? VideoTopicId { get; set; } = NUlid.Ulid.Empty.ToString();
     public VideoTopic? VideoTopic { get; set; } 
     public VideoType VideoType { get; set; } = VideoType.PARTICIPATION;
+    public int LikeCounts { get; set; }
+    public int CommentCounts { get; set; }
+    public int ShareCounts { get; set; }
+    public int ParticipantCounts { get; set; }
 }

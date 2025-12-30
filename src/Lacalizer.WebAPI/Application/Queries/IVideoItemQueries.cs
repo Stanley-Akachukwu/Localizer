@@ -16,6 +16,10 @@ public class SingleVideoItemDto
     public string Topic { get; set; } = string.Empty;
     public string VideoUri { get; set; } = string.Empty;
     public string? VideoTopicId { get; set; }
+    public int SavedLikes { get; set; }
+    public int SavedComments { get; set; }
+    public int SavedShares { get; set; }
+    public int SavedParticipants { get; set; }
 }
 
 public interface IVideoItemQueries
@@ -139,7 +143,11 @@ public class VideoItemQueries : IVideoItemQueries
                     Title = v.Title,
                     Topic = v.Topic,
                     VideoTopicId = v.VideoTopicId,
-                    VideoUri = v.VideoType == VideoType.TOPIC? v.VideoUri: "https://github.com/ewerspej/maui-samples/blob/main/assets/bigbuckbunny.mp4?raw=true"
+                    VideoUri = v.VideoType == VideoType.TOPIC? v.VideoUri: "https://github.com/ewerspej/maui-samples/blob/main/assets/bigbuckbunny.mp4?raw=true",
+                    SavedLikes = v.LikeCounts,
+                    SavedComments =v.CommentCounts,
+                    SavedShares =v.ShareCounts,
+                    SavedParticipants = v.ParticipantCounts
                 })
                 .ToListAsync(ct);
 

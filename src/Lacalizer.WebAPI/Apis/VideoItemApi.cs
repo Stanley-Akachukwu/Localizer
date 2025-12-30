@@ -29,7 +29,7 @@ public static class VideoItemApi
 
         v1.MapPost("/", CreateParticipatoryVideoItemAsync)
            .WithName("CreateParticipatoryVideoItem")
-           .WithSummary("Create Particpatory video item")
+           .WithSummary("Create particpatory video item")
            .WithDescription("Creates a new particpatory video item");
 
         v1.MapPut("/", UpdateVideoItemAsync)
@@ -41,6 +41,11 @@ public static class VideoItemApi
            .WithName("DeleteVideoItem")
            .WithSummary("Delete video item")
            .WithDescription("Deletes a video item by ID");
+
+        v1.MapPost("/saveLike", IncreaseLikesAsync)
+           .WithName("IncreaseLikes")
+           .WithSummary("Increase likes")
+           .WithDescription("Increase likes of video item");
 
         return v1;
     }
@@ -101,6 +106,16 @@ public static class VideoItemApi
         var cmd = new DeleteVideoItemCommand(request.Id);
         var result = await mediator.Send(cmd);
         return TypedResults.Ok(result);
+    }
+    private static Task<LocalizerApiResponse<int>> IncreaseLikesAsync(
+   IncreaseLikesCommand cmd,
+   IValidator<IncreaseLikesCommand> validator,
+   IValidationService validatorService,
+   IMediator mediator)
+    {
+        return MediatorValidationHelper.ExecuteAsync<
+            IncreaseLikesCommand,
+            int>(cmd, validator, validatorService, mediator);
     }
 }
 

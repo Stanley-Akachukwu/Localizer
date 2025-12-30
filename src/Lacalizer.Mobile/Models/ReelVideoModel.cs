@@ -17,7 +17,8 @@ public partial class ReelVideoModel : ObservableObject
     public ReelVideoModel(string title, string topic, string videoUri, string videoTopicId,
         IVideoService videoService,
         ICommentService commentService,
-        ReelViewModel parentViewModel)
+        ReelViewModel parentViewModel,
+        int savedLikes, int savedComments,  int savedShares, int savedParticipants, string videoItemId)
     {
         Title = title;
         Topic = topic;
@@ -28,13 +29,23 @@ public partial class ReelVideoModel : ObservableObject
         CommentService = commentService;
         ParentViewModel = parentViewModel;
 
-        CommentsPanelTranslationY = 500; // start hidden
+        SavedLikes = savedLikes;
+        SavedComments = savedComments;
+        SavedShares = savedShares;
+        SavedParticipants = savedParticipants;
+        VideoItemId = videoItemId;
+        CommentsPanelTranslationY = 500;  
     }
 
     public string Title { get; set; }
     public string Topic { get; set; }
     public string VideoUri { get; set; }
     public string VideoTopicId { get; set; }
+    public string VideoItemId { get; set; }
+    public int SavedLikes { get; set; }
+    public int SavedComments { get; set; }
+    public int SavedShares { get; set; }
+    public int SavedParticipants { get; set; }
 
     [ObservableProperty]
     private bool isPlaying;
@@ -56,7 +67,11 @@ public partial class ReelVideoModel : ObservableObject
     [RelayCommand]
     private async Task IncreaseLikesAsync()
     {
-        LikesCount++;
+       var addCountResult = await VideoService.SaveLikeAsync(LikesCount, VideoItemId);
+        if (addCountResult != null) 
+        {
+            LikesCount = addCountResult.Value;
+        }
     }
 
     [RelayCommand]

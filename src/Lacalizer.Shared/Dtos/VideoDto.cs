@@ -7,4 +7,10 @@ public class VideoDto
     public string? Topic { get; set; }
     public string? VideoUri { get; set; }
     public string? VideoTopicId { get; set; }
+    public int SavedLikes { get; set; }
+    public int SavedComments { get; set; }
+    public int SavedShares { get; set; }
+    public int SavedParticipants { get; set; }
 }
+
+ 

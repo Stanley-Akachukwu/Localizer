@@ -65,10 +65,11 @@ public partial class ReelViewModel : ObservableObject
             // Add default counter values
             foreach (var vid in items)
             {
-                vid.LikesCount = 0;
-                vid.CommentCount = 0;
-                vid.ShareCount = 0;
-                vid.ParticipantsCount = 0;
+                vid.VideoItemId = vid.VideoItemId;
+                vid.LikesCount = vid.SavedLikes;
+                vid.CommentCount = vid.SavedComments;
+                vid.ShareCount = vid.SavedShares;
+                vid.ParticipantsCount = vid.SavedParticipants;
                 vid.ParentViewModel = this;
                 vid.VideoService = _videoService;
                 vid.CommentService = _commentService;

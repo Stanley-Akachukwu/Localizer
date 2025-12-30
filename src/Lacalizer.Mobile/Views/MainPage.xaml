@@ -30,7 +30,7 @@
                 Aspect="AspectFill"
                 Source="https://github.com/Stanley-Akachukwu/sa-video-reviews/blob/master/Listen.mp4?raw=true"
                 ShouldAutoPlay="True"
-                ShouldLoopPlayback="True"
+                ShouldLoopPlayback="False"
                 ShouldShowPlaybackControls="False"
                 IsPlaying="{Binding IsVideoPlaying}"
                 ZIndex="0" />

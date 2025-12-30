@@ -11,7 +11,8 @@ public interface IVideoService
 {
     Task<List<ReelVideoModel>> GetTopicVideosAsync(int pageIndex, int pageSize, CancellationToken ct = default);
     Task<ReelVideoModel?> CreateVideoAsync(VideoCreateRequest request, CancellationToken ct = default);
-    Task<List<ParticipationVideoModel>> GetParticipationVideosAsync(int pageIndex, int pageSize, string? videoTopicId, CancellationToken ct = default);   
+    Task<List<ParticipationVideoModel>> GetParticipationVideosAsync(int pageIndex, int pageSize, string? videoTopicId, CancellationToken ct = default);
+    Task<int?> SaveLikeAsync(int likes,string videoItemId, CancellationToken ct = default);
 }
 
 public class VideoService : IVideoService
@@ -62,8 +63,7 @@ public class VideoService : IVideoService
                     v.Title,
                     v.Topic,
                     v.VideoUri,
-                    v.VideoTopicId,null,null,null
-                ))
+                    v.VideoTopicId,null,null,null,v.SavedLikes,v.SavedComments,v.SavedShares, v.SavedParticipants,v.Id))
                 .ToList();
 
             _cache.Set(cacheKey, items, TimeSpan.FromMinutes(10));
@@ -154,8 +154,7 @@ public class VideoService : IVideoService
                 rsp.Data.Title,
                 rsp.Data.Topic,
                 rsp.Data.VideoUri,
-                rsp.Data.Id, null, null, null
-            );
+                rsp.Data.Id, null, null, null, rsp.Data.SavedLikes, rsp.Data.SavedComments, rsp.Data.SavedShares, rsp.Data.SavedParticipants, rsp.Data.Id);
         }
         catch (TaskCanceledException)
         {
@@ -165,9 +164,35 @@ public class VideoService : IVideoService
         {
             return null;
         }
-    }    
+    }
+
+    public async Task<int?> SaveLikeAsync(int likes, string videoItemId, CancellationToken ct = default)
+    {
+        var request = new LikeVideoRequest(likes, videoItemId);
+        var url = "api/videoitems/saveLike";
+
+        try
+        {
+            using var response = await _client.PostAsJsonAsync(url, request, ct);
+
+            response.EnsureSuccessStatusCode();
+
+            var options = new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true
+            };
+
+            var rsp = await response.Content
+                .ReadFromJsonAsync<LocalizerApiResponse<int>>(options, ct);
+
+            return rsp.Data;
+        }
+        catch (Exception)
+        {
+            return likes;
+        }
+    }
 }
 
 public record VideoCreateRequest(string Title, string Topic, string VideoUri, string Language ,string TopicId);
-
- 
+public record LikeVideoRequest(int likes, string videoItemId);
