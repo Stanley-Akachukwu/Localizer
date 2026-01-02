@@ -49,7 +49,7 @@ public partial class ReelPage : ContentPage
         _vm.Videos[itemIndex].IsPlaying = true;
         _vm.SelectedTopic = _vm.Videos[itemIndex].Topic;
         _vm.VideoTopicId = _vm.Videos[itemIndex].VideoTopicId;
-
+        _vm.VideoItemId = _vm.Videos[itemIndex].VideoItemId;
 
         foreach (var myModel in _vm.Videos)
         {

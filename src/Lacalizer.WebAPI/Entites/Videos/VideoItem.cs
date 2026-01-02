@@ -20,4 +20,5 @@ public class VideoItem : BaseEntity<string>
     public int CommentCounts { get; set; }
     public int ShareCounts { get; set; }
     public int ParticipantCounts { get; set; }
+    public ICollection<Comment>? Comments { get; set; }
 }

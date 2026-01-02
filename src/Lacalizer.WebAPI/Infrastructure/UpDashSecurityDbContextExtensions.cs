@@ -46,11 +46,11 @@ public static class DbInitializer
             Console.WriteLine($"Seeding ...");
 
 
-            //var videoTopicSeed = await VideoTopicSeedAsync(dbContext, sysInitId, ct);
-            //if (videoTopicSeed)
-            //{
-            //    if (videoTopicSeed) tables.Add("videoTopicSeed");
-            //}
+            var videoTopicSeed = await VideoTopicSeedAsync(dbContext, sysInitId, ct);
+            if (videoTopicSeed)
+            {
+                if (videoTopicSeed) tables.Add("videoTopicSeed");
+            }
 
 
             var videoItemSeed = await VideoItemSeedAsync(dbContext, sysInitId, ct);

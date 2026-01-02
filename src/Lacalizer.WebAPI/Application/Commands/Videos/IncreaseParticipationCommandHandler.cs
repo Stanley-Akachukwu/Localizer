@@ -5,18 +5,21 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 
 namespace Lacalizer.WebAPI.Application.Commands.Videos;
-
-public record IncreaseLikesCommand(string VideoItemId) : IRequest<LocalizerApiResponse<int>>;
  
-public class IncreaseLikesCommandHandler : IRequestHandler<IncreaseLikesCommand, LocalizerApiResponse<int>>
+
+public record IncreaseParticipationCommand(
+    int Likes,
+    string VideoItemId) : IRequest<LocalizerApiResponse<int>>;
+
+public class IncreaseParticipationCommandHandler : IRequestHandler<IncreaseParticipationCommand, LocalizerApiResponse<int>>
 {
     private readonly LocalizeContext _db;
-    public IncreaseLikesCommandHandler(LocalizeContext db)
+    public IncreaseParticipationCommandHandler(LocalizeContext db)
     {
         _db = db;
     }
 
-    public async Task<LocalizerApiResponse<int>> Handle(IncreaseLikesCommand request, CancellationToken ct)
+    public async Task<LocalizerApiResponse<int>> Handle(IncreaseParticipationCommand request, CancellationToken ct)
     {
         var videoItem = await _db.VideoItems
                                   .FirstOrDefaultAsync(v => v.Id.Trim() == request.VideoItemId.Trim(), ct);
@@ -28,10 +31,10 @@ public class IncreaseLikesCommandHandler : IRequestHandler<IncreaseLikesCommand,
                 IsSuccess = false,
                 ErrorMessage = "Video item not found.",
                 StatusCode = 404,
-                Data =0
+                Data = request.Likes
             };
         }
-        videoItem.LikeCounts++;
+        videoItem.ParticipantCounts++;
         _db.VideoItems.Update(videoItem);
         await _db.SaveChangesAsync(ct);
 
@@ -40,15 +43,15 @@ public class IncreaseLikesCommandHandler : IRequestHandler<IncreaseLikesCommand,
             IsSuccess = true,
             Data = videoItem.LikeCounts++,
             StatusCode = 201,
-            ResponseMessage = "Video item likes increased successfully."
+            ResponseMessage = "Video item localizing participation increased successfully."
         };
     }
 }
 
 
-public class IncreaseLikesCommandValidator : AbstractValidator<IncreaseLikesCommand>
+public class IncreaseParticipationCommandValidator : AbstractValidator<IncreaseParticipationCommand>
 {
-    public IncreaseLikesCommandValidator()
+    public IncreaseParticipationCommandValidator()
     {
         RuleFor(x => x.VideoItemId).NotEmpty();
     }

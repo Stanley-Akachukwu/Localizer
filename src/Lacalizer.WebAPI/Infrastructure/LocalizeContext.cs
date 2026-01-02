@@ -9,12 +9,14 @@ namespace Lacalizer.WebAPI.Infrastructure;
 
 public class LocalizeContext(DbContextOptions<LocalizeContext> options) : DbContext(options)
 {
+    public DbSet<Comment> Comments { get; set; }
     public DbSet<VideoItem> VideoItems { get; set; }
     public DbSet<VideoTopic> VideoTopics { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
+        modelBuilder.Entity<Comment>().ToTable("Comments", DbSchemaConstants.COMMENT);
         modelBuilder.Entity<VideoItem>().ToTable("VideoItems", DbSchemaConstants.VIDEO);
         modelBuilder.Entity<VideoTopic>().ToTable("VideoTopics", DbSchemaConstants.VIDEO);
 

@@ -7,6 +7,7 @@ namespace Lacalizer.Mobile.Views;
 
 [QueryProperty(nameof(Topic), "topic")]
 [QueryProperty(nameof(VideoTopicId), "videoTopicId")]
+[QueryProperty(nameof(VideoItemId), "videoItemId")]
 
 public partial class LocalizePage : ContentPage
 {
@@ -37,6 +38,16 @@ public partial class LocalizePage : ContentPage
             var vm = BindingContext as LocalizeVewModel;
             if (vm != null)
                 vm.VideoTopicId = value;
+        }
+    }
+    public string VideoItemId
+    {
+        get => (BindingContext as LocalizeVewModel)?.VideoItemId;
+        set
+        {
+            var vm = BindingContext as LocalizeVewModel;
+            if (vm != null)
+                vm.VideoItemId = value;
         }
     }
     private void CameraViewLoaded(object sender, EventArgs e)

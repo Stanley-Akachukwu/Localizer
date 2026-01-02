@@ -5,7 +5,6 @@ using Lacalizer.WebAPI.Application.Commands.Videos;
 using Lacalizer.WebAPI.Application.Queries;
 using Lacalizer.WebAPI.Infrastructure;
 using Lacalizer.WebAPI.Services.Validations;
-using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Azure;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -31,6 +30,8 @@ builder.Services.AddMediatR(cfg =>
 
 builder.Services.AddScoped<IValidationService, ValidationService>();
 builder.Services.AddScoped<IVideoItemQueries, VideoItemQueries>();
+builder.Services.AddScoped<ICommentQueries, CommentQueries>();
+
 builder.Services.AddAzureClients(clientBuilder =>
 {
     clientBuilder.AddBlobServiceClient(builder.Configuration["StorageConnection:blobServiceUri"]!).WithName("StorageConnection");
@@ -53,6 +54,7 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseAuthorization();
 app.MapVideoItemAPI();
+app.MapCommentAPI();
 app.MapDefaultEndpoints();
 
 app.CreateLocalizeDbIfNotExists();

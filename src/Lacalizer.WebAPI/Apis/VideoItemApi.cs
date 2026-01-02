@@ -47,6 +47,11 @@ public static class VideoItemApi
            .WithSummary("Increase likes")
            .WithDescription("Increase likes of video item");
 
+        v1.MapPost("/saveParticipation", IncreaseParticipationAsync)
+           .WithName("SaveParticipation")
+           .WithSummary("Save participation")
+           .WithDescription("Save vidoe localizing participation");
+
         return v1;
     }
 
@@ -117,7 +122,18 @@ public static class VideoItemApi
             IncreaseLikesCommand,
             int>(cmd, validator, validatorService, mediator);
     }
+    private static Task<LocalizerApiResponse<int>> IncreaseParticipationAsync(
+     IncreaseParticipationCommand cmd,
+     IValidator<IncreaseParticipationCommand> validator,
+     IValidationService validatorService,
+     IMediator mediator)
+    {
+        return MediatorValidationHelper.ExecuteAsync<
+            IncreaseParticipationCommand,
+            int>(cmd, validator, validatorService, mediator);
+    }
 }
+
 
 public record GetVideoItemByIdRequest(string Id);
 public record VideoPaginationQuery(

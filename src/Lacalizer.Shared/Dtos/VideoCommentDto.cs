@@ -8,11 +8,8 @@ public class VideoCommentDto
 {
     public string? VideoId { get; set; }
     public string? VideoTopicId { get; set; }
-
-    public int Id { get; set; }
-    public int? ParentId { get; set; } 
+    public string Id { get; set; }
+    public string? ParentId { get; set; } 
     public string? Author { get; set; }
     public string? Content { get; set; }
-    public ObservableCollection<VideoCommentDto> Children { get; set; } = new ObservableCollection<VideoCommentDto>();
-    public int Depth { get; set; }
 }

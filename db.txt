@@ -1,5 +1,5 @@
 EntityFrameworkCore\Add-Migration AddActionCounts -Context LocalizeContext -IgnoreChanges
-EntityFrameworkCore\Add-Migration AddActionCounts  -Context LocalizeContext 
+EntityFrameworkCore\Add-Migration InitialMig  -Context LocalizeContext 
 
 
 EntityFrameworkCore\Update-Database -Context LocalizeContext
@@ -25,3 +25,26 @@ Click Save. If all the details are correct and the networks are aligned, pgAdmin
 In summary: Use the container name postgres on port 5432 from within your pgAdmin container.
  
 +-------------------------------------Connect to azure postgres container from pgadmin container -------------------+
+
+
+
+
+Postgres Queries
+
+UPDATE "order"."OrderSubItems"
+SET "ItemGroupModifierId" = '"01K5VH9D1JH1YF1XGK0YTVZ105"',
+    "ItemGroupModifierName" = 'GRP1'
+WHERE "ItemId" = '01K4K2B7SB7EGEABER5W1FW6HK';
+
+
+Error: When you have below error. What to do is:
+
+Debug the error with and fix the migration code to take care of it OR
+Go to Initial create migration or which ever migration the table was created and comment it out. Then add new migration for the problem table E.G.
+
+Error: Npgsql.PostgresException HResult=0x80004005 Message=42P01: relation "MasterSubMenuItems" does not exist
+
+3F000: schema \"document\" does not exist
+
+"23503: insert or update on table \"MenuItems\" violates foreign key constraint \"FK_MenuItems_FileUploads_FileUploadId\"\r\n\r\nDETAIL: Detail redacted 
+as it may contain sensitive data. Specify 'Include Error Detail' in the connection string to include this information."

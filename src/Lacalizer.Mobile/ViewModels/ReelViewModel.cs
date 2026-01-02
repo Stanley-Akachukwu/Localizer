@@ -27,6 +27,8 @@ public partial class ReelViewModel : ObservableObject
     [ObservableProperty]
     private string videoTopicId;
     [ObservableProperty]
+    private string videoItemId;
+    [ObservableProperty]
     private ReelVideoModel selectedVideo;
     public ReelViewModel(IVideoService videoService, INavigationService navigationService, ICommentService commentService)
     {
@@ -40,7 +42,7 @@ public partial class ReelViewModel : ObservableObject
     private async Task RecordVideoAsync()
     {
         await _navigationService.GoToAsync(
-            $"{Routes.LocalizePage}?topic={SelectedTopic}&videoTopicId={VideoTopicId}"
+            $"{Routes.LocalizePage}?topic={SelectedTopic}&videoTopicId={VideoTopicId}&videoItemId={VideoItemId}"
         );
     }
 

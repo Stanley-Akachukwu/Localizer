@@ -67,7 +67,7 @@ public partial class ReelVideoModel : ObservableObject
     [RelayCommand]
     private async Task IncreaseLikesAsync()
     {
-       var addCountResult = await VideoService.SaveLikeAsync(LikesCount, VideoItemId);
+       var addCountResult = await VideoService.SaveLikeAsync(VideoItemId);
         if (addCountResult != null) 
         {
             LikesCount = addCountResult.Value;
@@ -91,7 +91,7 @@ public partial class ReelVideoModel : ObservableObject
     [RelayCommand]
     private async Task OpenCommentsAsync()
     {
-        await LoadCommentsAsync();
+        await LoadCommentsAsync(VideoItemId);
         await ParentViewModel.OpenCommentsCommand.ExecuteAsync(this);
     }
 
@@ -113,19 +113,20 @@ public partial class ReelVideoModel : ObservableObject
             ParentId = ReplyingTo?.Id.ToString(),
             VideoTopicId = VideoTopicId,
             Depth = ReplyingTo == null ? 0 : ReplyingTo.Depth + 1,
+            VideoId = VideoItemId,
+            Author = "CurrentUser", // Replace with actual current user
             Children = new ObservableCollection<VideoComment>()
         };
 
         var created = await CommentService.PostCommentAsync(newDto);
 
-        // Add to UI tree (ObservableCollection ensures refresh)
-        if (ReplyingTo == null)
+        if (ReplyingTo == null ||string.IsNullOrEmpty(created.Id))
         {
             Comments.Add(created);
         }
         else
         {
-            // Must be ObservableCollection, otherwise UI won't update
+            CommentCount++;
             ReplyingTo.Children.Add(created);
         }
 
@@ -150,25 +151,12 @@ public partial class ReelVideoModel : ObservableObject
             c.Depth = depth;
             dest.Add(c);
 
-            // Recursively build children
             BuildHierarchy(source, c.Id, c.Children, depth + 1);
         }
     }
-    private async Task LoadCommentsAsync()
+    private async Task LoadCommentsAsync(string videoItemId)
     {
-        // Sample flat data (from a database or API)
-       // var flatComments = await CommentService.GetVideoCommentsAsync(VideoTopicId);
-        var flatComments = new List<VideoComment>
-        {
-            new VideoComment { Id = "1", Author = "Parent 1", Content = "This is a top-level comment.", ParentId = null },
-            new VideoComment { Id = "2", Author = "Child 1", Content = "Reply to Parent 1.", ParentId = "1" },
-            new VideoComment { Id = "3", Author = "Child 2", Content = "Another reply to Parent 1.", ParentId = "1" },
-            new VideoComment { Id = "4", Author = "Parent 2", Content = "This is another top-level comment.", ParentId = null },
-            new VideoComment { Id = "5", Author = "Child 3", Content = "Reply to Parent 2.", ParentId = "4"},
-            new VideoComment { Id = "6", Author = "Grandchild 1", Content = "Reply to Child 3.", ParentId = "5" }
-        };
-
-        // Function to recursively build the hierarchy
+        var flatComments = await CommentService.GetVideoCommentsAsync(1, 100, videoItemId);
         Comments.Clear();
         CommentCount = flatComments.Count;
         BuildHierarchy(flatComments, null, Comments, 0);

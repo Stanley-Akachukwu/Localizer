@@ -22,6 +22,72 @@ namespace Lacalizer.WebAPI.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
+            modelBuilder.Entity("Lacalizer.WebAPI.Entites.Comment", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Author")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Content")
+                        .HasColumnType("text");
+
+                    b.Property<string>("CreatedByUserId")
+                        .HasMaxLength(128)
+                        .HasColumnType("character varying(128)");
+
+                    b.Property<DateTimeOffset?>("DateCreated")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTimeOffset?>("DateDeleted")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTimeOffset?>("DateUpdated")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("DeletedByUserId")
+                        .HasMaxLength(128)
+                        .HasColumnType("character varying(128)");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(250)
+                        .HasColumnType("character varying(250)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("ParentId")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Tags")
+                        .HasMaxLength(150)
+                        .HasColumnType("character varying(150)");
+
+                    b.Property<string>("UID")
+                        .HasMaxLength(250)
+                        .HasColumnType("character varying(250)");
+
+                    b.Property<string>("UpdatedByUserId")
+                        .HasMaxLength(128)
+                        .HasColumnType("character varying(128)");
+
+                    b.Property<string>("VideoItemId")
+                        .HasColumnType("text");
+
+                    b.Property<string>("VideoTopicId")
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("VideoItemId");
+
+                    b.ToTable("Comments", "comment");
+                });
+
             modelBuilder.Entity("Lacalizer.WebAPI.Entites.Videos.VideoItem", b =>
                 {
                     b.Property<string>("Id")
@@ -168,6 +234,15 @@ namespace Lacalizer.WebAPI.Migrations
                     b.ToTable("VideoTopics", "video");
                 });
 
+            modelBuilder.Entity("Lacalizer.WebAPI.Entites.Comment", b =>
+                {
+                    b.HasOne("Lacalizer.WebAPI.Entites.Videos.VideoItem", "VideoItem")
+                        .WithMany("Comments")
+                        .HasForeignKey("VideoItemId");
+
+                    b.Navigation("VideoItem");
+                });
+
             modelBuilder.Entity("Lacalizer.WebAPI.Entites.Videos.VideoItem", b =>
                 {
                     b.HasOne("Lacalizer.WebAPI.Entites.Videos.VideoTopic", "VideoTopic")
@@ -175,6 +250,11 @@ namespace Lacalizer.WebAPI.Migrations
                         .HasForeignKey("VideoTopicId");
 
                     b.Navigation("VideoTopic");
+                });
+
+            modelBuilder.Entity("Lacalizer.WebAPI.Entites.Videos.VideoItem", b =>
+                {
+                    b.Navigation("Comments");
                 });
 
             modelBuilder.Entity("Lacalizer.WebAPI.Entites.Videos.VideoTopic", b =>

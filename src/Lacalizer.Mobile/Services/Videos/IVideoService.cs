@@ -12,7 +12,8 @@ public interface IVideoService
     Task<List<ReelVideoModel>> GetTopicVideosAsync(int pageIndex, int pageSize, CancellationToken ct = default);
     Task<ReelVideoModel?> CreateVideoAsync(VideoCreateRequest request, CancellationToken ct = default);
     Task<List<ParticipationVideoModel>> GetParticipationVideosAsync(int pageIndex, int pageSize, string? videoTopicId, CancellationToken ct = default);
-    Task<int?> SaveLikeAsync(int likes,string videoItemId, CancellationToken ct = default);
+    Task<int?> SaveLikeAsync(string videoItemId, CancellationToken ct = default);
+    Task<int?> SaveParticipationCountAsync(string videoItemId, CancellationToken ct = default);
 }
 
 public class VideoService : IVideoService
@@ -166,9 +167,9 @@ public class VideoService : IVideoService
         }
     }
 
-    public async Task<int?> SaveLikeAsync(int likes, string videoItemId, CancellationToken ct = default)
+    public async Task<int?> SaveLikeAsync(string videoItemId, CancellationToken ct = default)
     {
-        var request = new LikeVideoRequest(likes, videoItemId);
+        var request = new LikeVideoRequest(videoItemId);
         var url = "api/videoitems/saveLike";
 
         try
@@ -189,10 +190,40 @@ public class VideoService : IVideoService
         }
         catch (Exception)
         {
-            return likes;
+            return 0;
+        }
+    }
+
+    public async Task<int?> SaveParticipationCountAsync(string videoItemId, CancellationToken ct = default)
+    {
+        var request = new LocalizeParticipationRequest(videoItemId);
+        var url = "api/videoitems/saveParticipation";
+
+        try
+        {
+            using var response = await _client.PostAsJsonAsync(url, request, ct);
+
+            response.EnsureSuccessStatusCode();
+
+            var options = new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true
+            };
+
+            var rsp = await response.Content
+                .ReadFromJsonAsync<LocalizerApiResponse<int>>(options, ct);
+
+            return rsp.Data;
+        }
+        catch (Exception)
+        {
+            return 0;
         }
     }
 }
 
 public record VideoCreateRequest(string Title, string Topic, string VideoUri, string Language ,string TopicId);
-public record LikeVideoRequest(int likes, string videoItemId);
+public record LikeVideoRequest(string videoItemId);
+public record LocalizeParticipationRequest(string videoItemId);
+
+

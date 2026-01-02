@@ -25,6 +25,9 @@ public partial class LocalizeVewModel : ObservableObject
     [ObservableProperty]
     private string videoTopicId;
 
+    [ObservableProperty]
+    private string videoItemId;
+
     public IAsyncRelayCommand StartLocalizeCommand { get; }
 
     public CameraView CameraViewRef { get; set; }
@@ -139,6 +142,8 @@ public partial class LocalizeVewModel : ObservableObject
     {
         await _videoService
             .CreateVideoAsync(new VideoCreateRequest("Localized Video",SelectedTopic,videoUrl, "Igbo", VideoTopicId));
+        await _videoService
+           .SaveParticipationCountAsync(VideoItemId);
     }
     
     [RelayCommand]
