@@ -64,7 +64,7 @@ public class VideoService : IVideoService
                     v.Title,
                     v.Topic,
                     v.VideoUri,
-                    v.VideoTopicId,null,null,null,v.SavedLikes,v.SavedComments,v.SavedShares, v.SavedParticipants,v.Id))
+                    v.VideoTopicId,v.SavedLikes,v.SavedComments,v.SavedShares, v.SavedParticipants,v.Id, null, null, null,null))
                 .ToList();
 
             _cache.Set(cacheKey, items, TimeSpan.FromMinutes(10));
@@ -155,7 +155,7 @@ public class VideoService : IVideoService
                 rsp.Data.Title,
                 rsp.Data.Topic,
                 rsp.Data.VideoUri,
-                rsp.Data.Id, null, null, null, rsp.Data.SavedLikes, rsp.Data.SavedComments, rsp.Data.SavedShares, rsp.Data.SavedParticipants, rsp.Data.Id);
+                rsp.Data.Id, rsp.Data.SavedLikes, rsp.Data.SavedComments, rsp.Data.SavedShares, rsp.Data.SavedParticipants, rsp.Data.Id, null, null, null, null);
         }
         catch (TaskCanceledException)
         {

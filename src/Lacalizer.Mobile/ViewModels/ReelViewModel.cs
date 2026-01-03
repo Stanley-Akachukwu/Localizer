@@ -75,6 +75,7 @@ public partial class ReelViewModel : ObservableObject
                 vid.ParentViewModel = this;
                 vid.VideoService = _videoService;
                 vid.CommentService = _commentService;
+                vid.NavigationService = _navigationService;
             }
 
             Videos = new ObservableCollection<ReelVideoModel>(items);

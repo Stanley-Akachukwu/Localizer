@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Lacalizer.Mobile.Navigation;
 using Lacalizer.Mobile.Services.Comments;
 using Lacalizer.Mobile.Services.Videos;
 using Lacalizer.Mobile.ViewModels;
@@ -12,13 +13,14 @@ public partial class ReelVideoModel : ObservableObject
 {
     public IVideoService VideoService { get; set; }
     public ICommentService CommentService { get; set; }
-
+    public INavigationService NavigationService { get; set; }
     public ReelViewModel ParentViewModel { get; set; }
     public ReelVideoModel(string title, string topic, string videoUri, string videoTopicId,
-        IVideoService videoService,
+        int savedLikes, int savedComments,  int savedShares, int savedParticipants, string videoItemId,
+         IVideoService videoService,
         ICommentService commentService,
-        ReelViewModel parentViewModel,
-        int savedLikes, int savedComments,  int savedShares, int savedParticipants, string videoItemId)
+        INavigationService navigationService,
+        ReelViewModel parentViewModel)
     {
         Title = title;
         Topic = topic;
@@ -27,6 +29,7 @@ public partial class ReelVideoModel : ObservableObject
 
         VideoService = videoService;
         CommentService = commentService;
+        NavigationService = navigationService;
         ParentViewModel = parentViewModel;
 
         SavedLikes = savedLikes;
@@ -77,7 +80,8 @@ public partial class ReelVideoModel : ObservableObject
     [RelayCommand]
     private async Task IncreaseParticipantsAsync()
     {
-        ParticipantsCount++;
+       // ParticipantsCount++;
+        await NavigationService.GoToAsync($"{Routes.ParticipationPage}?videoTopicId={VideoTopicId}");
     }
 
     [RelayCommand]
