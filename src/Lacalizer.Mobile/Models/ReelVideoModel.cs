@@ -80,7 +80,6 @@ public partial class ReelVideoModel : ObservableObject
     [RelayCommand]
     private async Task IncreaseParticipantsAsync()
     {
-       // ParticipantsCount++;
         await NavigationService.GoToAsync($"{Routes.ParticipationPage}?videoTopicId={VideoTopicId}");
     }
 

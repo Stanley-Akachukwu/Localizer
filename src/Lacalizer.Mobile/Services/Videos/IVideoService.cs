@@ -113,10 +113,8 @@ public class VideoService : IVideoService
                     v.Title,
                     v.Topic,
                     v.VideoUri,
-                    v.Id
-                ))
+                    v.VideoTopicId, v.SavedLikes, v.SavedComments, v.SavedShares, v.SavedParticipants, v.Id, null, null, null, null))
                 .ToList();
-
             return items;
         }
         catch (TaskCanceledException)

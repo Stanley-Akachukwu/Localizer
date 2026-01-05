@@ -8,6 +8,7 @@
             xmlns:models="clr-namespace:Lacalizer.Mobile.Models"
             xmlns:viewModels="clr-namespace:Lacalizer.Mobile.ViewModels"
             xmlns:media="clr-namespace:Lacalizer.Mobile.CustomControls.Media"
+            xmlns:local="clr-namespace:Lacalizer.Mobile.Views"
             x:Name="Participations"
             x:DataType="viewModels:ParticipationViewModel"
             Shell.NavBarIsVisible="False">
@@ -47,52 +48,51 @@
 
                         <!-- Right Action Buttons -->
                         <StackLayout
-                   Orientation="Vertical"
-                   Spacing="25"
-                   HorizontalOptions="End"
-                   VerticalOptions="End"
-                   Margin="0,0,20,40">
+                        Orientation="Vertical"
+                        Spacing="25"
+                        HorizontalOptions="End"
+                        VerticalOptions="End"
+                        Margin="0,0,20,40">
 
 
-                           
 
                             <!-- LIKES -->
                             <StackLayout Spacing="4">
                                 <ImageButton
-                                 Source="likes"
-                                 Command="{Binding IncreaseLikesCommand}"
-                                 HeightRequest="36"
-                                 WidthRequest="36" />
+              Source="likes"
+              Command="{Binding IncreaseLikesCommand}"
+              HeightRequest="36"
+              WidthRequest="36" />
                                 <Label Text="{Binding LikesCount}"
-                                    TextColor="White"
-                                    FontSize="10"
-                                    HorizontalOptions="Center"/>
+                 TextColor="White"
+                 FontSize="10"
+                 HorizontalOptions="Center"/>
                             </StackLayout>
 
                             <!-- SHARE -->
                             <StackLayout Spacing="4">
                                 <ImageButton
-                                 Source="share"
-                                 Command="{Binding IncreaseShareCommand}"
-                                 HeightRequest="36"
-                                 WidthRequest="36" />
+              Source="share"
+              Command="{Binding IncreaseShareCommand}"
+              HeightRequest="36"
+              WidthRequest="36" />
                                 <Label Text="{Binding ShareCount}"
-                                    TextColor="White"
-                                    FontSize="10"
-                                    HorizontalOptions="Center"/>
+                 TextColor="White"
+                 FontSize="10"
+                 HorizontalOptions="Center"/>
                             </StackLayout>
 
                             <!-- COMMENTS -->
                             <StackLayout Spacing="4">
                                 <ImageButton
-                                 Source="comments"
-                                 Command="{Binding OpenCommentsCommand}"
-                                 HeightRequest="36"
-                                 WidthRequest="36" />
+              Source="comments"
+              Command="{Binding OpenCommentsCommand}"
+              HeightRequest="36"
+              WidthRequest="36" />
                                 <Label Text="{Binding CommentCount}"
-                                    TextColor="White"
-                                    FontSize="10"
-                                    HorizontalOptions="Center"/>
+                 TextColor="White"
+                 FontSize="10"
+                 HorizontalOptions="Center"/>
                             </StackLayout>
 
                         </StackLayout>
@@ -104,90 +104,122 @@
         </CollectionView>
 
         <BoxView
-         Color="#80000000"
-         IsVisible="{Binding Videos[0].IsCommentsVisible}"
-         InputTransparent="False"
-         />
+        Color="#80000000"
+        IsVisible="{Binding Videos[0].IsCommentsVisible}"
+        InputTransparent="False"
+        />
 
-        <!-- COMMENTS PANEL -->
         <Frame
-         x:Name="CommentPanel"
-         IsVisible="False"
-         BackgroundColor="White"
-         CornerRadius="20"
-         Padding="20"
-         TranslationY="500"
-         VerticalOptions="End"
-         HeightRequest="450"
-         HasShadow="True"
-         BindingContext="{Binding SelectedVideo}">
+x:Name="CommentPanel"
+IsVisible="False"
+BackgroundColor="White"
+CornerRadius="20"
+Padding="20"
+TranslationY="500"
+VerticalOptions="End"
+HeightRequest="450"
+HasShadow="True"
+BindingContext="{Binding SelectedVideo}">
 
             <Grid RowDefinitions="Auto,*">
 
                 <!-- CLOSE BUTTON -->
                 <ImageButton
-Grid.Row="0"
-Source="close"
-Command="{Binding Source={x:Reference Participations}, Path=BindingContext.SelectedVideo.CloseCommentsCommand}"
-HorizontalOptions="End"
-HeightRequest="30"
-WidthRequest="30"/>
+        Grid.Row="0"
+        Source="close"
+        Command="{Binding Source={x:Reference Participations}, Path=BindingContext.SelectedVideo.CloseCommentsCommand}"
+        HorizontalOptions="End"
+        HeightRequest="30"
+        WidthRequest="30"/>
 
-                <!-- COMMENTS CONTENT -->
-                <VerticalStackLayout 
-Grid.Row="1"
-Spacing="10">
+                <!-- FIXED COMMENTS SECTION -->
+                <Grid Grid.Row="1" RowDefinitions="Auto,*,Auto" RowSpacing="10">
 
-                    <Label Text="Comments"
-       FontSize="18"
-       TextColor="Black"
-       FontAttributes="Bold" />
+                    <!-- Header -->
+                    <Label Grid.Row="0"
+               Text="Comments"
+               FontSize="18"
+               TextColor="Black"
+               FontAttributes="Bold"/>
 
-                    <CollectionView ItemsSource="{Binding Comments}">
+                    <!-- COMMENTS LIST -->
+                    <CollectionView Grid.Row="1"
+                        ItemsSource="{Binding Source={x:Reference Participations}, Path=BindingContext.SelectedVideo.Comments}">
                         <CollectionView.EmptyView>
                             <Label Text="No comments yet."
-               TextColor="Gray"
-               FontSize="14" />
+                       TextColor="Gray"
+                       FontSize="14" />
                         </CollectionView.EmptyView>
-
                         <CollectionView.ItemTemplate>
-                            <DataTemplate>
-                                <Label Text="{Binding .}"
-                   FontSize="14"
-                   TextColor="Black"/>
+                            <DataTemplate x:DataType="models:VideoComment">
+                                <local:ThreadedCommentView
+    BindingContext="{Binding}"
+    ReplyCommand="{Binding Source={x:Reference Participations},
+                           Path=BindingContext.SelectedVideo.StartReplyCommand}" />
                             </DataTemplate>
+
                         </CollectionView.ItemTemplate>
                     </CollectionView>
 
-                    <Grid ColumnDefinitions="*,Auto">
-                        <Entry 
-        Text="{Binding Source={x:Reference Participations}, Path=BindingContext.SelectedVideo.NewComment}"
-        Placeholder="Add a comment..."
-        FontSize="18"
-        TextColor="Black" />
+                    <!-- REPLYING TO FRAME -->
+                    <Frame Grid.Row="2"
+        IsVisible="{Binding ReplyingTo}"
+        BackgroundColor="#EEF2FF"
+        CornerRadius="12"
+        Padding="8"
+        Margin="0,6,0,0">
 
-                        <Button 
-        Grid.Column="1"
-        Text="Send"
-        Command="{Binding Source={x:Reference Participations}, Path=BindingContext.SelectedVideo.SendCommentCommand}" />
+                        <HorizontalStackLayout Spacing="6">
+                            <Label
+        Text="{Binding ReplyingTo.Author,
+                       StringFormat='Replying to @{0}'}"
+        FontSize="12"
+        TextColor="#4338CA" />
+
+                            <Button
+        Text=""
+        FontSize="12"
+        BackgroundColor="Transparent"
+        Command="{Binding CancelReplyCommand}" />
+                        </HorizontalStackLayout>
+                    </Frame>
+
+
+
+                    <Grid Grid.Row="2" ColumnDefinitions="*,Auto">
+
+                        <Entry x:Name="CommentEntry"
+                Text="{Binding Source={x:Reference Participations}, Path=BindingContext.SelectedVideo.NewComment}"
+                Placeholder="Add a comment..."
+                FontSize="18"
+                TextColor="Black" />
+
+
+                        <ImageButton
+                    Grid.Column="1"
+                    Source="send"  
+                    HeightRequest="22"
+                    WidthRequest="22"
+                    BackgroundColor="Transparent"
+                    Command="{Binding Source={x:Reference Participations}, Path=BindingContext.SelectedVideo.SendCommentCommand}" />
+
                     </Grid>
 
-                </VerticalStackLayout>
+                </Grid>
 
             </Grid>
-
         </Frame>
 
         <Grid
-     BackgroundColor="#80000000"  
-         IsVisible="{Binding IsLoading}">
+    BackgroundColor="#80000000"  
+        IsVisible="{Binding IsLoading}">
             <ActivityIndicator
-         IsRunning="{Binding IsLoading}"
-         Color="White"
-         HorizontalOptions="Center"
-         VerticalOptions="Center"
-         WidthRequest="60"
-         HeightRequest="60"/>
+        IsRunning="{Binding IsLoading}"
+        Color="White"
+        HorizontalOptions="Center"
+        VerticalOptions="Center"
+        WidthRequest="60"
+        HeightRequest="60"/>
         </Grid>
     </Grid>
     

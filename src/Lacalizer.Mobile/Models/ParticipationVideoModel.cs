@@ -1,9 +1,9 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Lacalizer.Mobile.Navigation;
 using Lacalizer.Mobile.Services.Comments;
 using Lacalizer.Mobile.Services.Videos;
 using Lacalizer.Mobile.ViewModels;
-using Lacalizer.Shared.Dtos;
 using System.Collections.ObjectModel;
 
 namespace Lacalizer.Mobile.Models;
@@ -13,20 +13,42 @@ public partial class ParticipationVideoModel : ObservableObject
 {
     public IVideoService VideoService { get; set; }
     public ICommentService CommentService { get; set; }
+    public INavigationService NavigationService { get; set; }
     public ParticipationViewModel ParentViewModel { get; set; }
-    public ParticipationVideoModel(string title, string topic, string videoUri, string videoTopicId)
+   
+    public ParticipationVideoModel(string title, string topic, string videoUri, string videoTopicId,
+       int savedLikes, int savedComments, int savedShares, int savedParticipants, string videoItemId,
+        IVideoService videoService,
+       ICommentService commentService,
+       INavigationService navigationService,
+       ParticipationViewModel parentViewModel)
     {
         Title = title;
         Topic = topic;
         VideoUri = videoUri;
         VideoTopicId = videoTopicId;
-        CommentsPanelTranslationY = 500; // start hidden
-    }
 
+        VideoService = videoService;
+        CommentService = commentService;
+        NavigationService = navigationService;
+        ParentViewModel = parentViewModel;
+
+        SavedLikes = savedLikes;
+        SavedComments = savedComments;
+        SavedShares = savedShares;
+        SavedParticipants = savedParticipants;
+        VideoItemId = videoItemId;
+        CommentsPanelTranslationY = 500;
+    }
     public string Title { get; set; }
     public string Topic { get; set; }
     public string VideoUri { get; set; }
     public string VideoTopicId { get; set; }
+    public string VideoItemId { get; set; }
+    public int SavedLikes { get; set; }
+    public int SavedComments { get; set; }
+    public int SavedShares { get; set; }
+    public int SavedParticipants { get; set; }
 
     [ObservableProperty]
     private bool isPlaying;
@@ -39,18 +61,19 @@ public partial class ParticipationVideoModel : ObservableObject
     
     [ObservableProperty] private bool isCommentsVisible;
     [ObservableProperty] private double commentsPanelTranslationY;
+    [ObservableProperty] private string newComment;
+    [ObservableProperty] private VideoComment? replyingTo;
+    [ObservableProperty]
+    private ObservableCollection<VideoComment> comments = new();
 
-  
     [RelayCommand]
     private async Task IncreaseLikesAsync()
     {
-        LikesCount++;
-    }
-
-    [RelayCommand]
-    private async Task IncreaseParticipantsAsync()
-    {
-        ParticipantsCount++;
+        var addCountResult = await VideoService.SaveLikeAsync(VideoItemId);
+        if (addCountResult != null)
+        {
+            LikesCount = addCountResult.Value;
+        }
     }
 
     [RelayCommand]
@@ -59,15 +82,12 @@ public partial class ParticipationVideoModel : ObservableObject
         ShareCount++;
     }
 
-    [ObservableProperty]
-    private string newComment;
 
-    [ObservableProperty]
-    private ObservableCollection<string> comments = new();
-    
+
     [RelayCommand]
     private async Task OpenCommentsAsync()
     {
+        await LoadCommentsAsync(VideoItemId);
         await ParentViewModel.OpenCommentsCommand.ExecuteAsync(this);
     }
 
@@ -83,18 +103,60 @@ public partial class ParticipationVideoModel : ObservableObject
         if (string.IsNullOrWhiteSpace(NewComment))
             return;
 
-        //var commentDto = new VideoCommentDto
-        //{
-        //    Content = NewComment,
-        //    VideoTopicId = VideoTopicId
-        //};
-        //await CommentService.PostCommentAsync(commentDto);
+        var newDto = new VideoComment
+        {
+            Content = NewComment,
+            ParentId = ReplyingTo?.Id.ToString(),
+            VideoTopicId = VideoTopicId,
+            Depth = ReplyingTo == null ? 0 : ReplyingTo.Depth + 1,
+            VideoId = VideoItemId,
+            Author = "CurrentUser", // Replace with actual current user
+            Children = new ObservableCollection<VideoComment>()
+        };
 
-        Comments.Add(NewComment);
+        var created = await CommentService.PostCommentAsync(newDto);
+
+        if (ReplyingTo == null || string.IsNullOrEmpty(created.Id))
+        {
+            Comments.Add(created);
+        }
+        else
+        {
+            CommentCount++;
+            ReplyingTo.Children.Add(created);
+        }
+
         CommentCount++;
-
         NewComment = string.Empty;
+        ReplyingTo = null;
+    }
+    [RelayCommand]
+    private void StartReply(VideoComment parent)
+    {
+        ReplyingTo = parent;
+        NewComment = $"@{parent.Author} ";
+    }
 
-        await ParentViewModel.CloseCommentsCommand.ExecuteAsync(null);
+    private void BuildHierarchy(List<VideoComment> source, string? parentId, ObservableCollection<VideoComment> dest, int depth)
+    {
+        foreach (var c in source.Where(x => x.ParentId == parentId))
+        {
+            if (c.Children == null)
+                c.Children = new ObservableCollection<VideoComment>();
+
+            c.Depth = depth;
+            dest.Add(c);
+
+            BuildHierarchy(source, c.Id, c.Children, depth + 1);
+        }
+    }
+    private async Task LoadCommentsAsync(string videoItemId)
+    {
+        var flatComments = await CommentService.GetVideoCommentsAsync(1, 100, videoItemId);
+        Comments.Clear();
+        CommentCount = flatComments.Count;
+        BuildHierarchy(flatComments, null, Comments, 0);
+
+        await Task.CompletedTask;
     }
 }

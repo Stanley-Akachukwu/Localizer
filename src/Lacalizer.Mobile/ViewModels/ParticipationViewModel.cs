@@ -2,6 +2,7 @@
 using CommunityToolkit.Mvvm.Input;
 using Lacalizer.Mobile.Models;
 using Lacalizer.Mobile.Navigation;
+using Lacalizer.Mobile.Services.Comments;
 using Lacalizer.Mobile.Services.Videos;
 using System.Collections.ObjectModel;
 
@@ -11,28 +12,30 @@ public partial class ParticipationViewModel : ObservableObject
 {
     private readonly IVideoService _videoService;
     private readonly INavigationService _navigationService;
-    private bool _isLoading;
-    public bool IsLoading
-    {
-        get => _isLoading;
-        set { _isLoading = value; OnPropertyChanged(); }
-    }
+    private readonly ICommentService _commentService;
 
     [ObservableProperty]
-    private ObservableCollection<ParticipationVideoModel> _videos;
+    private ObservableCollection<ParticipationVideoModel> videos;
+
+    [ObservableProperty]
+    private bool isLoading;
     [ObservableProperty]
     private string selectedTopic;
-
     [ObservableProperty]
     private string videoTopicId;
     [ObservableProperty]
+    private string videoItemId;
+    [ObservableProperty]
     private ParticipationVideoModel selectedVideo;
-    public ParticipationViewModel(IVideoService videoService, INavigationService navigationService)
+
+    public ParticipationViewModel(IVideoService videoService, INavigationService navigationService, ICommentService commentService)
     {
         _videoService = videoService;
         _navigationService = navigationService;
+        _commentService = commentService;
         LoadVideosCommand = new AsyncRelayCommand(LoadVideosAsync);
     }
+
 
     public IAsyncRelayCommand LoadVideosCommand { get; }
 
@@ -54,12 +57,15 @@ public partial class ParticipationViewModel : ObservableObject
             // Add default counter values
             foreach (var vid in items)
             {
-                vid.LikesCount = Random.Shared.Next(1, 50);
-                vid.CommentCount = Random.Shared.Next(1, 20);
-                vid.ShareCount = Random.Shared.Next(1, 10);
-                vid.ParticipantsCount = Random.Shared.Next(1, 30);
+                vid.VideoItemId = vid.VideoItemId;
+                vid.LikesCount = vid.SavedLikes;
+                vid.CommentCount = vid.SavedComments;
+                vid.ShareCount = vid.SavedShares;
+                vid.ParticipantsCount = vid.SavedParticipants;
                 vid.ParentViewModel = this;
                 vid.VideoService = _videoService;
+                vid.CommentService = _commentService;
+                vid.NavigationService = _navigationService;
             }
 
             Videos = new ObservableCollection<ParticipationVideoModel>(items);
@@ -112,7 +118,6 @@ public partial class ParticipationViewModel : ObservableObject
 
         SelectedVideo = null;
     }
-
 
     [RelayCommand]
     private async Task BackAsync()
