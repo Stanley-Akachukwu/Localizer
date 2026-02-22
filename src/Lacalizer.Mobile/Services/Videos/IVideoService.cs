@@ -2,6 +2,8 @@
 using Lacalizer.Shared.Dtos;
 using Lacalizer.Shared.Enums;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Configuration;
+using System.Diagnostics;
 using System.Net.Http.Json;
 using System.Text.Json;
 
@@ -20,11 +22,13 @@ public class VideoService : IVideoService
 {
     private readonly HttpClient _client;
     private readonly IMemoryCache _cache;
-
-    public VideoService(HttpClient client, IMemoryCache cache)
+    private IConfiguration _config;
+    public VideoService(HttpClient client, IMemoryCache cache, IConfiguration config)
     {
         _client = client;
         _cache = cache;
+        _config = config; 
+        _client.BaseAddress = new Uri(_config["ApiSettings:BaseUrl"]);
     }
 
     public async Task<List<ReelVideoModel>> GetTopicVideosAsync(

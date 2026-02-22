@@ -14,8 +14,8 @@ public partial class ParticipationVideoModel : ObservableObject
     public IVideoService VideoService { get; set; }
     public ICommentService CommentService { get; set; }
     public INavigationService NavigationService { get; set; }
-    public ParticipationViewModel ParentViewModel { get; set; }
-   
+    public ParticipationViewModel ParentViewModel { get; set; }   
+    
     public ParticipationVideoModel(string title, string topic, string videoUri, string videoTopicId,
        int savedLikes, int savedComments, int savedShares, int savedParticipants, string videoItemId,
         IVideoService videoService,
@@ -82,6 +82,11 @@ public partial class ParticipationVideoModel : ObservableObject
         ShareCount++;
     }
 
+    [RelayCommand]
+    private async Task NavigateToTopicAsync()
+    {
+        await NavigationService.GoToAsync(Routes.ReelPage);
+    }
 
 
     [RelayCommand]

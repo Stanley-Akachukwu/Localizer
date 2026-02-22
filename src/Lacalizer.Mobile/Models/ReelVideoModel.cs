@@ -15,12 +15,34 @@ public partial class ReelVideoModel : ObservableObject
     public ICommentService CommentService { get; set; }
     public INavigationService NavigationService { get; set; }
     public ReelViewModel ParentViewModel { get; set; }
+    //public ReelVideoModel(string title, string topic, string videoUri, string videoTopicId,
+    //    int savedLikes, int savedComments,  int savedShares, int savedParticipants, string videoItemId) 
+    //    : this(title, topic, videoUri, videoTopicId,savedLikes, savedComments, savedShares, savedParticipants, videoItemId, null, null, null, null)
+    //{
+    //    Title = title;
+    //    Topic = topic;
+    //    VideoUri = videoUri;
+    //    VideoTopicId = videoTopicId;
+
+    //    //VideoService = videoService;
+    //    //CommentService = commentService;
+    //    //NavigationService = navigationService;
+    //    //ParentViewModel = parentViewModel;
+
+    //    SavedLikes = savedLikes;
+    //    SavedComments = savedComments;
+    //    SavedShares = savedShares;
+    //    SavedParticipants = savedParticipants;
+    //    VideoItemId = videoItemId;
+    //    CommentsPanelTranslationY = 500;  
+    //}
+
     public ReelVideoModel(string title, string topic, string videoUri, string videoTopicId,
-        int savedLikes, int savedComments,  int savedShares, int savedParticipants, string videoItemId,
-         IVideoService videoService,
-        ICommentService commentService,
-        INavigationService navigationService,
-        ReelViewModel parentViewModel)
+       int savedLikes, int savedComments, int savedShares, int savedParticipants, string videoItemId,
+        IVideoService videoService,
+       ICommentService commentService,
+       INavigationService navigationService,
+       ReelViewModel parentViewModel)
     {
         Title = title;
         Topic = topic;
@@ -37,7 +59,7 @@ public partial class ReelVideoModel : ObservableObject
         SavedShares = savedShares;
         SavedParticipants = savedParticipants;
         VideoItemId = videoItemId;
-        CommentsPanelTranslationY = 500;  
+        CommentsPanelTranslationY = 500;
     }
 
     public string Title { get; set; }

@@ -2,6 +2,7 @@
 using Lacalizer.Mobile.Models;
 using Lacalizer.Shared.Dtos;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Configuration;
 using System.Net.Http.Json;
 using System.Text.Json;
 
@@ -20,11 +21,13 @@ public class CommentService : ICommentService
 {
     private readonly HttpClient _client;
     private readonly IMemoryCache _cache;
-
-    public CommentService(HttpClient client, IMemoryCache cache)
+    private IConfiguration _config;
+    public CommentService(HttpClient client, IMemoryCache cache, IConfiguration config)
     {
         _client = client;
         _cache = cache;
+        _config = config;
+        _client.BaseAddress = new Uri(_config["ApiSettings:BaseUrl"]);
     }
 
     public async Task<List<VideoComment>> GetVideoCommentsAsync( 

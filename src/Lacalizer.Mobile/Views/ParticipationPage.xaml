@@ -72,10 +72,10 @@
                             <!-- SHARE -->
                             <StackLayout Spacing="4">
                                 <ImageButton
-              Source="share"
-              Command="{Binding IncreaseShareCommand}"
-              HeightRequest="36"
-              WidthRequest="36" />
+                  Source="share"
+                  Command="{Binding IncreaseShareCommand}"
+                  HeightRequest="36"
+                  WidthRequest="36" />
                                 <Label Text="{Binding ShareCount}"
                  TextColor="White"
                  FontSize="10"
@@ -94,6 +94,15 @@
                  FontSize="10"
                  HorizontalOptions="Center"/>
                             </StackLayout>
+
+                            <StackLayout Spacing="4">
+                                <ImageButton
+                                Source="start_topic"
+                                Command="{Binding NavigateToTopicCommand}"
+                                HeightRequest="36"
+                                WidthRequest="36" />
+                            </StackLayout>
+
 
                         </StackLayout>
 
