@@ -23,7 +23,14 @@
             ContentTemplate="{DataTemplate views:ReelPage}"
             Route="Reel" />
         </Tab>
-
+        
+        <Tab Title="Group"
+           Icon="start.png">
+            <ShellContent
+         ContentTemplate="{DataTemplate views:ReelVideoGroupPage}"
+          Route="GroupReels" />
+        </Tab>
+        
     </TabBar>
 
 

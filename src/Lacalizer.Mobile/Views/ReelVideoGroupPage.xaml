@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Lacalizer.Mobile.Views.ReelVideoGroupPage"
+             Title="ReelVideoGroupPage"
+             xmlns:models="clr-namespace:Lacalizer.Mobile.Models"
+             xmlns:viewModels="clr-namespace:Lacalizer.Mobile.ViewModels"
+             xmlns:media="clr-namespace:Lacalizer.Mobile.CustomControls.Media"
+             xmlns:local="clr-namespace:Lacalizer.Mobile.Views"
+             xmlns:converters="clr-namespace:Lacalizer.Mobile.Converters"
+             x:DataType="viewModels:ReelVideoGroupViewModel"
+             Shell.NavBarIsVisible="False">
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <converters:BoolToColorConverter x:Key="BoolToColorConverter"
+                                         TrueColor="LimeGreen"
+                                         FalseColor="White"/>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+    
+    <Grid>
+        <Grid BindingContext="{Binding VideoGroup}" Padding="10" BackgroundColor="{Binding BackgroundColor}">
+
+            <Border Stroke="White" StrokeThickness="2" Padding="10">
+
+                <Grid RowDefinitions="*,Auto,*" RowSpacing="20">
+
+                    <!-- TOP ROW -->
+                    <Grid Grid.Row="0" ColumnDefinitions="*,*" ColumnSpacing="10">
+
+                        <Border Stroke="{Binding TopLeft.IsPlaying, Converter={StaticResource BoolToColorConverter}}"
+                        StrokeThickness="3" StrokeShape="RoundRectangle 20">
+                            <!--<media:ExtendedMediaElement
+                        Source="{Binding TopLeft.VideoUri}"
+                        IsPlaying="{Binding TopLeft.IsPlaying}" />-->
+                            <media:ExtendedMediaElement
+Source="https://github.com/Stanley-Akachukwu/sa-video-reviews/blob/master/Listen.mp4?raw=true"
+IsPlaying="{Binding TopLeft.IsPlaying}" />
+                        </Border>
+
+                        <Border Stroke="{Binding TopRight.IsPlaying, Converter={StaticResource BoolToColorConverter}}"
+                        StrokeThickness="3" StrokeShape="RoundRectangle 20">
+                            <media:ExtendedMediaElement
+Source="https://github.com/Stanley-Akachukwu/sa-video-reviews/blob/master/Listen.mp4?raw=true"
+IsPlaying="{Binding TopRight.IsPlaying}" />
+                            <!--<media:ExtendedMediaElement
+                        Source="{Binding TopRight.VideoUri}"
+                        IsPlaying="{Binding TopRight.IsPlaying}" />-->
+                        </Border>
+
+                    </Grid>
+
+                    <!-- CENTER -->
+                    <Grid Grid.Row="1" HorizontalOptions="Center">
+                        <Border Stroke="White"
+                        BackgroundColor="#66000000"
+                        WidthRequest="320"
+                        HeightRequest="120"
+                        StrokeShape="RoundRectangle 200">
+
+                            <Label Text="{Binding CenterText}"
+                           TextColor="White"
+                           HorizontalTextAlignment="Center"
+                           VerticalTextAlignment="Center"/>
+                        </Border>
+                    </Grid>
+
+                    <!-- BOTTOM ROW -->
+                    <Grid Grid.Row="2" ColumnDefinitions="*,*" ColumnSpacing="10">
+
+                        <Border Stroke="{Binding BottomLeft.IsPlaying, Converter={StaticResource BoolToColorConverter}}"
+                        StrokeThickness="3" StrokeShape="RoundRectangle 20">
+                            <!--<media:ExtendedMediaElement
+                        Source="{Binding BottomLeft.VideoUri}"
+                        IsPlaying="{Binding BottomLeft.IsPlaying}" />-->
+                            <media:ExtendedMediaElement
+Source="https://github.com/Stanley-Akachukwu/sa-video-reviews/blob/master/Listen.mp4?raw=true"
+IsPlaying="{Binding BottomLeft.IsPlaying}" />
+                        </Border>
+
+                        <Border Stroke="{Binding BottomRight.IsPlaying, Converter={StaticResource BoolToColorConverter}}"
+                        StrokeThickness="3" StrokeShape="RoundRectangle 20">
+                            <!--<media:ExtendedMediaElement
+                        Source="{Binding BottomRight.VideoUri}"
+                        IsPlaying="{Binding BottomRight.IsPlaying}" />-->
+                            <media:ExtendedMediaElement
+Source="https://github.com/Stanley-Akachukwu/sa-video-reviews/blob/master/Listen.mp4?raw=true"
+IsPlaying="{Binding BottomRight.IsPlaying}" />
+                        </Border>
+
+                    </Grid>
+
+                </Grid>
+            </Border>
+        </Grid>
+        <!--<CollectionView ItemsSource="{Binding VideoGroups}" >
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+
+                    <Grid Padding="10" BackgroundColor="Black">
+
+                        --><!-- OUTER BORDER --><!--
+                        <Border Stroke="White" StrokeThickness="2" Padding="10">
+
+                            <Grid RowDefinitions="*,Auto,*" RowSpacing="20">
+
+                                --><!-- ================= TOP ROW ================= --><!--
+                                <Grid Grid.Row="0" ColumnDefinitions="*,*" ColumnSpacing="10">
+
+                                    --><!-- TOP LEFT --><!--
+                                    <Border Stroke="{Binding TopLeft.IsPlaying, 
+                                    Converter={StaticResource BoolToColorConverter}}"
+                                     StrokeThickness="3" StrokeShape="RoundRectangle 20">
+                                        <media:ExtendedMediaElement
+                                    Source="{Binding TopLeft.VideoUri}"
+                                    IsPlaying="{Binding TopLeft.IsPlaying}"
+                                    Aspect="AspectFill" />
+                                    </Border>
+
+                                    --><!-- TOP RIGHT --><!--
+                                    <Border Stroke="{Binding TopRight.IsPlaying, 
+                                    Converter={StaticResource BoolToColorConverter}}"
+                                    StrokeThickness="3" StrokeShape="RoundRectangle 20">       
+                                        <media:ExtendedMediaElement
+                                    Source="{Binding TopRight.VideoUri}"
+                                    IsPlaying="{Binding TopRight.IsPlaying}"
+                                    Aspect="AspectFill" />
+                                    </Border>
+
+                                </Grid>
+
+                                --><!-- ================= CENTER OVAL ================= --><!--
+                                <Grid Grid.Row="1" HorizontalOptions="Center">
+
+                                    <Border
+                                Stroke="White"
+                                StrokeThickness="2"
+                                BackgroundColor="#66000000"
+                                WidthRequest="320"
+                                HeightRequest="120"
+                                StrokeShape="RoundRectangle 200">
+
+                                        <Label
+                                    Text="{Binding CenterText}"
+                                    TextColor="White"
+                                    FontSize="16"
+                                    HorizontalTextAlignment="Center"
+                                    VerticalTextAlignment="Center"
+                                    Padding="20"/>
+                                    </Border>
+
+                                </Grid>
+
+                                --><!-- ================= BOTTOM ROW ================= --><!--
+                                <Grid Grid.Row="2" ColumnDefinitions="*,*" ColumnSpacing="10">
+
+                                    --><!-- BOTTOM LEFT --><!--
+                                    <Border Stroke="{Binding BottomLeft.IsPlaying, 
+                                     Converter={StaticResource BoolToColorConverter}}"
+                                      StrokeThickness="3" StrokeShape="RoundRectangle 20">
+                                        <media:ExtendedMediaElement
+                                    Source="{Binding BottomLeft.VideoUri}"
+                                    IsPlaying="{Binding BottomLeft.IsPlaying}"
+                                    Aspect="AspectFill" />
+                                    </Border>
+
+                                    --><!-- BOTTOM RIGHT --><!--
+                                    <Border Stroke="{Binding BottomRight.IsPlaying, 
+                                      Converter={StaticResource BoolToColorConverter}}"
+                                     StrokeThickness="3" StrokeShape="RoundRectangle 20">
+                                        <media:ExtendedMediaElement
+                                    Source="{Binding BottomRight.VideoUri}"
+                                    IsPlaying="{Binding BottomRight.IsPlaying}"
+                                    Aspect="AspectFill" />
+                                    </Border>
+
+                                </Grid>
+
+                            </Grid>
+                        </Border>
+
+                    </Grid>
+
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>-->
+    <Grid
+  BackgroundColor="#80000000"  
+      IsVisible="{Binding IsLoading}">
+            <ActivityIndicator
+      IsRunning="{Binding IsLoading}"
+      Color="White"
+      HorizontalOptions="Center"
+      VerticalOptions="Center"
+      WidthRequest="60"
+      HeightRequest="60"/>
+        </Grid>
+    </Grid>
+</ContentPage>

@@ -169,6 +169,9 @@
 	  <MauiXaml Update="Views\ReelPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
+	  <MauiXaml Update="Views\ReelVideoGroupPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	  <MauiXaml Update="Views\ThreadedCommentView.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>

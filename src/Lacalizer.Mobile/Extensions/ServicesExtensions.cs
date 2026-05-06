@@ -14,7 +14,7 @@ public static class ServicesExtensions
 {
     public static MauiAppBuilder ConfigureServices(this MauiAppBuilder builder)
     {
-
+        var baseUrl = builder.Configuration["ApiSettings:BaseUrl"];
         //#if WINDOWS
         //        builder.Services.TryAddSingleton<SharedMauiLib.INativeAudioService, SharedMauiLib.Platforms.Windows.NativeAudioService>();
         //#elif ANDROID
@@ -42,16 +42,19 @@ public static class ServicesExtensions
         builder.Services.AddTransient<ParticipationViewModel>();
         builder.Services.AddTransient<ParticipationPage>();
 
+        builder.Services.AddTransient<ReelVideoGroupViewModel>();
+        builder.Services.AddTransient<ReelVideoGroupPage>();
+
         builder.Services.AddMemoryCache();
 
         builder.Services.AddHttpClient<IVideoService, VideoService>(client =>
         {
-            client.BaseAddress = new Uri("https://f38nk8m5-7078.uks1.devtunnels.ms/");
+            client.BaseAddress = new Uri(baseUrl);
         });
 
         builder.Services.AddHttpClient<ICommentService, CommentService>(client =>
         {
-            client.BaseAddress = new Uri("https://f38nk8m5-7078.uks1.devtunnels.ms/");
+            client.BaseAddress = new Uri(baseUrl);
         });
 
 

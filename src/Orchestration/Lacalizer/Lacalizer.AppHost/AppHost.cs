@@ -1,5 +1,6 @@
 
 using Aspire.Hosting;
+using Projects;
 
 var builder = DistributedApplication.CreateBuilder(args);
 
@@ -23,8 +24,8 @@ var lacalizerWebapi =builder.AddProject<Projects.Lacalizer_WebAPI>("lacalizer-we
     .WithExternalHttpEndpoints()
     .WithReference(localizedb);
 
-builder.AddDevTunnel("tunnel")
+builder.AddDevTunnel("localizer-api")
        .WithReference(lacalizerWebapi)
-       .WithAnonymousAccess(); 
- 
+       .WithAnonymousAccess();
+
 builder.Build().Run();

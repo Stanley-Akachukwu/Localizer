@@ -1,0 +1,12 @@
+Note DevTunnels expires in 30 days. Always ensure you have active devtunnel. Follow the step below if you are getting error about devtunnel to update:
+
+1. On Powershell list the available tunnel: devtunnel list
+
+2. Run the following command to delete expire devtunnels: 
+
+devtunnel list | Select-String "tunnel-" | ForEach-Object {
+    $id = ($_ -split "\s+")[0]
+    devtunnel delete $id
+}
+
+3. Restart your aspire to create new devtunnel
