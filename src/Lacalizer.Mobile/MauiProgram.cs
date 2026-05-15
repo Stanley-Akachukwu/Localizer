@@ -7,6 +7,7 @@ using Localizer.Mobile.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Mopups.Hosting;
+using Plugin.Maui.ScreenRecording;
 using System.Reflection;
 
 namespace Lacalizer.Mobile;
@@ -19,11 +20,13 @@ public static class MauiProgram
         var builder = MauiApp.CreateBuilder();
         builder
             .UseMauiApp<App>()
+            .UseScreenRecording()
              .UseMauiCameraView()
             .UseMauiCommunityToolkit()
             .UseMauiCommunityToolkitCamera()
-            .UseMauiCommunityToolkitMediaElement()
-            .ConfigureMopups()
+            .UseMauiCommunityToolkitMediaElement(
+                isAndroidForegroundServiceEnabled: true
+            ).ConfigureMopups()
             .ConfigureFonts(fonts =>
             {
                 fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
