@@ -1,4 +1,5 @@
 ﻿using Lacalizer.Shared.Enums;
+using Lacalizer.WebAPI.Entites.Users;
 
 namespace Lacalizer.WebAPI.Entites.Videos;
 
@@ -8,7 +9,8 @@ public class VideoItem : BaseEntity<string>
     {
         Id = NUlid.Ulid.NewUlid().ToString();
     }
-
+    public string UserId { get; set; }
+    public ApplicationUser User { get; set; }
     public string Language { get; set; } = string.Empty;
     public string Title { get; set; } = string.Empty;
     public string Topic { get; set; } = string.Empty;

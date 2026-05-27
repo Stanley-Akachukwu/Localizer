@@ -1,4 +1,5 @@
-﻿using Lacalizer.WebAPI.Entites.Videos;
+﻿using Lacalizer.WebAPI.Entites.Users;
+using Lacalizer.WebAPI.Entites.Videos;
 
 namespace Lacalizer.WebAPI.Entites;
 
@@ -8,6 +9,8 @@ public class Comment : BaseEntity<string>
     {
         Id = NUlid.Ulid.NewUlid().ToString();
     }
+    public string UserId { get; set; }
+    public ApplicationUser User { get; set; }
     public string? VideoItemId { get; set; }
     public VideoItem? VideoItem { get; set; }
     public string? VideoTopicId { get; set; }

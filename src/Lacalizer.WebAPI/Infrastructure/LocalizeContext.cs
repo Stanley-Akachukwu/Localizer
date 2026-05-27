@@ -1,13 +1,15 @@
 ﻿using Lacalizer.WebAPI.Entites;
 using Lacalizer.WebAPI.Entites.Helpers.Converters;
+using Lacalizer.WebAPI.Entites.Users;
 using Lacalizer.WebAPI.Entites.Videos;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NUlid;
 
 namespace Lacalizer.WebAPI.Infrastructure;
 
-public class LocalizeContext(DbContextOptions<LocalizeContext> options) : DbContext(options)
+public class LocalizeContext(DbContextOptions<LocalizeContext> options): IdentityDbContext<ApplicationUser>(options)
 {
     public DbSet<Comment> Comments { get; set; }
     public DbSet<VideoItem> VideoItems { get; set; }

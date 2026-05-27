@@ -1,6 +1,8 @@
 ﻿
+using Lacalizer.Mobile.Helpers;
 using Lacalizer.Mobile.Navigation;
 using Lacalizer.Mobile.Services.Comments;
+using Lacalizer.Mobile.Services.Users;
 using Lacalizer.Mobile.Services.Videos;
 using Lacalizer.Mobile.ViewModels;
 using Lacalizer.Mobile.Views;
@@ -25,6 +27,19 @@ public static class ServicesExtensions
         //#elif IOS
         //        builder.Services.TryAddSingleton<SharedMauiLib.INativeAudioService, SharedMauiLib.Platforms.iOS.NativeAudioService>();
         //#endif
+
+        builder.Services.AddSingleton<AuthService>();
+        builder.Services.AddSingleton<SessionService>();
+        builder.Services.AddTransient<LoginPage>();
+        builder.Services.AddTransient<RegisterPage>();
+        builder.Services.AddTransient<AuthViewModel>();
+        builder.Services.AddTransient<AuthViewModel>();
+        builder.Services.AddTransient<LoginViewModel>();
+        builder.Services.AddTransient<RegisterViewModel>();
+
+        builder.Services.AddSingleton<AuthService>();
+        builder.Services.AddSingleton<SessionService>();
+
 
         builder.Services.AddSingleton<MainViewModel>();
         builder.Services.AddSingleton<MainPage>();
@@ -56,6 +71,16 @@ public static class ServicesExtensions
         {
             client.BaseAddress = new Uri(baseUrl);
         });
+
+        builder.Services.AddSingleton<SessionService>();
+
+        builder.Services.AddTransient<JwtHandler>();
+
+        builder.Services.AddHttpClient<AuthService>(client =>
+        {
+            client.BaseAddress = new Uri(baseUrl);
+        })
+        .AddHttpMessageHandler<JwtHandler>();
 
 
         return builder;
