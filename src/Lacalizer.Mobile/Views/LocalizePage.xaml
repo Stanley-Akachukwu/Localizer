@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+              xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             x:Class="Lacalizer.Mobile.Views.LocalizePage"
+             Title="LocalizePage"
+             xmlns:viewModels="clr-namespace:Lacalizer.Mobile.ViewModels"
+             x:Name="LocalizeCamera"
+             x:DataType="viewModels:LocalizeVewModel"
+             xmlns:cv="clr-namespace:Camera.MAUI;assembly=Camera.MAUI"
+             Shell.NavBarIsVisible="False">
+
+    <ScrollView>
+        <VerticalStackLayout
+            Spacing="25"
+            Padding="30,0"
+            VerticalOptions="Fill"
+            HorizontalOptions="Fill">
+
+            <cv:CameraView x:Name="cameraView" WidthRequest="300" HeightRequest="300"
+            Loaded="CameraViewLoaded" CamerasLoaded="cameraView_CamerasLoaded"/>
+
+
+            <Label 
+    x:Name="lblTopic"
+    Text="{Binding SelectedTopic}"
+    HorizontalOptions="Center"
+    VerticalOptions="Center"
+    TextColor="White"
+    BackgroundColor="Black"
+    FontSize="16"
+    FontAttributes="Bold"
+    Padding="20,10" />
+
+            <Button Text="Start Localize" Command="{Binding StartLocalizeCommand}" />
+
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentPage>

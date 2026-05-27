@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             x:Class="Lacalizer.Mobile.Views.RegisterPage"
+             BackgroundColor="Transparent"
+             xmlns:viewModels="clr-namespace:Lacalizer.Mobile.ViewModels"
+             x:DataType="viewModels:RegisterViewModel"
+             Title="RegisterPage"
+             Shell.NavBarIsVisible="False">
+    <ScrollView>
+
+        <VerticalStackLayout
+            Padding="30"
+            Spacing="18">
+
+            <Label
+                Text="Create Account"
+                FontSize="32"
+                FontAttributes="Bold"
+                TextColor="Black"/>
+
+            <Entry
+                Placeholder="First Name"
+                Text="{Binding FirstName}"
+                TextColor="Black"/>
+
+            <Entry
+                Placeholder="Last Name"
+                Text="{Binding LastName}"
+                TextColor="Black"/>
+
+            <Entry
+                Placeholder="Phone Number"
+                Text="{Binding PhoneNumber}"
+                Keyboard="Telephone"
+                TextColor="Black"/>
+
+            <Entry
+                Placeholder="Email"
+                Text="{Binding Email}"
+                Keyboard="Email"
+                TextColor="Black"/>
+
+            <Entry
+                Placeholder="Password"
+                IsPassword="True"
+                Text="{Binding Password}"
+                TextColor="Black"/>
+
+            <Button
+                Text="Create Account"
+                Command="{Binding RegisterCommand}"
+                BackgroundColor="Black"
+                TextColor="White"
+                CornerRadius="25"
+                HeightRequest="55"/>
+
+        </VerticalStackLayout>
+
+    </ScrollView>
+</ContentPage>

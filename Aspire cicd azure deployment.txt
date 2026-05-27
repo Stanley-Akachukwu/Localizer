@@ -4,3 +4,13 @@ https://www.youtube.com/watch?v=Hjm-K8454tE
 
 step 1: azd init
 ... continue with the prompts to select the language, framework, and Azure services you want to use for your application.
+
+
+
+
+------------------------------------------------------------------------------------------------------------------------
+Deployed Resources: https://portal.azure.com/#@FCMB.onmicrosoft.com/resource/subscriptions/53b47206-24b3-497e-a941-a508e10598f9/resourceGroups/rg-localizer/overview
+
+Aspire Dashboard: https://aspire-dashboard.ext.gentlestone-249e9646.southafricanorth.azurecontainerapps.io/
+
+Web API Swagger: https://lacalizer-webapi.gentlestone-249e9646.southafricanorth.azurecontainerapps.io/swagger/index.html
