@@ -46,12 +46,24 @@ builder.Services.AddScoped<IVideoItemQueries, VideoItemQueries>();
 builder.Services.AddScoped<ICommentQueries, CommentQueries>();
 builder.Services.AddScoped<JwtTokenGenerator>();
 
-builder.Services.AddAzureClients(clientBuilder =>
+if (builder.Environment.IsDevelopment())
 {
-    clientBuilder.AddBlobServiceClient(builder.Configuration["StorageConnection:blobServiceUri"]!).WithName("StorageConnection");
-    clientBuilder.AddQueueServiceClient(builder.Configuration["StorageConnection:queueServiceUri"]!).WithName("StorageConnection");
-    clientBuilder.AddTableServiceClient(builder.Configuration["StorageConnection:tableServiceUri"]!).WithName("StorageConnection");
-});
+    builder.Services.AddAzureClients(clientBuilder =>
+    {
+        clientBuilder.AddBlobServiceClient(builder.Configuration["StorageConnection:blobServiceUri"]!).WithName("StorageConnection");
+        clientBuilder.AddQueueServiceClient(builder.Configuration["StorageConnection:queueServiceUri"]!).WithName("StorageConnection");
+        clientBuilder.AddTableServiceClient(builder.Configuration["StorageConnection:tableServiceUri"]!).WithName("StorageConnection");
+    });
+}
+else
+{
+    builder.Services.AddAzureClients(clientBuilder =>
+    {
+        clientBuilder.AddBlobServiceClient(
+            builder.Configuration.GetConnectionString("blobs")!);
+    });
+}
+
 
 var app = builder.Build();
 

@@ -1,6 +1,7 @@
 ###########################################################
 ## Ignore Visual Studio, .NET, and user-specific files  ##
 ###########################################################
+.azure
 
  Ignore Visual Studio settings
 .vs/

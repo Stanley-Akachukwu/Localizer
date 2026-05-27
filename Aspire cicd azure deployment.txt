@@ -1,0 +1,6 @@
+https://www.youtube.com/watch?v=Hjm-K8454tE
+
+----Fresh deployment of Aspire to Azure using Azure DevOps Pipelines steps:
+
+step 1: azd init
+... continue with the prompts to select the language, framework, and Azure services you want to use for your application.
