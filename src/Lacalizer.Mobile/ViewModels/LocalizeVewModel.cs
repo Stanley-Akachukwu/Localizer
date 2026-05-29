@@ -5,6 +5,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Lacalizer.Mobile.Navigation;
 using Lacalizer.Mobile.Services.Videos;
+using Microsoft.Extensions.Configuration;
 
 namespace Lacalizer.Mobile.ViewModels;
 
@@ -12,11 +13,13 @@ public partial class LocalizeVewModel : ObservableObject
 {
     private readonly IVideoService _videoService;
     private readonly INavigationService _navigationService;
-    public LocalizeVewModel(IVideoService videoService, INavigationService navigationService)
+    private readonly IConfiguration _config;
+    public LocalizeVewModel(IVideoService videoService, INavigationService navigationService, IConfiguration config)
     {
         _videoService = videoService;
         _navigationService = navigationService;
         StartLocalizeCommand = new AsyncRelayCommand(StartLocalizeAsync);
+        _config = config;
     }
 
     [ObservableProperty]
@@ -67,8 +70,6 @@ public partial class LocalizeVewModel : ObservableObject
 
             var result = await CameraViewRef.StartRecordingAsync(filePath, new Size(1920, 1080));
 
-            await Task.Delay(TimeSpan.FromSeconds(7));
-
             result = await CameraViewRef.StopRecordingAsync();
 
             if (!File.Exists(filePath))
@@ -96,16 +97,25 @@ public partial class LocalizeVewModel : ObservableObject
 
     private async Task<bool> UploadToAzuriteAsync(string filePath, string blobName)
     {
+
         try
         {
-            string connectionString =
-    "AccountName=devstoreaccount1;" +
-    "AccountKey=Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw==;" +
-    "DefaultEndpointsProtocol=http;" +
-    "BlobEndpoint=http://192.168.1.227:10000/devstoreaccount1;" +
-    "QueueEndpoint=http://192.168.1.227:10001/devstoreaccount1;" +
-    "TableEndpoint=http://192.168.1.227:10002/devstoreaccount1;";
+              //          string connectionString =
+              //"AccountName=devstoreaccount1;" +
+              //"AccountKey=Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw==;" +
+              //"DefaultEndpointsProtocol=http;" +
+              //"BlobEndpoint=http://192.168.1.227:10000/devstoreaccount1;" +
+              //"QueueEndpoint=http://192.168.1.227:10001/devstoreaccount1;" +
+              //"TableEndpoint=http://192.168.1.227:10002/devstoreaccount1;";
 
+
+#if DEBUG
+            var connectionString =
+                _config["Storage:LocalConnectionString"];
+#else
+        var connectionString =
+            _config["Storage:ProductionConnectionString"];
+#endif
 
 
             string containerName = "videos";

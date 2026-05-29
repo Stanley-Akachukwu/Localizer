@@ -76,7 +76,6 @@ public class VideoItemQueries : IVideoItemQueries
                     StatusCodes.Status404NotFound);
             }
 
-            // Cache the result for 5 minutes
             _cache.Set(cacheKey, dto, TimeSpan.FromMinutes(5));
 
             return LocalizerApiResponse<SingleVideoItemDto>.Success(dto, StatusCodes.Status200OK);
@@ -169,5 +168,31 @@ public class VideoItemQueries : IVideoItemQueries
         }
     }
 }
+
+
+
+
+//<ItemGroup>
+//		<PackageReference Include = "Azure.Storage.Blobs" Version="12.27.0" />
+//		<PackageReference Include = "Camera.MAUI" Version="1.5.1" />
+//		<PackageReference Include = "CommunityToolkit.Maui.Camera" Version="6.0.1" />
+//		<PackageReference Include = "Microsoft.Extensions.Caching.Memory" Version="10.0.7" />
+//		<PackageReference Include = "Microsoft.Extensions.Configuration.Binder" Version="10.0.7" />
+//		<PackageReference Include = "Microsoft.Extensions.Configuration.Json" Version="10.0.7" />
+//		<PackageReference Include = "Microsoft.Extensions.Http" Version="10.0.7" />
+//		<PackageReference Include = "Mopups" Version="1.3.4" />
+//		<PackageReference Include = "epj.RouteGenerator" Version="1.0.5" />
+//		<PackageReference Include = "epj.Expander.Maui" Version="1.0.4" />
+//		<PackageReference Include = "Microsoft.Maui.Controls.Compatibility" Version="10.0.60" />
+//		<PackageReference Include = "CommunityToolkit.Maui" Version="14.1.0" />
+//		<PackageReference Include = "CommunityToolkit.Maui.MediaElement" Version="9.0.0" />
+//		<PackageReference Include = "CommunityToolkit.Mvvm" Version="8.4.2" />
+//		<PackageReference Include = "Microsoft.Maui.Controls" Version="10.0.60" />
+//		<PackageReference Include = "Microsoft.Maui.Essentials" Version="10.0.60" />
+//		<PackageReference Include = "Microsoft.Extensions.Logging.Debug" Version="10.0.7" />
+//		<PackageReference Include = "NUlid" Version="1.7.3" />
+//		<PackageReference Include = "OpenTelemetry.Exporter.OpenTelemetryProtocol" Version="1.15.3" />
+//		<PackageReference Include = "Plugin.Maui.ScreenRecording.Levchenko" Version="1.0.1" />
+//	</ItemGroup>
 
 

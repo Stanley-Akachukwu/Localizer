@@ -10,12 +10,10 @@ namespace Lacalizer.Mobile.Views;
 public partial class ReelPage : ContentPage
 {
     private readonly ReelViewModel _vm;
-    private readonly INavigationService _navigationService;
-    public ReelPage(ReelViewModel vm, INavigationService navigationService)
+    public ReelPage(ReelViewModel vm)
     {
         InitializeComponent();
         BindingContext = _vm = vm;
-        _navigationService = navigationService;
         this.RegisterBackHandler();
     }
     

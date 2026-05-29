@@ -1,12 +1,15 @@
 <Solution>
   <Folder Name="/Solution Items/">
-    <File Path="Aspire cicd azure deployment.txt" />
-    <File Path="Azurrite.txt" />
-    <File Path="db.txt" />
-    <File Path="DevTunnel_Fix.txt" />
-    <File Path="Research.txt" />
-    <File Path="Rough.txt" />
+    <File Path="Solution Items/Aspire cicd azure deployment.txt" />
+    <File Path="Solution Items/Azurrite.txt" />
+    <File Path="Solution Items/db.txt" />
+    <File Path="Solution Items/DevTunnel_Fix.txt" />
+    <File Path="Solution Items/Research.txt" />
+    <File Path="Solution Items/Rough.txt" />
   </Folder>
+  <Project Path="src/Lacalizer.Mobile/Lacalizer.Mobile.csproj">
+    <Deploy Solution="Debug|*" />
+  </Project>
   <Project Path="src/Lacalizer.Shared/Lacalizer.Shared.csproj" Id="f9bdbbf4-3169-489d-84e1-65e545f0d4e4" />
   <Project Path="src/Lacalizer.WebAPI/Lacalizer.WebAPI.csproj" />
   <Project Path="src/Orchestration/Lacalizer/Lacalizer.AppHost/Lacalizer.AppHost.csproj" />

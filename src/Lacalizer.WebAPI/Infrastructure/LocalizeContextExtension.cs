@@ -1,5 +1,7 @@
-﻿using Lacalizer.WebAPI.Entites.Videos;
+﻿using Lacalizer.WebAPI.Entites.Users;
+using Lacalizer.WebAPI.Entites.Videos;
 using Lacalizer.WebAPI.Infrastructure.Seeds;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Npgsql;
 
@@ -19,10 +21,14 @@ public static class LocalizeContextExtension
 
                 string sysInitId = configuration.GetValue<string>("LacalizeSettings:SysInitId")!;
                 var dbContext = services.GetRequiredService<LocalizeContext>();
+                var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
+
+                //// ⚠️ DROP DATABASE (ONLY FOR DEV / ONE-TIME INIT)
+                //dbContext.Database.EnsureDeleted();
 
                 dbContext.Database.Migrate();
 
-                DbInitializer.InitializeAsync(dbContext, sysInitId, scope, cancellationToken).Wait();
+                DbInitializer.InitializeAsync(dbContext, sysInitId,userManager, cancellationToken).Wait();
             }
             catch (Exception ex)
             {
@@ -36,7 +42,7 @@ public static class LocalizeContextExtension
 public static class DbInitializer
 {
 
-    public static async Task InitializeAsync(LocalizeContext dbContext, string sysInitId, IServiceScope scope, CancellationToken ct)
+    public static async Task InitializeAsync(LocalizeContext dbContext, string sysInitId, UserManager<ApplicationUser> userManager, CancellationToken ct)
     {
         try
         {
@@ -44,6 +50,13 @@ public static class DbInitializer
             Console.WriteLine($"DB Initiating ...");
             var tables = new List<string>();
             Console.WriteLine($"Seeding ...");
+
+            var userSeed = await UserSeedAsync(userManager, ct);
+
+            if (userSeed)
+            {
+                tables.Add("userSeed");
+            }
 
 
             var videoTopicSeed = await VideoTopicSeedAsync(dbContext, sysInitId, ct);
@@ -66,6 +79,40 @@ public static class DbInitializer
         catch (NpgsqlException ex)
         {
             Console.Error.WriteLine($"Error Initializing db: {ex.Message}");
+        }
+    }
+
+    private static async Task<bool> UserSeedAsync(
+     UserManager<ApplicationUser> userManager,
+     CancellationToken ct)
+    {
+        try
+        {
+            var users = UserSeed.GetUsers();
+
+            foreach (var user in users)
+            {
+                var exists = await userManager.FindByIdAsync(user.Id);
+
+                if (exists == null)
+                {
+                    var result = await userManager.CreateAsync(user);
+
+                    if (!result.Succeeded)
+                    {
+                        Console.Error.WriteLine(
+                            $"User creation failed: {string.Join(", ", result.Errors.Select(e => e.Description))}");
+                        return false;
+                    }
+                }
+            }
+
+            return true;
+        }
+        catch (Exception ex)
+        {
+            Console.Error.WriteLine($"User seeding error: {ex.Message}");
+            return false;
         }
     }
 
@@ -97,7 +144,8 @@ public static class DbInitializer
                         DateUpdated = DateTime.UtcNow,
                         UpdatedByUserId = v.UpdatedByUserId,
                         UID = v.Id,
-                        VideoType = v.VideoType
+                        VideoType = v.VideoType,
+                        UserId = v.UserId,
                     };
 
                     videoItems.Add(videoItem);
@@ -143,6 +191,8 @@ public static class DbInitializer
                         DateUpdated = DateTime.UtcNow,
                         UpdatedByUserId = v.CreatedByUserId,
                         UID = $"{v.Id}-{v.Title}",
+                        UserId = v.UserId,
+
                     };
                     videoTopics.Add(videoTopic);
                 }

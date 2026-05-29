@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Design;
 
 namespace Lacalizer.WebAPI.Infrastructure;
 
-public class UpDashSecurityDbContextFactory : IDesignTimeDbContextFactory<LocalizeContext>
+public class LocalizeDbContextFactory : IDesignTimeDbContextFactory<LocalizeContext>
 {
     public LocalizeContext CreateDbContext(string[] args)
     {
@@ -21,3 +21,5 @@ public class UpDashSecurityDbContextFactory : IDesignTimeDbContextFactory<Locali
         return new LocalizeContext(optionsBuilder.Options);
     }
 }
+
+ 

@@ -2,6 +2,7 @@
 using Lacalizer.WebAPI.Entites.Helpers.Converters;
 using Lacalizer.WebAPI.Entites.Users;
 using Lacalizer.WebAPI.Entites.Videos;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
@@ -22,15 +23,13 @@ public class LocalizeContext(DbContextOptions<LocalizeContext> options): Identit
         modelBuilder.Entity<VideoItem>().ToTable("VideoItems", DbSchemaConstants.VIDEO);
         modelBuilder.Entity<VideoTopic>().ToTable("VideoTopics", DbSchemaConstants.VIDEO);
 
-        //modelBuilder.Entity<Domain.UpdashOrders.Order>()
-        //    .HasOne(c => c.Amount)
-        //    .WithOne(a => a.Order)
-        //    .HasForeignKey<Domain.UpdashOrders.Order>(c => c.AmountId);
-
-
-        //  modelBuilder.ApplyConfiguration(new UpDashUserConfiguration());
-
-
+        modelBuilder.Entity<ApplicationUser>().ToTable("AspNetUsers", DbSchemaConstants.AUTH);
+        modelBuilder.Entity<IdentityRole>().ToTable("AspNetRoles", DbSchemaConstants.AUTH);
+        modelBuilder.Entity<IdentityUserRole<string>>().ToTable("AspNetUserRoles", DbSchemaConstants.AUTH);
+        modelBuilder.Entity<IdentityUserClaim<string>>().ToTable("AspNetUserClaims", DbSchemaConstants.AUTH);
+        modelBuilder.Entity<IdentityUserLogin<string>>().ToTable("AspNetUserLogins", DbSchemaConstants.AUTH);
+        modelBuilder.Entity<IdentityRoleClaim<string>>().ToTable("AspNetRoleClaims", DbSchemaConstants.AUTH);
+        modelBuilder.Entity<IdentityUserToken<string>>().ToTable("AspNetUserTokens", DbSchemaConstants.AUTH);
 
         foreach (var entityType in modelBuilder.Model.GetEntityTypes())
         {

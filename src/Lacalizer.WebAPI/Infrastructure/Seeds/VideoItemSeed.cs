@@ -6,7 +6,7 @@ namespace Lacalizer.WebAPI.Infrastructure.Seeds;
  
 public static class VideoItemSeed
 {
-    private static readonly Ulid SystemUserId = Ulid.Empty;
+    public static readonly string SystemUserId = UserSeed.SystemUser.Id;
     public static async Task<VideoItem[]> GetDefaultVideoItemAsync(CancellationToken ct)
     {
         return new[]
@@ -14,6 +14,7 @@ public static class VideoItemSeed
                 new VideoItem()
                 {
                     Id = "1KAZM0HZ2JZPFBW643KT15T4G",
+                    UserId = "01SYSTEMUSER00000000000001",
                     Language = "English",
                     VideoType = VideoType.TOPIC,
                     Title = "Eze Adi",
@@ -25,6 +26,7 @@ public static class VideoItemSeed
                 new VideoItem()
                 {
                     Id = "01KAZM0HZ2JZPFBW643KTHT234",
+                     UserId = "01SYSTEMUSER00000000000001",
                     Language = "French",
                     VideoType = VideoType.TOPIC,
                     Title = "Eze Adi",
@@ -37,6 +39,7 @@ public static class VideoItemSeed
                 new VideoItem()
                 {
                     Id = "TOPIC01KAZM0HZ2JZPFBW643KT4THKE",
+                     UserId = "01SYSTEMUSER00000000000001",
                     Language = "Spanish",
                     VideoType = VideoType.TOPIC,
                     Title = "Machine",
@@ -50,4 +53,3 @@ public static class VideoItemSeed
         };
     }
 }
-

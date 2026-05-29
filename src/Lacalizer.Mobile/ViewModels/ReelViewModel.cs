@@ -64,7 +64,6 @@ public partial class ReelViewModel : ObservableObject
 
             var items = await _videoService.GetTopicVideosAsync(1, 100);
 
-            // Add default counter values
             foreach (var vid in items)
             {
                 vid.VideoItemId = vid.VideoItemId;
@@ -95,7 +94,7 @@ public partial class ReelViewModel : ObservableObject
     [RelayCommand]
     private async Task OpenCommentsAsync(ReelVideoModel video)
     {
-        SelectedVideo = video;     // ⬅ Important!
+        SelectedVideo = video;     
 
         video.IsCommentsVisible = true;
         video.IsPlaying = false;

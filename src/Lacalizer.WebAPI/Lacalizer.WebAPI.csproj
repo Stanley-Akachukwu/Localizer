@@ -21,7 +21,9 @@
     <PackageReference Include="MediatR" Version="14.1.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="10.0.7" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="10.0.7" />
-    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.7" />
+	<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.7" />
+	<PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="10.0.1" />
+	  <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.7" />
 	  <PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.7" />
 	  <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="10.0.7" />
 	  <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="10.0.7">
@@ -29,7 +31,6 @@
 		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 	  </PackageReference>
 	  <PackageReference Include="Microsoft.Extensions.Azure" Version="1.14.0" />
-	  <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="10.0.1" />
 	  
 	  <PackageReference Include="NUlid" Version="1.7.3" />
 	  

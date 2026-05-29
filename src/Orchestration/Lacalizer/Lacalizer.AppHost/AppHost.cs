@@ -41,7 +41,7 @@ try
             .WithEnvironment("PGADMIN_CONFIG_MASTER_PASSWORD_REQUIRED", "False")
             .WithBindMount("./pgadmin-data", "/var/lib/pgadmin")
             .WithEndpoint(name: "pgadmin-http", port: 8090, targetPort: 80)
-            .WithReference(localizedb);
+            .WithReference(localizedb);// http://localhost:8090/browser/  
 
         builder.AddDevTunnel("localizer-api")
             .WithReference(localizerWebApi)

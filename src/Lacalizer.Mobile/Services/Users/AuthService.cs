@@ -42,42 +42,33 @@ public class AuthService
         return true;
     }
 
-    public async Task<bool> RegisterAsync(RegisterRequest request)
+    public async Task<string> RegisterAsync(RegisterRequest request)
     {
         try
         {
-            // Call backend API
             var response = await _httpClient.PostAsJsonAsync(
                 "api/auth/register",
                 request);
 
-            // If request failed
             if (!response.IsSuccessStatusCode)
             {
                 var error = await response.Content
                     .ReadAsStringAsync();
-
-                // Optional: log or show message
-                Console.WriteLine($"Register failed: {error}");
-
-                return false;
+                return $"Register failed: {error}";
             }
 
-            // Optional response parsing
             var result = await response.Content
                 .ReadFromJsonAsync<ApiResponse>();
 
-            return result?.Success ?? true;
+            return result?.Message!;
         }
         catch (HttpRequestException ex)
         {
-            Console.WriteLine($"Network error: {ex.Message}");
-            return false;
+            return $"Network error: {ex.Message}";
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Unexpected error: {ex.Message}");
-            return false;
+            return $"Unexpected error: {ex.Message}";
         }
     }
 }

@@ -2,6 +2,7 @@
 using Lacalizer.WebAPI.Entites.Users;
 using Lacalizer.WebAPI.Models;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 namespace Lacalizer.WebAPI.Apis;
 
@@ -24,70 +25,137 @@ public static class AuthApi
     }
 
     private static async Task<IResult> Register(
-        RegisterRequest request,
-        UserManager<ApplicationUser> userManager)
+     RegisterRequest request,
+     UserManager<ApplicationUser> userManager,
+     RoleManager<IdentityRole> roleManager)
     {
-        var existingUser = userManager.Users
-            .FirstOrDefault(x =>
-                x.PhoneNumber == request.PhoneNumber);
-
-        if (existingUser != null)
+        try
         {
-            return Results.BadRequest(new
+            var existingUser = await userManager.Users
+                .FirstOrDefaultAsync(x =>
+                    x.PhoneNumber == request.PhoneNumber);
+
+            const string roleName = "User";
+
+            if (existingUser != null)
             {
-                Message = "Phone already exists"
+                //return Results.BadRequest(new
+                //{
+                //    Message = "Phone already exists"
+                //});
+
+                // ✅ Ensure role exists
+
+                var roleExists = await roleManager.RoleExistsAsync(roleName);
+
+                if (!roleExists)
+                {
+                    var createRoleResult = await roleManager
+                        .CreateAsync(new IdentityRole(roleName));
+
+                    if (!createRoleResult.Succeeded)
+                    {
+                        return Results.BadRequest(new
+                        {
+                            Message = "Failed to create user role",
+                            Errors = createRoleResult.Errors
+                                .Select(x => x.Description)
+                        });
+                    }
+                    return Results.Ok(new
+                    {
+                        Message = "Registration successful"
+                    });
+                }
+            }
+
+           
+
+            var user = new ApplicationUser
+            {
+                FirstName = request.FirstName,
+                LastName = request.LastName,
+                PhoneNumber = request.PhoneNumber,
+                Email = request.Email,
+                UserName = request.PhoneNumber
+            };
+
+            var result = await userManager
+                .CreateAsync(user, request.Password);
+
+            if (!result.Succeeded)
+            {
+                return Results.BadRequest(new
+                {
+                    Message = "Registration failed",
+                    Errors = result.Errors.Select(x => x.Description)
+                });
+            }
+
+            var roleResult = await userManager
+                .AddToRoleAsync(user, roleName);
+
+            if (!roleResult.Succeeded)
+            {
+                return Results.BadRequest(new
+                {
+                    Message = "User created but role assignment failed",
+                    Errors = roleResult.Errors
+                        .Select(x => x.Description)
+                });
+            }
+
+            return Results.Ok(new
+            {
+                Message = "Registration successful"
             });
         }
-
-        var user = new ApplicationUser
+        catch (Exception ex)
         {
-            FirstName = request.FirstName,
-            LastName = request.LastName,
-            PhoneNumber = request.PhoneNumber,
-            Email = request.Email,
-            UserName = request.PhoneNumber
-        };
-
-        var result = await userManager
-            .CreateAsync(user, request.Password);
-
-        if (!result.Succeeded)
-        {
-            return Results.BadRequest(result.Errors);
+            return Results.Problem(
+                title: "An error occurred while processing the registration request.",
+                detail: ex.Message,
+                statusCode: StatusCodes.Status500InternalServerError);
         }
-
-        await userManager.AddToRoleAsync(user, "User");
-
-        return Results.Ok(new
-        {
-            Message = "Registration successful"
-        });
     }
 
     private static async Task<IResult> Login(
-        LoginRequest request,
-        UserManager<ApplicationUser> userManager,
-        JwtTokenGenerator jwtGenerator)
+    LoginRequest request,
+    UserManager<ApplicationUser> userManager,
+    JwtTokenGenerator jwtGenerator)
     {
-        var user = userManager.Users
-            .FirstOrDefault(x =>
-                x.PhoneNumber == request.PhoneNumber);
-
-        if (user == null)
+        try
         {
-            return Results.Unauthorized();
+            var user = await userManager.Users
+                .FirstOrDefaultAsync(x =>
+                    x.PhoneNumber == request.PhoneNumber);
+
+            if (user == null)
+            {
+                return Results.NotFound(new
+                {
+                    Message = "User does not exist."
+                });
+            }
+
+            var validPassword = await userManager
+                .CheckPasswordAsync(user, request.Password);
+
+            if (!validPassword)
+            {
+                return Results.Unauthorized();
+            }
+
+            var token = jwtGenerator.Generate(user);
+
+            return Results.Ok(token);
         }
-
-        var validPassword = await userManager
-            .CheckPasswordAsync(user, request.Password);
-
-        if (!validPassword)
+        catch (Exception ex)
         {
-            return Results.Unauthorized();
+            return Results.Problem(
+                title: "An error occurred while processing the login request.",
+                detail: ex.Message,
+                statusCode: StatusCodes.Status500InternalServerError);
         }
-
-        var token = jwtGenerator.Generate(user);
-
-        return Results.Ok(token);
     }
 }

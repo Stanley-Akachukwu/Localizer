@@ -27,7 +27,7 @@ public class VideoService : IVideoService
         _client = client;
         _cache = cache;
         _config = config; 
-        _client.BaseAddress = new Uri(_config["ApiSettings:BaseUrl"]);
+        _client.BaseAddress = new Uri(_config["ApiSettings:BaseUrl"]!);
     }
 
     public async Task<List<ReelVideoModel>> GetTopicVideosAsync(
@@ -40,7 +40,7 @@ public class VideoService : IVideoService
             string cacheKey = $"videos-{pageIndex}-{pageSize}-{VideoType.TOPIC}";
 
             if (_cache.TryGetValue(cacheKey, out List<ReelVideoModel> cachedVideos))
-                return cachedVideos;
+                return cachedVideos!;
 
             var url = $"api/videoitems?PageIndex={pageIndex}&PageSize={pageSize}&VideoType={VideoType.TOPIC}";
 
@@ -64,10 +64,10 @@ public class VideoService : IVideoService
 
             var items = rsp.Data.Data
                 .Select(v => new ReelVideoModel(
-                    v.Title,
-                    v.Topic,
-                    v.VideoUri,
-                    v.VideoTopicId,v.SavedLikes,v.SavedComments,v.SavedShares, v.SavedParticipants,v.Id, null, null, null,null))
+                    v.Title!,
+                    v.Topic!,
+                    v.VideoUri!,
+                    v.VideoTopicId!,v.SavedLikes,v.SavedComments,v.SavedShares, v.SavedParticipants,v.Id!, null!, null!, null!,null!))
                 .ToList();
 
             _cache.Set(cacheKey, items, TimeSpan.FromMinutes(10));
@@ -113,10 +113,10 @@ public class VideoService : IVideoService
 
             var items = rsp.Data.Data
                 .Select(v => new ParticipationVideoModel(
-                    v.Title,
-                    v.Topic,
-                    v.VideoUri,
-                    v.VideoTopicId, v.SavedLikes, v.SavedComments, v.SavedShares, v.SavedParticipants, v.Id, null, null, null, null))
+                    v.Title!,
+                    v.Topic!,
+                    v.VideoUri!,
+                    v.VideoTopicId!, v.SavedLikes, v.SavedComments, v.SavedShares, v.SavedParticipants, v.Id!, null!, null!, null!, null!))
                 .ToList();
             return items;
         }
@@ -153,10 +153,10 @@ public class VideoService : IVideoService
                 return null;
 
             return new ReelVideoModel(
-                rsp.Data.Title,
-                rsp.Data.Topic,
-                rsp.Data.VideoUri,
-                rsp.Data.Id, rsp.Data.SavedLikes, rsp.Data.SavedComments, rsp.Data.SavedShares, rsp.Data.SavedParticipants, rsp.Data.Id, null, null, null, null);
+                rsp.Data.Title!,
+                rsp.Data.Topic!,
+                rsp.Data.VideoUri!,
+                rsp.Data.Id!, rsp.Data.SavedLikes, rsp.Data.SavedComments, rsp.Data.SavedShares, rsp.Data.SavedParticipants, rsp.Data.Id!, null!, null!, null!, null!);
         }
         catch (TaskCanceledException)
         {
@@ -187,7 +187,7 @@ public class VideoService : IVideoService
             var rsp = await response.Content
                 .ReadFromJsonAsync<LocalizerApiResponse<int>>(options, ct);
 
-            return rsp.Data;
+            return rsp?.Data;
         }
         catch (Exception)
         {
@@ -214,7 +214,7 @@ public class VideoService : IVideoService
             var rsp = await response.Content
                 .ReadFromJsonAsync<LocalizerApiResponse<int>>(options, ct);
 
-            return rsp.Data;
+            return rsp!.Data;
         }
         catch (Exception)
         {

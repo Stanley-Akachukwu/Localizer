@@ -34,6 +34,14 @@ public partial class RegisterViewModel : ObservableObject
     [RelayCommand]
     private async Task Register()
     {
+        var (isValid, error) = PasswordValidator.Validate(Password);
+
+        if (!isValid)
+        {
+            await Shell.Current.DisplayAlert("Invalid Password", error, "OK");
+            return;
+        }
+
         var request = new RegisterRequest
         {
             FirstName = FirstName,
@@ -43,16 +51,35 @@ public partial class RegisterViewModel : ObservableObject
             Password = Password
         };
 
-        var success = await _authService.RegisterAsync(request);
+        var result = await _authService.RegisterAsync(request);
+        await Shell.Current.DisplayAlert("Success", result, "OK");
+        await Shell.Current.GoToAsync("..");
+    }
 
-        if (success)
-        {
-            await Shell.Current.DisplayAlert(
-                "Success",
-                "Registration successful",
-                "OK");
+}
 
-            await Shell.Current.GoToAsync("..");
-        }
+public static class PasswordValidator
+{
+    public static (bool IsValid, string Error) Validate(string password)
+    {
+        if (string.IsNullOrWhiteSpace(password))
+            return (false, "Password is required.");
+
+        if (password.Length < 6)
+            return (false, "Password must be at least 6 characters long.");
+
+        if (!password.Any(char.IsUpper))
+            return (false, "Password must contain at least one uppercase letter.");
+
+        if (!password.Any(char.IsLower))
+            return (false, "Password must contain at least one lowercase letter.");
+
+        if (!password.Any(char.IsDigit))
+            return (false, "Password must contain at least one digit.");
+
+        if (!password.Any(ch => !char.IsLetterOrDigit(ch)))
+            return (false, "Password must contain at least one non-alphanumeric character.");
+
+        return (true, string.Empty);
     }
 }

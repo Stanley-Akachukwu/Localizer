@@ -11,7 +11,7 @@ public partial class App : Application
     public App(SessionService sessionService)
     {
         InitializeComponent();
-        //MainPage = new AppShell();
+        //ClearCache();
 
         CheckAuthentication(sessionService);
 
@@ -26,11 +26,28 @@ public partial class App : Application
         Dispatcher.Dispatch(new Action(() => { Console.WriteLine("test"); }));
         Application.Current.Dispatcher.Dispatch(new Action(() => { Console.WriteLine("test"); }));
 
-        // let's set the initial theme already during the app start
         SetTheme();
 
-        // subscribe to changes in the settings
         SettingsService.Instance.PropertyChanged += OnSettingsPropertyChanged!;
+    }
+
+    private void ClearCache()
+    {
+        try
+        {
+            var cacheDir = FileSystem.CacheDirectory;
+
+            if (Directory.Exists(cacheDir))
+            {
+                Directory.Delete(cacheDir, true);
+            }
+
+            Directory.CreateDirectory(cacheDir);
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"Cache clear failed: {ex}");
+        }
     }
     private async void CheckAuthentication(
         SessionService sessionService)
@@ -64,7 +81,7 @@ public partial class App : Application
                 DeviceService.Instance.SetStatusBarColor(Colors.White, true);
                 break;
             case AppTheme.Dark:
-                DeviceService.Instance.SetStatusBarColor(Colors.Black, false);
+                DeviceService.Instance.SetStatusBarColor(Colors.White, false);
                 break;
             case AppTheme.Unspecified when RequestedTheme == AppTheme.Light:
                 DeviceService.Instance.SetStatusBarColor(Colors.White, true);

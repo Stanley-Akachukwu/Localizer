@@ -1,5 +1,5 @@
-EntityFrameworkCore\Add-Migration AddActionCounts -Context LocalizeContext -IgnoreChanges
-EntityFrameworkCore\Add-Migration InitialMig  -Context LocalizeContext 
+EntityFrameworkCore\Add-Migration InitIdentity -Context LocalizeContext -IgnoreChanges
+EntityFrameworkCore\Add-Migration InitIdentity  -Context LocalizeContext 
 
 
 EntityFrameworkCore\Update-Database -Context LocalizeContext
@@ -8,9 +8,9 @@ Remove-Migration -Context LocalizeContext
 
 +-------------------------------------Connect to local postgres container from pgadmin container -------------------+
            In the Connection tab, enter the details:
-           Host=localhost;Port=59570;Username=postgres;Password=cXuMTd.x2{A8b}P}Sep8P.
+           Host=localhost;Port=65499;Username=postgres;Password=bYPxPNYeN_XmGQ0teT-w{e;Database=localizedb
 
-Host name/address: container name : localupdashdb
+Host name/address: container name : localizedb
 
 Port: 5432
 

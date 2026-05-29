@@ -1,5 +1,4 @@
-﻿
-using CommunityToolkit.Mvvm.ComponentModel;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Lacalizer.Mobile.Navigation;
 using Lacalizer.Mobile.Services.Users;
@@ -57,7 +56,7 @@ public partial class LoginViewModel : ObservableObject
                 return;
             }
 
-            await _sessionService.SaveTokenAsync("sample-token");
+            //await _sessionService.SaveTokenAsync("sample-token");
 
             await Shell.Current.GoToAsync(nameof(MainPage));
         }
