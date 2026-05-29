@@ -78,7 +78,7 @@ public partial class LocalizeVewModel : ObservableObject
             var uploadResult = await UploadToAzuriteAsync(filePath, fileName);
             if (!uploadResult)
             {
-                await Application.Current.MainPage.DisplayAlertAsync("Video UPLOAD ERROR", "Failed to upload.", "OK");
+                await Application.Current.MainPage.DisplayAlertAsync("Video UPLOAD ERROR", "Failed to upload video.", "OK");
 
                 await _navigationService.GoToAsync(Routes.ReelPage);
             }
@@ -89,7 +89,7 @@ public partial class LocalizeVewModel : ObservableObject
         }
         catch (Exception ex)
         {
-            await Application.Current.MainPage.DisplayAlertAsync("Video Processing ERROR", "Failed to process.", "OK");
+            await Application.Current.MainPage.DisplayAlertAsync("Video Processing ERROR", "Failed to process request.", "OK");
 
             await _navigationService.GoToAsync(Routes.ReelPage);
         }
@@ -100,14 +100,6 @@ public partial class LocalizeVewModel : ObservableObject
 
         try
         {
-              //          string connectionString =
-              //"AccountName=devstoreaccount1;" +
-              //"AccountKey=Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw==;" +
-              //"DefaultEndpointsProtocol=http;" +
-              //"BlobEndpoint=http://192.168.1.227:10000/devstoreaccount1;" +
-              //"QueueEndpoint=http://192.168.1.227:10001/devstoreaccount1;" +
-              //"TableEndpoint=http://192.168.1.227:10002/devstoreaccount1;";
-
 
 #if DEBUG
             var connectionString =
