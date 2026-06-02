@@ -14,9 +14,9 @@ public class ValidationError
 
 public class ValidationService : IValidationService
 {
-    private readonly LocalizeContext _dbContext;
+    private readonly LocalizeDbContext _dbContext;
 
-    public ValidationService(LocalizeContext dbContext)
+    public ValidationService(LocalizeDbContext dbContext)
     {
         _dbContext = dbContext;
     }

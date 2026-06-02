@@ -3,11 +3,11 @@ using Microsoft.EntityFrameworkCore.Design;
 
 namespace Lacalizer.WebAPI.Infrastructure;
 
-public class LocalizeDbContextFactory : IDesignTimeDbContextFactory<LocalizeContext>
+public class LocalizeDbContextFactory : IDesignTimeDbContextFactory<LocalizeDbContext>
 {
-    public LocalizeContext CreateDbContext(string[] args)
+    public LocalizeDbContext CreateDbContext(string[] args)
     {
-        var optionsBuilder = new DbContextOptionsBuilder<LocalizeContext>();
+        var optionsBuilder = new DbContextOptionsBuilder<LocalizeDbContext>();
 
         optionsBuilder.UseNpgsql(
             "localizedb",
@@ -18,7 +18,7 @@ public class LocalizeDbContextFactory : IDesignTimeDbContextFactory<LocalizeCont
                 optsBuilder.MigrationsHistoryTable("__EFMigrationsHistory", "public");
             });
 
-        return new LocalizeContext(optionsBuilder.Options);
+        return new LocalizeDbContext(optionsBuilder.Options);
     }
 }
 

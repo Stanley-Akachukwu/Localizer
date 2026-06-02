@@ -15,10 +15,10 @@ using Microsoft.Extensions.Azure;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.AddServiceDefaults();
-builder.AddNpgsqlDbContext<LocalizeContext>("localizedb");
+builder.AddNpgsqlDbContext<LocalizeDbContext>("localizedb");
 builder.Services
     .AddIdentity<ApplicationUser, IdentityRole>()
-    .AddEntityFrameworkStores<LocalizeContext>()
+    .AddEntityFrameworkStores<LocalizeDbContext>()
     .AddDefaultTokenProviders();
 builder.Services.Configure<JwtSettings>(
     builder.Configuration.GetSection("JwtSettings"));
@@ -81,6 +81,7 @@ app.UseAuthorization();
 app.MapAuthAPI();
 app.MapVideoItemAPI();
 app.MapCommentAPI();
+app.MapLocalizeContextAPI();
 app.MapDefaultEndpoints();
 
 app.CreateLocalizeDbIfNotExists();

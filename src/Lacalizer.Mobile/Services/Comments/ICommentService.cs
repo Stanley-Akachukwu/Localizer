@@ -81,7 +81,7 @@ public class CommentService : ICommentService
 
     public async Task<VideoComment> PostCommentAsync(VideoComment videoComment, CancellationToken ct = default)
     {
-        var request = new SaveVideoRequest(videoComment.VideoId,videoComment.ParentId,videoComment.Author,videoComment.Content);
+        var request = new SaveVideoRequest(videoComment.VideoId,videoComment.ParentId,videoComment.Author,videoComment.Content); 
 
         var url = "api/comments/saveComment";
 

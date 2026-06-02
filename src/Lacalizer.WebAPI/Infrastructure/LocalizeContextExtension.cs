@@ -20,7 +20,7 @@ public static class LocalizeContextExtension
                 var configuration = services.GetRequiredService<IConfiguration>();
 
                 string sysInitId = configuration.GetValue<string>("LacalizeSettings:SysInitId")!;
-                var dbContext = services.GetRequiredService<LocalizeContext>();
+                var dbContext = services.GetRequiredService<LocalizeDbContext>();
                 var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
 
                 //// ⚠️ DROP DATABASE (ONLY FOR DEV / ONE-TIME INIT)
@@ -42,7 +42,7 @@ public static class LocalizeContextExtension
 public static class DbInitializer
 {
 
-    public static async Task InitializeAsync(LocalizeContext dbContext, string sysInitId, UserManager<ApplicationUser> userManager, CancellationToken ct)
+    public static async Task InitializeAsync(LocalizeDbContext dbContext, string sysInitId, UserManager<ApplicationUser> userManager, CancellationToken ct)
     {
         try
         {
@@ -116,7 +116,7 @@ public static class DbInitializer
         }
     }
 
-    private static async Task<bool> VideoItemSeedAsync(LocalizeContext dbContext, string sysInitId, CancellationToken ct)
+    private static async Task<bool> VideoItemSeedAsync(LocalizeDbContext dbContext, string sysInitId, CancellationToken ct)
     {
        
         try
@@ -165,7 +165,7 @@ public static class DbInitializer
 
         return false;
     }
-    private static async Task<bool> VideoTopicSeedAsync(LocalizeContext dbContext, string sysInitId, CancellationToken ct)
+    private static async Task<bool> VideoTopicSeedAsync(LocalizeDbContext dbContext, string sysInitId, CancellationToken ct)
     {
         
         try

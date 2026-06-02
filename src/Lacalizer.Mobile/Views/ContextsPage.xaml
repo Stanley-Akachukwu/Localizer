@@ -1,0 +1,93 @@
+    <ContentPage 
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Lacalizer.Mobile.Views.ContextsPage"
+             Title="ContextsPage"
+            xmlns:models="clr-namespace:Lacalizer.Mobile.Models"
+            xmlns:viewModels="clr-namespace:Lacalizer.Mobile.ViewModels"
+            xmlns:media="clr-namespace:Lacalizer.Mobile.CustomControls.Media"
+             xmlns:local="clr-namespace:Lacalizer.Mobile.Views"
+            x:Name="Contexts"
+            x:DataType="viewModels:ContextsViewModel"
+            Shell.NavBarIsVisible="False">
+
+        <Grid Padding="20"
+          RowDefinitions="Auto,*,Auto">
+
+        <HorizontalStackLayout>
+
+            <Label
+                FontSize="22"
+                FontAttributes="Bold"
+                Text="Available Contexts" />
+
+            <Button
+                Margin="20,0,0,0"
+                Text="+ Add new context"
+                Command="{Binding CreateContextCommand}" />
+
+        </HorizontalStackLayout>
+
+        <CollectionView
+            Grid.Row="1"
+            ItemsSource="{Binding Contexts}">
+
+            <CollectionView.ItemTemplate>
+
+                <DataTemplate x:DataType="models:ContextModel">
+
+                    <Frame
+                        Margin="0,8"
+                        Padding="15">
+
+                        <VerticalStackLayout>
+
+                            <Label
+                                FontSize="16"
+                                Text="{Binding ContextText}" />
+
+                            <Label
+                                FontSize="12"
+                                Text="{Binding CreatedAt}" />
+
+                            <Button
+                                HorizontalOptions="End"
+                                Text="Localize"
+                                Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.LocalizeCommand}"
+                                CommandParameter="{Binding}" />
+
+                        </VerticalStackLayout>
+
+                    </Frame>
+
+                </DataTemplate>
+
+            </CollectionView.ItemTemplate>
+
+        </CollectionView>
+
+        <Grid
+            Grid.Row="2"
+            ColumnDefinitions="Auto,*,Auto">
+
+            <Button
+                Text="Previous"
+                Command="{Binding PreviousPageCommand}" />
+
+            <Label
+                Grid.Column="1"
+                HorizontalOptions="Center"
+                VerticalOptions="Center"
+                Text="{Binding PageIndex, StringFormat='Page {0}'}" />
+
+            <Button
+                Grid.Column="2"
+                Text="Next"
+                Command="{Binding NextPageCommand}" />
+
+        </Grid>
+
+    </Grid>
+
+</ContentPage>

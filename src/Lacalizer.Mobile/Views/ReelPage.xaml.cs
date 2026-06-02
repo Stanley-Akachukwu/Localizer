@@ -1,6 +1,5 @@
 using Lacalizer.Mobile.Helpers;
 using Lacalizer.Mobile.Models;
-using Lacalizer.Mobile.Navigation;
 using Lacalizer.Mobile.ViewModels;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -21,23 +20,32 @@ public partial class ReelPage : ContentPage
     {
         base.OnAppearing();
 
-
-        if (_vm == null)
+        try
         {
-            Console.WriteLine("ReelViewModel is null!");
-            return;
-        }
+            if (_vm?.LoadVideosCommand == null)
+                return;
 
-        if (_vm.LoadVideosCommand == null)
+            _vm.Videos ??= new ObservableCollection<ReelVideoModel>();
+
+            if (_vm.Videos.Count == 0)
+            {
+                await _vm.LoadVideosCommand.ExecuteAsync(null);
+
+                if (_vm.Videos.Count == 0)
+                {
+                    await Shell.Current.GoToAsync(nameof(ContextsPage));
+
+                    // OR
+                    // await Navigation.PushAsync(new AvailableContextsPage());
+
+                    return;
+                }
+            }
+        }
+        catch (Exception ex)
         {
-            Console.WriteLine("LoadVideosCommand is null!");
-            return;
+            Console.WriteLine($"Error loading videos: {ex}");
         }
-
-        if (_vm.Videos == null) _vm.Videos = new ObservableCollection<ReelVideoModel>();
-
-        if (_vm.Videos.Count == 0)
-            await _vm.LoadVideosCommand.ExecuteAsync(null);
     }
 
 

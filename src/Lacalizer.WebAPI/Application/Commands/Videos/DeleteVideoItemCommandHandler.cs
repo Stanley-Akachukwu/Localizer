@@ -12,9 +12,9 @@ public record DeleteVideoItemResult(string Id);
 public class DeleteVideoItemCommandHandler
     : IRequestHandler<DeleteVideoItemCommand, LocalizerApiResponse<DeleteVideoItemResult>>
 {
-    private readonly LocalizeContext _db;
+    private readonly LocalizeDbContext _db;
     public DeleteVideoItemCommandHandler(
-        LocalizeContext db)
+        LocalizeDbContext db)
     {
         _db = db;
     }

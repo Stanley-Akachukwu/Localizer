@@ -1,0 +1,35 @@
+<ContentPage
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:viewModels="clr-namespace:Lacalizer.Mobile.ViewModels"
+    x:Class="Lacalizer.Mobile.Views.CreateContextPage"
+    x:DataType="viewModels:CreateContextViewModel"
+    Title="Create Context"
+    xmlns:models="clr-namespace:Lacalizer.Mobile.Models"
+    Shell.NavBarIsVisible="False">
+
+    <ScrollView>
+
+        <VerticalStackLayout
+            Padding="20"
+            Spacing="15">
+
+            <Label
+                FontSize="22"
+                FontAttributes="Bold"
+                Text="Create Context" />
+
+            <Editor
+                HeightRequest="200"
+                Placeholder="Enter context text..."
+                Text="{Binding ContextText}" />
+
+            <Button
+                Text="Save"
+                Command="{Binding SaveCommand}" />
+
+        </VerticalStackLayout>
+
+    </ScrollView>
+
+</ContentPage>

@@ -18,9 +18,9 @@ public class UpdateVideoItemResult
 }
 public class UpdateVideoItemCommandHandler : IRequestHandler<UpdateVideoItemCommand, LocalizerApiResponse<UpdateVideoItemResult>>
 {
-    private readonly LocalizeContext _db;
+    private readonly LocalizeDbContext _db;
 
-    public UpdateVideoItemCommandHandler(LocalizeContext db)
+    public UpdateVideoItemCommandHandler(LocalizeDbContext db)
     {
         _db = db;
     }

@@ -27,10 +27,10 @@ public interface ICommentQueries
 
 public class CommentQueries : ICommentQueries
 {
-    private readonly LocalizeContext _dbContext;
+    private readonly LocalizeDbContext _dbContext;
     private readonly IMemoryCache _cache;
 
-    public CommentQueries(LocalizeContext dbContext, IMemoryCache cache)
+    public CommentQueries(LocalizeDbContext dbContext, IMemoryCache cache)
     {
         _dbContext = dbContext;
         _cache = cache;

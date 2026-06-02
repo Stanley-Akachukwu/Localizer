@@ -1,4 +1,5 @@
 ﻿using Lacalizer.WebAPI.Entites;
+using Lacalizer.WebAPI.Entites.Contexts;
 using Lacalizer.WebAPI.Entites.Helpers.Converters;
 using Lacalizer.WebAPI.Entites.Users;
 using Lacalizer.WebAPI.Entites.Videos;
@@ -10,11 +11,12 @@ using NUlid;
 
 namespace Lacalizer.WebAPI.Infrastructure;
 
-public class LocalizeContext(DbContextOptions<LocalizeContext> options): IdentityDbContext<ApplicationUser>(options)
+public class LocalizeDbContext(DbContextOptions<LocalizeDbContext> options): IdentityDbContext<ApplicationUser>(options)
 {
     public DbSet<Comment> Comments { get; set; }
     public DbSet<VideoItem> VideoItems { get; set; }
     public DbSet<VideoTopic> VideoTopics { get; set; }
+    public DbSet<LocalizeContext> LocalizeContexts { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -22,6 +24,7 @@ public class LocalizeContext(DbContextOptions<LocalizeContext> options): Identit
         modelBuilder.Entity<Comment>().ToTable("Comments", DbSchemaConstants.COMMENT);
         modelBuilder.Entity<VideoItem>().ToTable("VideoItems", DbSchemaConstants.VIDEO);
         modelBuilder.Entity<VideoTopic>().ToTable("VideoTopics", DbSchemaConstants.VIDEO);
+        modelBuilder.Entity<LocalizeContext>().ToTable("LocalizeContexts", DbSchemaConstants.VIDEO);
 
         modelBuilder.Entity<ApplicationUser>().ToTable("AspNetUsers", DbSchemaConstants.AUTH);
         modelBuilder.Entity<IdentityRole>().ToTable("AspNetRoles", DbSchemaConstants.AUTH);

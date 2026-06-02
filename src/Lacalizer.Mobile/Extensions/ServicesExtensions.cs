@@ -60,7 +60,20 @@ public static class ServicesExtensions
         builder.Services.AddTransient<ReelVideoGroupViewModel>();
         builder.Services.AddTransient<ReelVideoGroupPage>();
 
+        builder.Services.AddTransient<ContextsViewModel>();
+        builder.Services.AddTransient<ContextsPage>();
+
+        builder.Services.AddTransient<CreateContextViewModel>();
+        builder.Services.AddTransient<CreateContextPage>();
+
+
+
         builder.Services.AddMemoryCache();
+
+        builder.Services.AddHttpClient<IContextService, ContextService>(client =>
+        {
+            client.BaseAddress = new Uri(baseUrl);
+        });
 
         builder.Services.AddHttpClient<IVideoService, VideoService>(client =>
         {
@@ -81,8 +94,6 @@ public static class ServicesExtensions
             client.BaseAddress = new Uri(baseUrl);
         })
         .AddHttpMessageHandler<JwtHandler>();
-
-
         return builder;
     }
 }

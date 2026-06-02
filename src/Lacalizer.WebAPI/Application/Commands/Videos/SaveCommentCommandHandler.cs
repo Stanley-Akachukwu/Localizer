@@ -14,9 +14,9 @@ public record SaveCommentCommand(string VideoItemId, string? ParentId, string Au
 
 public class SaveCommentCommandHandler : IRequestHandler<SaveCommentCommand, LocalizerApiResponse<CreateCommentResult>>
 {
-    private readonly LocalizeContext _db;
+    private readonly LocalizeDbContext _db;
     private static readonly Ulid SystemUserId = Ulid.Empty;
-    public SaveCommentCommandHandler(LocalizeContext db)
+    public SaveCommentCommandHandler(LocalizeDbContext db)
     {
         _db = db;
     }

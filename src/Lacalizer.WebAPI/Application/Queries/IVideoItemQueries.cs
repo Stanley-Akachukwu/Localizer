@@ -33,10 +33,10 @@ public interface IVideoItemQueries
 
 public class VideoItemQueries : IVideoItemQueries
 {
-    private readonly LocalizeContext _dbContext;
+    private readonly LocalizeDbContext _dbContext;
     private readonly IMemoryCache _cache;
 
-    public VideoItemQueries(LocalizeContext dbContext, IMemoryCache cache)
+    public VideoItemQueries(LocalizeDbContext dbContext, IMemoryCache cache)
     {
         _dbContext = dbContext;
         _cache = cache;

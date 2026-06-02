@@ -85,10 +85,12 @@
                             <!-- PARTICIPANTS -->
                             <StackLayout Spacing="4">
                                 <ImageButton
-                                    Source="participations"
-                                    Command="{Binding IncreaseParticipantsCommand}"
-                                    HeightRequest="36"
-                                    WidthRequest="36" />
+                                Source="participations"
+                                Command="{Binding IncreaseParticipantsCommand}"
+                                BackgroundColor="White"
+                                HeightRequest="36"
+                                WidthRequest="36"
+                                CornerRadius="18" />        
                                 <Label Text="{Binding ParticipantsCount}"
                                        TextColor="White"
                                        FontSize="10"

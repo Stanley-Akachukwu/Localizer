@@ -247,7 +247,6 @@
         FontSize="20"
         Text="Start Recording"
         TextColor="White"
-        BackgroundColor="Red"
         Command="{Binding StartRecordingCommand}"
         HorizontalOptions="Fill"
         VerticalOptions="End" />

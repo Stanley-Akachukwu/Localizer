@@ -21,9 +21,9 @@ public class CreateVideoItemResult
 }
 public class CreateVideoItemCommandHandler : IRequestHandler<CreateParticipatoryVideoItemCommand, LocalizerApiResponse<CreateVideoItemResult>>
 {
-    private readonly LocalizeContext _db;
+    private readonly LocalizeDbContext _db;
     private static readonly Ulid SystemUserId = Ulid.Empty;
-    public CreateVideoItemCommandHandler(LocalizeContext db)
+    public CreateVideoItemCommandHandler(LocalizeDbContext db)
     {
         _db = db;
     }

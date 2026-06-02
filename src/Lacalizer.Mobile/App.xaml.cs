@@ -11,7 +11,8 @@ public partial class App : Application
     public App(SessionService sessionService)
     {
         InitializeComponent();
-        //ClearCache();
+       // ClearCache();
+
 
         CheckAuthentication(sessionService);
 
@@ -49,6 +50,7 @@ public partial class App : Application
             System.Diagnostics.Debug.WriteLine($"Cache clear failed: {ex}");
         }
     }
+   
     private async void CheckAuthentication(
         SessionService sessionService)
     {

@@ -13,8 +13,8 @@ public record IncreaseParticipationCommand(
 
 public class IncreaseParticipationCommandHandler : IRequestHandler<IncreaseParticipationCommand, LocalizerApiResponse<int>>
 {
-    private readonly LocalizeContext _db;
-    public IncreaseParticipationCommandHandler(LocalizeContext db)
+    private readonly LocalizeDbContext _db;
+    public IncreaseParticipationCommandHandler(LocalizeDbContext db)
     {
         _db = db;
     }

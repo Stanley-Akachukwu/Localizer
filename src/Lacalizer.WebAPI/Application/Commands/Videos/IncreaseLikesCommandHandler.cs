@@ -10,8 +10,8 @@ public record IncreaseLikesCommand(string VideoItemId) : IRequest<LocalizerApiRe
  
 public class IncreaseLikesCommandHandler : IRequestHandler<IncreaseLikesCommand, LocalizerApiResponse<int>>
 {
-    private readonly LocalizeContext _db;
-    public IncreaseLikesCommandHandler(LocalizeContext db)
+    private readonly LocalizeDbContext _db;
+    public IncreaseLikesCommandHandler(LocalizeDbContext db)
     {
         _db = db;
     }
