@@ -30,16 +30,17 @@ public partial class ReelPage : ContentPage
             if (_vm.Videos.Count == 0)
             {
                 await _vm.LoadVideosCommand.ExecuteAsync(null);
+                await Shell.Current.GoToAsync(nameof(ContextsPage));
+                return;
+                //if (_vm.Videos.Count == 0)
+                //{
+                //    await Shell.Current.GoToAsync(nameof(ContextsPage));
 
-                if (_vm.Videos.Count == 0)
-                {
-                    await Shell.Current.GoToAsync(nameof(ContextsPage));
+                //    // OR
+                //    // await Navigation.PushAsync(new AvailableContextsPage());
 
-                    // OR
-                    // await Navigation.PushAsync(new AvailableContextsPage());
-
-                    return;
-                }
+                //    return;
+                //}
             }
         }
         catch (Exception ex)

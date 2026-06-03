@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Lacalizer.Mobile.Models;
+using Lacalizer.Mobile.Navigation;
 using Lacalizer.Mobile.Services.Comments;
 using Lacalizer.Mobile.Services.Videos;
 using Lacalizer.Mobile.Views;
@@ -11,7 +12,7 @@ namespace Lacalizer.Mobile.ViewModels;
 public partial class ContextsViewModel : ObservableObject
 {
     private readonly IContextService _contextService;
-
+    private readonly INavigationService _navigationService;
     public ObservableCollection<ContextModel> Contexts { get; } = new();
 
     [ObservableProperty]
@@ -28,11 +29,22 @@ public partial class ContextsViewModel : ObservableObject
 
     [ObservableProperty]
     private long totalCount;
+   
+    [ObservableProperty]
+    private string selectedTopic;
+    [ObservableProperty]
+    private string videoTopicId;
+    [ObservableProperty]
+    private string videoItemId;
+    [ObservableProperty]
+    private ReelVideoModel selectedVideo;
 
     public ContextsViewModel(
-        IContextService contextService)
+        IContextService contextService,
+        INavigationService navigationService)
     {
         _contextService = contextService;
+        _navigationService = navigationService;
     }
 
     [RelayCommand]
@@ -62,6 +74,8 @@ public partial class ContextsViewModel : ObservableObject
             IsBusy = false;
         }
     }
+
+    
 
     [RelayCommand]
     public async Task NextPage()
@@ -95,10 +109,14 @@ public partial class ContextsViewModel : ObservableObject
         if (context == null)
             return;
 
-        await Shell.Current.DisplayAlert(
-            "Localize",
-            context.ContextText,
-            "OK");
+        await _navigationService.GoToAsync(
+           $"{Routes.LocalizePage}?topic={context.ContextText}&videoTopicId={context.Id}&videoItemId={context.Id}"
+       );
+
+        //await Shell.Current.DisplayAlert(
+        //    "Localize",
+        //    context.ContextText,
+        //    "OK");
     }
 
     [RelayCommand]
