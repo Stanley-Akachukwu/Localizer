@@ -1,5 +1,6 @@
 ﻿
 using Lacalizer.Mobile.Helpers;
+using Lacalizer.Mobile.Models;
 using Lacalizer.Mobile.Navigation;
 using Lacalizer.Mobile.Services.Comments;
 using Lacalizer.Mobile.Services.Users;
@@ -94,6 +95,8 @@ public static class ServicesExtensions
             client.BaseAddress = new Uri(baseUrl);
         })
         .AddHttpMessageHandler<JwtHandler>();
+        //builder.Services.AddHttpContextAccessor();
+        builder.Services.AddScoped<ICurrentUser, CurrentUser>();
         return builder;
     }
 }

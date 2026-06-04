@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Lacalizer.Mobile.Models;
+using Lacalizer.Mobile.Services.Users;
 using Lacalizer.Mobile.Services.Videos;
 
 namespace Lacalizer.Mobile.ViewModels;
@@ -8,9 +9,13 @@ namespace Lacalizer.Mobile.ViewModels;
 public partial class CreateContextViewModel : ObservableObject
 {
     private readonly IContextService _contextService;
-    public CreateContextViewModel(IContextService contextService)
+    private readonly SessionService _sessionService;
+    private readonly ICurrentUser _currentUser;
+    public CreateContextViewModel(IContextService contextService, SessionService sessionService, ICurrentUser currentUser)
     {
         _contextService = contextService;
+        _sessionService = sessionService;
+        _currentUser = currentUser;
     }
     [ObservableProperty]
     private string contextText = string.Empty;
@@ -28,7 +33,11 @@ public partial class CreateContextViewModel : ObservableObject
             ContextText = contextText
         };
 
-        var created = await _contextService.PostContextAsync(contextModel, UserId);
+      //var token =  await _sessionService.GetTokenAsync();
+      //  var userId = _currentUser.UserId;
+      //  var email = _currentUser.Email;
+
+        var created = await _contextService.PostContextAsync(contextModel, userId);
         await Shell.Current.DisplayAlert(
             "Success",
             "Context created successfully",
