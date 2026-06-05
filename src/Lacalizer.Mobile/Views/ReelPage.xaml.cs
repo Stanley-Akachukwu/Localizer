@@ -15,7 +15,7 @@ public partial class ReelPage : ContentPage
         BindingContext = _vm = vm;
         this.RegisterBackHandler();
     }
-    
+
     protected override async void OnAppearing()
     {
         base.OnAppearing();
@@ -30,17 +30,22 @@ public partial class ReelPage : ContentPage
             if (_vm.Videos.Count == 0)
             {
                 await _vm.LoadVideosCommand.ExecuteAsync(null);
-                await Shell.Current.GoToAsync(nameof(ContextsPage));
-                return;
-                //if (_vm.Videos.Count == 0)
-                //{
-                //    await Shell.Current.GoToAsync(nameof(ContextsPage));
 
-                //    // OR
-                //    // await Navigation.PushAsync(new AvailableContextsPage());
+                if (_vm.Videos.Count == 0)
+                {
+                    bool createContext = await Shell.Current.DisplayAlert(
+                        "No Available Videos",
+                        "No available video to participate in.\n\nMake a new context?",
+                        "Create Context",
+                        "Cancel");
 
-                //    return;
-                //}
+                    if (createContext)
+                    {
+                        await Shell.Current.GoToAsync(nameof(ContextsPage));
+                    }
+
+                    return;
+                }
             }
         }
         catch (Exception ex)
