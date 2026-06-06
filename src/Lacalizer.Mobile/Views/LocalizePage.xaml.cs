@@ -4,8 +4,8 @@ using Lacalizer.Mobile.ViewModels;
 namespace Lacalizer.Mobile.Views;
 
 
-[QueryProperty(nameof(Topic), "topic")]
-[QueryProperty(nameof(VideoTopicId), "videoTopicId")]
+[QueryProperty(nameof(ContextText), "contextText")]
+[QueryProperty(nameof(VideoContextId), "videoContextId")]
 [QueryProperty(nameof(VideoItemId), "videoItemId")]
 
 public partial class LocalizePage : ContentPage
@@ -17,24 +17,24 @@ public partial class LocalizePage : ContentPage
         this.RegisterBackHandler();
     }
      
-    public string Topic
+    public string ContextText
     {
-        get => (BindingContext as LocalizeVewModel)?.SelectedTopic;
+        get => (BindingContext as LocalizeVewModel)?.SelectedContext;
         set
         {
             var vm = BindingContext as LocalizeVewModel;
             if (vm != null)
-                vm.SelectedTopic = value;
+                vm.SelectedContext = value;
         }
     }
-    public string VideoTopicId
+    public string VideoContextId
     {
-        get => (BindingContext as LocalizeVewModel)?.VideoTopicId;
+        get => (BindingContext as LocalizeVewModel)?.VideoContextId;
         set
         {
             var vm = BindingContext as LocalizeVewModel;
             if (vm != null)
-                vm.VideoTopicId = value;
+                vm.VideoContextId = value;
         }
     }
     public string VideoItemId

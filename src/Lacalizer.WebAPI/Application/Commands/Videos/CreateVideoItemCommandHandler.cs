@@ -11,8 +11,7 @@ namespace Lacalizer.WebAPI.Application.Commands.Videos;
 
 public record CreateParticipatoryVideoItemCommand(
     string Language,
-    string Title,
-    string Topic,
+    string ContextText,
     string VideoUri, string TopicId) : IRequest<LocalizerApiResponse<CreateVideoItemResult>>;
 public class CreateVideoItemResult
 {
@@ -32,7 +31,7 @@ public class CreateVideoItemCommandHandler : IRequestHandler<CreateParticipatory
     {
         var id = Ulid.NewUlid().ToString(); 
 
-        var videoTopic = await _db.VideoTopics
+        var videoTopic = await _db.VideoContexts
                                   .FirstOrDefaultAsync(v => v.Id.Trim() == request.TopicId.Trim(), ct);
 
         if (videoTopic == null)
@@ -48,18 +47,16 @@ public class CreateVideoItemCommandHandler : IRequestHandler<CreateParticipatory
         var videoItem = new VideoItem
         {
             Id = id,
-            VideoTopicId = videoTopic.Id,
+            VideoContextId = videoTopic.Id,
             Language = request.Language,
-            Title = request.Title,
-            Topic = request.Topic,
+            ContextText = request.ContextText,
             VideoUri = request.VideoUri,
-            Description = request.Title,
+            Description = "Localized",
             IsActive = true,
             CreatedByUserId = SystemUserId.ToString(),
             DateCreated = DateTime.UtcNow,
             DateUpdated = DateTime.UtcNow,
             UpdatedByUserId = SystemUserId.ToString(),
-            UID = id,
             VideoType = VideoType.PARTICIPATION
         };
 
@@ -86,8 +83,7 @@ public class CreateVideoItemCommandValidator : AbstractValidator<CreateParticipa
     public CreateVideoItemCommandValidator()
     {
         RuleFor(x => x.Language).NotEmpty();
-        RuleFor(x => x.Title).NotEmpty();
-        RuleFor(x => x.Topic).NotEmpty();
+        RuleFor(x => x.ContextText).NotEmpty();
         RuleFor(x => x.VideoUri).NotEmpty();
     }
 }

@@ -16,17 +16,16 @@ public partial class ParticipationVideoModel : ObservableObject
     public INavigationService NavigationService { get; set; }
     public ParticipationViewModel ParentViewModel { get; set; }   
     
-    public ParticipationVideoModel(string title, string topic, string videoUri, string videoTopicId,
+    public ParticipationVideoModel(string contextText, string videoUri, string videoContextId,
        int savedLikes, int savedComments, int savedShares, int savedParticipants, string videoItemId,
         IVideoService videoService,
        ICommentService commentService,
        INavigationService navigationService,
        ParticipationViewModel parentViewModel)
     {
-        Title = title;
-        Topic = topic;
+        ContextText = contextText;
         VideoUri = videoUri;
-        VideoTopicId = videoTopicId;
+        VideoContextId = videoContextId;
 
         VideoService = videoService;
         CommentService = commentService;
@@ -41,9 +40,9 @@ public partial class ParticipationVideoModel : ObservableObject
         CommentsPanelTranslationY = 500;
     }
     public string Title { get; set; }
-    public string Topic { get; set; }
+    public string ContextText { get; set; }
     public string VideoUri { get; set; }
-    public string VideoTopicId { get; set; }
+    public string VideoContextId { get; set; }
     public string VideoItemId { get; set; }
     public int SavedLikes { get; set; }
     public int SavedComments { get; set; }
@@ -110,9 +109,9 @@ public partial class ParticipationVideoModel : ObservableObject
 
         var newDto = new VideoComment
         {
-            Content = NewComment,
+            ContentText = NewComment,
             ParentId = ReplyingTo?.Id.ToString(),
-            VideoTopicId = VideoTopicId,
+            VideoContextId = VideoContextId,
             Depth = ReplyingTo == null ? 0 : ReplyingTo.Depth + 1,
             VideoId = VideoItemId,
             Author = "CurrentUser", // Replace with actual current user

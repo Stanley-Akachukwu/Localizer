@@ -1,10 +1,9 @@
 ﻿
 using Lacalizer.Mobile.Models;
+using Lacalizer.Mobile.Services.Users;
 using Lacalizer.Shared.Dtos;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
-using System.Net.Http.Json;
-using System.Text.Json;
 
 namespace Lacalizer.Mobile.Services.Comments;
 
@@ -19,15 +18,15 @@ public interface ICommentService
 
 public class CommentService : ICommentService
 {
-    private readonly HttpClient _client;
     private readonly IMemoryCache _cache;
     private IConfiguration _config;
-    public CommentService(HttpClient client, IMemoryCache cache, IConfiguration config)
+    private readonly IApiClient _apiClient;
+
+    public CommentService(IApiClient apiClient, IMemoryCache cache, IConfiguration config)
     {
-        _client = client;
+        _apiClient = apiClient;
         _cache = cache;
         _config = config;
-        _client.BaseAddress = new Uri(_config["ApiSettings:BaseUrl"]);
     }
 
     public async Task<List<VideoComment>> GetVideoCommentsAsync( 
@@ -39,30 +38,19 @@ public class CommentService : ICommentService
         {
             var url = $"api/comments?PageIndex={pageIndex}&PageSize={pageSize}&videoItemId={videoItemId}";
 
-            using var response = await _client.GetAsync(url, ct);
-            response.EnsureSuccessStatusCode();
+            var response = await _apiClient
+        .GetAsync<LocalizerApiResponse<PaginatedItems<VideoCommentDto>>>(url, ct);
 
-            var content = await response.Content.ReadAsStringAsync(ct);
-            if (string.IsNullOrWhiteSpace(content))
-                return new List<VideoComment>();
 
-            var options = new JsonSerializerOptions
-            {
-                PropertyNameCaseInsensitive = true
-            };
-
-            var rsp = await response.Content
-                .ReadFromJsonAsync<LocalizerApiResponse<PaginatedItems<VideoCommentDto>>>(options, ct);
-
-            if (rsp is null || rsp.Data is null)
+            if (response?.Data?.Data is null || response?.Data?.Data is null)
                 return new List<VideoComment>();
            
-            var items = rsp.Data.Data
+            var items = response?.Data.Data
                 .Select(c => new VideoComment
                 {
                     Id = c?.Id?.ToString(),
                     Author = c?.Author,
-                    Content = c?.Content,
+                    ContentText = c?.Content,
                     ParentId = c?.ParentId?.ToString(),
                 })
                 .ToList();
@@ -81,30 +69,12 @@ public class CommentService : ICommentService
 
     public async Task<VideoComment> PostCommentAsync(VideoComment videoComment, CancellationToken ct = default)
     {
-        var request = new SaveVideoRequest(videoComment.VideoId,videoComment.ParentId,videoComment.Author,videoComment.Content); 
-
-        var url = "api/comments/saveComment";
+        var request = new SaveVideoRequest(videoComment.VideoId,videoComment.ParentId,videoComment.Author,videoComment.ContentText); 
 
         try
         {
-            using var response = await _client.PostAsJsonAsync(url, request, ct);
-
-            response.EnsureSuccessStatusCode();
-
-            var options = new JsonSerializerOptions
-            {
-                PropertyNameCaseInsensitive = true
-            };
-
-            var rsp = await response.Content
-                .ReadFromJsonAsync<LocalizerApiResponse<CreateCommentResult>>(options, ct);
-            if (rsp.Data is not null && rsp.IsSuccess)
-            {
-                videoComment.Id = rsp.Data.CommentId;
-                videoComment.CommentCount = rsp.Data.CommentCount;
-            }
-
-                return await Task.FromResult(videoComment);
+            var result = await _apiClient.PostAsync<SaveVideoRequest, VideoComment>("api/comments/saveComment", request);
+            return await Task.FromResult(videoComment);
         }
         catch (Exception)
         {

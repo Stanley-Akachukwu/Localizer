@@ -12,10 +12,9 @@ public class SingleVideoItemDto
 {
     public string Id { get; set; } = string.Empty;
     public string Language { get; set; } = string.Empty;
-    public string Title { get; set; } = string.Empty;
-    public string Topic { get; set; } = string.Empty;
+    public string ContextText { get; set; } = string.Empty;
     public string VideoUri { get; set; } = string.Empty;
-    public string? VideoTopicId { get; set; }
+    public string? VideoContextId { get; set; }
     public int SavedLikes { get; set; }
     public int SavedComments { get; set; }
     public int SavedShares { get; set; }
@@ -63,8 +62,7 @@ public class VideoItemQueries : IVideoItemQueries
                 {
                     Id = v.Id,
                     Language = v.Language,
-                    Title = v.Title,
-                    Topic = v.Topic,
+                    ContextText = v.ContextText,
                     VideoUri = v.VideoUri
                 })
                 .FirstOrDefaultAsync(ct);
@@ -108,13 +106,13 @@ public class VideoItemQueries : IVideoItemQueries
             IQueryable<VideoItem> query = _dbContext.VideoItems;
 
             if (!string.IsNullOrWhiteSpace(req.VideoTopicId) && req.VideoType==VideoType.PARTICIPATION)
-                query = query.Where(v => v.VideoTopicId == req.VideoTopicId);
+                query = query.Where(v => v.VideoContextId == req.VideoTopicId);
 
             if (!string.IsNullOrWhiteSpace(req.Language))
                 query = query.Where(v => v.Language == req.Language);
 
             if (!string.IsNullOrWhiteSpace(req.Title))
-                query = query.Where(v => v.Topic == req.Title);
+                query = query.Where(v => v.ContextText == req.Title);
 
             if (req.DateCreated.HasValue)
                 query = query.Where(v => v.DateCreated.Value.Date == req.DateCreated.Value.Date);
@@ -132,16 +130,15 @@ public class VideoItemQueries : IVideoItemQueries
             }
 
             var items = await query
-                .OrderBy(v => v.Title)
+                .OrderBy(v => v.DateCreated)
                 .Skip((req.PageIndex - 1) * req.PageSize)
                 .Take(req.PageSize)
                 .Select(v => new SingleVideoItemDto
                 {
                     Id = v.Id,
                     Language = v.Language,
-                    Title = v.Title,
-                    Topic = v.Topic,
-                    VideoTopicId = v.VideoTopicId,
+                    ContextText = v.ContextText,
+                    VideoContextId = v.VideoContextId,
                     VideoUri = v.VideoUri, //= v.VideoType == VideoType.TOPIC? v.VideoUri: "https://github.com/ewerspej/maui-samples/blob/main/assets/bigbuckbunny.mp4?raw=true",
                     SavedLikes = v.LikeCounts,
                     SavedComments =v.CommentCounts,

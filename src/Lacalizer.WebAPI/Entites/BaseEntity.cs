@@ -9,8 +9,6 @@ public abstract class BaseEntity<T>
 
     [MaxLength(250)]
     public string? Description { get; set; }
-    [MaxLength(250)]
-    public string? UID { get; set; }
     public bool IsActive { get; set; } = true;
 
     [MaxLength(128)]

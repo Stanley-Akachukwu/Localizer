@@ -15,39 +15,17 @@ public partial class ReelVideoModel : ObservableObject
     public ICommentService CommentService { get; set; }
     public INavigationService NavigationService { get; set; }
     public ReelViewModel ParentViewModel { get; set; }
-    //public ReelVideoModel(string title, string topic, string videoUri, string videoTopicId,
-    //    int savedLikes, int savedComments,  int savedShares, int savedParticipants, string videoItemId) 
-    //    : this(title, topic, videoUri, videoTopicId,savedLikes, savedComments, savedShares, savedParticipants, videoItemId, null, null, null, null)
-    //{
-    //    Title = title;
-    //    Topic = topic;
-    //    VideoUri = videoUri;
-    //    VideoTopicId = videoTopicId;
 
-    //    //VideoService = videoService;
-    //    //CommentService = commentService;
-    //    //NavigationService = navigationService;
-    //    //ParentViewModel = parentViewModel;
-
-    //    SavedLikes = savedLikes;
-    //    SavedComments = savedComments;
-    //    SavedShares = savedShares;
-    //    SavedParticipants = savedParticipants;
-    //    VideoItemId = videoItemId;
-    //    CommentsPanelTranslationY = 500;  
-    //}
-
-    public ReelVideoModel(string title, string topic, string videoUri, string videoTopicId,
+    public ReelVideoModel(string contextText, string videoUri, string videoContextId,
        int savedLikes, int savedComments, int savedShares, int savedParticipants, string videoItemId,
         IVideoService videoService,
        ICommentService commentService,
        INavigationService navigationService,
        ReelViewModel parentViewModel)
     {
-        Title = title;
-        Topic = topic;
+        ContextText = contextText;
         VideoUri = videoUri;
-        VideoTopicId = videoTopicId;
+        VideoContextId = videoContextId;
 
         VideoService = videoService;
         CommentService = commentService;
@@ -62,10 +40,9 @@ public partial class ReelVideoModel : ObservableObject
         CommentsPanelTranslationY = 500;
     }
 
-    public string Title { get; set; }
-    public string Topic { get; set; }
+    public string ContextText { get; set; }
     public string VideoUri { get; set; }
-    public string VideoTopicId { get; set; }
+    public string VideoContextId { get; set; }
     public string VideoItemId { get; set; }
     public int SavedLikes { get; set; }
     public int SavedComments { get; set; }
@@ -102,7 +79,7 @@ public partial class ReelVideoModel : ObservableObject
     [RelayCommand]
     private async Task IncreaseParticipantsAsync()
     {
-        await NavigationService.GoToAsync($"{Routes.ParticipationPage}?videoTopicId={VideoTopicId}");
+        await NavigationService.GoToAsync($"{Routes.ParticipationPage}?videoTopicId={VideoContextId}");
     }
 
     [RelayCommand]
@@ -127,19 +104,19 @@ public partial class ReelVideoModel : ObservableObject
     }
 
     [RelayCommand]
-    private async Task SendCommentAsync()
+    private async Task SendCommentAsync(string userId)
     {
         if (string.IsNullOrWhiteSpace(NewComment))
             return;
 
         var newDto = new VideoComment
         {
-            Content = NewComment,
+            ContentText = NewComment,
             ParentId = ReplyingTo?.Id.ToString(),
-            VideoTopicId = VideoTopicId,
+            VideoContextId = VideoContextId,
             Depth = ReplyingTo == null ? 0 : ReplyingTo.Depth + 1,
             VideoId = VideoItemId,
-            Author = "CurrentUser", // Replace with actual current user
+            Author = userId,
             Children = new ObservableCollection<VideoComment>()
         };
 

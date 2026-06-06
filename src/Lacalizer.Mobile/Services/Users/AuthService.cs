@@ -1,74 +1,44 @@
 ﻿
 using Lacalizer.Mobile.Models;
-using System.Net.Http.Json;
 
 namespace Lacalizer.Mobile.Services.Users;
 
 public class AuthService
 {
-    private readonly HttpClient _httpClient;
-    private readonly SessionService _sessionService;
+    private readonly IApiClient _apiClient;
+    private readonly AuthStateProvider _authState;
 
-    public AuthService(
-        HttpClient httpClient,
-        SessionService sessionService)
+    public AuthService(IApiClient apiClient, AuthStateProvider authState)
     {
-        _httpClient = httpClient;
-        _sessionService = sessionService;
+        _apiClient = apiClient;
+        _authState = authState;
     }
 
-    public async Task<bool> LoginAsync(
-        string phone,
-        string password)
+    public async Task<bool> LoginAsync(string phone, string password)
     {
-        var response = await _httpClient.PostAsJsonAsync(
+        var result = await _apiClient.PostAsync<LoginRequest, LoginResponse>(
             "api/auth/login",
-            new
+            new LoginRequest
             {
                 PhoneNumber = phone,
                 Password = password
             });
 
-        if (!response.IsSuccessStatusCode)
+        if (string.IsNullOrWhiteSpace(result?.Token))
             return false;
 
-        var result =
-            await response.Content.ReadFromJsonAsync
-            <LoginResponse>();
-
-        await _sessionService
-            .SaveTokenAsync(result!.Token);
-
+        await _authState.LoginAsync(result.Token);
         return true;
     }
 
     public async Task<string> RegisterAsync(RegisterRequest request)
     {
-        try
-        {
-            var response = await _httpClient.PostAsJsonAsync(
-                "api/auth/register",
-                request);
+        var result = await _apiClient.PostAsync<RegisterRequest, ApiResponse>(
+            "api/auth/register",
+            request);
 
-            if (!response.IsSuccessStatusCode)
-            {
-                var error = await response.Content
-                    .ReadAsStringAsync();
-                return $"Register failed: {error}";
-            }
-
-            var result = await response.Content
-                .ReadFromJsonAsync<ApiResponse>();
-
-            return result?.Message!;
-        }
-        catch (HttpRequestException ex)
-        {
-            return $"Network error: {ex.Message}";
-        }
-        catch (Exception ex)
-        {
-            return $"Unexpected error: {ex.Message}";
-        }
+        return result?.Message ?? "Unknown response";
     }
 }
+
+ 

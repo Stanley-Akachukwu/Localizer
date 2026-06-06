@@ -23,13 +23,16 @@ public partial class LocalizeVewModel : ObservableObject
     }
 
     [ObservableProperty]
-    private string selectedTopic;
+    private string selectedContext;
 
     [ObservableProperty]
-    private string videoTopicId;
+    private string videoContextId;
 
     [ObservableProperty]
     private string videoItemId;
+
+    [ObservableProperty]
+    private string targetLanguage;
 
     public IAsyncRelayCommand StartLocalizeCommand { get; }
 
@@ -84,7 +87,7 @@ public partial class LocalizeVewModel : ObservableObject
             }
             else
             {
-                await _navigationService.GoToAsync($"{Routes.ParticipationPage}?videoTopicId={VideoTopicId}");
+                await _navigationService.GoToAsync($"{Routes.ParticipationPage}?videoContextId={VideoContextId}");
             }
         }
         catch (Exception ex)
@@ -143,7 +146,7 @@ public partial class LocalizeVewModel : ObservableObject
     private async Task SaveVideoItemAsync(string videoUrl)
     {
         await _videoService
-            .CreateVideoAsync(new VideoCreateRequest("Localized Video",SelectedTopic,videoUrl, "Igbo", VideoTopicId));
+            .CreateVideoAsync(new VideoCreateRequest(SelectedContext,videoUrl, TargetLanguage, VideoContextId));
         await _videoService
            .SaveParticipationCountAsync(VideoItemId);
     }

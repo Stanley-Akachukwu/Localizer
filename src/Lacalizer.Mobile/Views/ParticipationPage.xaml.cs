@@ -4,7 +4,7 @@ using System.Collections.ObjectModel;
 
 namespace Lacalizer.Mobile.Views;
 
-[QueryProperty(nameof(VideoTopicId), "videoTopicId")]
+[QueryProperty(nameof(VideoContextId), "videoContextId")]
 public partial class ParticipationPage : ContentPage
 {
     private readonly ParticipationViewModel _vm;
@@ -15,14 +15,14 @@ public partial class ParticipationPage : ContentPage
 
     }
 
-    public string VideoTopicId
+    public string VideoContextId
     {
-        get => (BindingContext as ParticipationViewModel)?.VideoTopicId;
+        get => (BindingContext as ParticipationViewModel)?.VideoContextId;
         set
         {
             var vm = BindingContext as ParticipationViewModel;
             if (vm != null)
-                vm.VideoTopicId = value;
+                vm.VideoContextId = value;
         }
     }
     protected override async void OnAppearing()
@@ -54,8 +54,8 @@ public partial class ParticipationPage : ContentPage
         var itemIndex = e.CenterItemIndex;
 
         _vm.Videos[itemIndex].IsPlaying = true;
-        _vm.SelectedTopic = _vm.Videos[itemIndex].Topic;
-        _vm.VideoTopicId = _vm.Videos[itemIndex].VideoTopicId;
+        _vm.SelectedContext = _vm.Videos[itemIndex].ContextText;
+        _vm.VideoContextId = _vm.Videos[itemIndex].VideoContextId;
         foreach (var myModel in _vm.Videos)
         {
             if (myModel != _vm.Videos[itemIndex])

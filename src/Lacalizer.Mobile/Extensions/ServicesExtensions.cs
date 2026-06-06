@@ -1,7 +1,7 @@
 ﻿
 using Lacalizer.Mobile.Helpers;
-using Lacalizer.Mobile.Models;
 using Lacalizer.Mobile.Navigation;
+using Lacalizer.Mobile.Services;
 using Lacalizer.Mobile.Services.Comments;
 using Lacalizer.Mobile.Services.Users;
 using Lacalizer.Mobile.Services.Videos;
@@ -29,8 +29,6 @@ public static class ServicesExtensions
         //        builder.Services.TryAddSingleton<SharedMauiLib.INativeAudioService, SharedMauiLib.Platforms.iOS.NativeAudioService>();
         //#endif
 
-        builder.Services.AddSingleton<AuthService>();
-        builder.Services.AddSingleton<SessionService>();
         builder.Services.AddTransient<LoginPage>();
         builder.Services.AddTransient<RegisterPage>();
         builder.Services.AddTransient<AuthViewModel>();
@@ -38,8 +36,6 @@ public static class ServicesExtensions
         builder.Services.AddTransient<LoginViewModel>();
         builder.Services.AddTransient<RegisterViewModel>();
 
-        builder.Services.AddSingleton<AuthService>();
-        builder.Services.AddSingleton<SessionService>();
 
 
         builder.Services.AddSingleton<MainViewModel>();
@@ -67,36 +63,22 @@ public static class ServicesExtensions
         builder.Services.AddTransient<CreateContextViewModel>();
         builder.Services.AddTransient<CreateContextPage>();
 
-
-
         builder.Services.AddMemoryCache();
 
-        builder.Services.AddHttpClient<IContextService, ContextService>(client =>
-        {
-            client.BaseAddress = new Uri(baseUrl);
-        });
+         
 
-        builder.Services.AddHttpClient<IVideoService, VideoService>(client =>
-        {
-            client.BaseAddress = new Uri(baseUrl);
-        });
+        builder.Services.AddTransient<CachedJwtHandler>();
+        builder.Services.AddSingleton<ITokenProvider, TokenProvider>();
+        builder.Services.AddSingleton<ICurrentUserService, CurrentUserService>();
+        builder.Services.AddSingleton<AuthStateProvider>();
 
-        builder.Services.AddHttpClient<ICommentService, CommentService>(client =>
-        {
-            client.BaseAddress = new Uri(baseUrl);
-        });
+        builder.Services.AddScoped<IApiClient, ApiClient>();
 
-        builder.Services.AddSingleton<SessionService>();
+        builder.Services.AddScoped<IVideoService, VideoService>();
+        builder.Services.AddScoped<ICommentService, CommentService>();
+        builder.Services.AddScoped<IContextService, ContextService>();
 
-        builder.Services.AddTransient<JwtHandler>();
-
-        builder.Services.AddHttpClient<AuthService>(client =>
-        {
-            client.BaseAddress = new Uri(baseUrl);
-        })
-        .AddHttpMessageHandler<JwtHandler>();
-        //builder.Services.AddHttpContextAccessor();
-        builder.Services.AddScoped<ICurrentUser, CurrentUser>();
+        builder.Services.AddScoped<AuthService>();
         return builder;
     }
 }

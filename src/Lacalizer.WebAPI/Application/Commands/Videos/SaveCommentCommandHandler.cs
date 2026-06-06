@@ -44,14 +44,13 @@ public class SaveCommentCommandHandler : IRequestHandler<SaveCommentCommand, Loc
             VideoItemId = request.VideoItemId,
             ParentId = string.IsNullOrWhiteSpace(request.ParentId) ? null : request.ParentId,
             Author = request.Author,
-            Content = request.Content,
+            ContextText = request.Content,
             Description = request.Content,
             IsActive = true,
             CreatedByUserId = SystemUserId.ToString(),
             DateCreated = DateTime.UtcNow,
             DateUpdated = DateTime.UtcNow,
             UpdatedByUserId = SystemUserId.ToString(),
-            UID = id,
         };
 
         await _db.Comments.AddAsync(comment, ct);

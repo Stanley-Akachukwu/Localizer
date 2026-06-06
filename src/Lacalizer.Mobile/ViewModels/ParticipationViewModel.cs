@@ -20,9 +20,9 @@ public partial class ParticipationViewModel : ObservableObject
     [ObservableProperty]
     private bool isLoading;
     [ObservableProperty]
-    private string selectedTopic;
+    private string selectedContext;
     [ObservableProperty]
-    private string videoTopicId;
+    private string videoContextId;
     [ObservableProperty]
     private string videoItemId;
     [ObservableProperty]
@@ -52,7 +52,7 @@ public partial class ParticipationViewModel : ObservableObject
             }
             IsLoading = true;
 
-            var items = await _videoService.GetParticipationVideosAsync(1, 100, VideoTopicId);
+            var items = await _videoService.GetParticipationVideosAsync(1, 100, VideoContextId);
 
             // Add default counter values
             foreach (var vid in items)

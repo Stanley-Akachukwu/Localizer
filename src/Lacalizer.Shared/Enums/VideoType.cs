@@ -3,6 +3,6 @@
 public enum VideoType
 {
     NONE = 0,
-    TOPIC = 1,
+    CONTEXT = 1,
     PARTICIPATION = 2,
 }

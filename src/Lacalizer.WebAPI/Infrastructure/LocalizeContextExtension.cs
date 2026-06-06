@@ -28,7 +28,7 @@ public static class LocalizeContextExtension
 
                 dbContext.Database.Migrate();
 
-                DbInitializer.InitializeAsync(dbContext, sysInitId,userManager, cancellationToken).Wait();
+                DbInitializer.InitializeAsync(dbContext, userManager, cancellationToken).Wait();
             }
             catch (Exception ex)
             {
@@ -42,7 +42,7 @@ public static class LocalizeContextExtension
 public static class DbInitializer
 {
 
-    public static async Task InitializeAsync(LocalizeDbContext dbContext, string sysInitId, UserManager<ApplicationUser> userManager, CancellationToken ct)
+    public static async Task InitializeAsync(LocalizeDbContext dbContext, UserManager<ApplicationUser> userManager, CancellationToken ct)
     {
         try
         {
@@ -59,14 +59,14 @@ public static class DbInitializer
             }
 
 
-            var videoTopicSeed = await VideoTopicSeedAsync(dbContext, sysInitId, ct);
-            if (videoTopicSeed)
+            var videoContextSeed = await VideoTopicSeedAsync(dbContext, ct);
+            if (videoContextSeed)
             {
-                if (videoTopicSeed) tables.Add("videoTopicSeed");
+                if (videoContextSeed) tables.Add("videoContextSeed");
             }
 
 
-            var videoItemSeed = await VideoItemSeedAsync(dbContext, sysInitId, ct);
+            var videoItemSeed = await VideoItemSeedAsync(dbContext, ct);
             if (videoItemSeed)
             {
                 if (videoItemSeed) tables.Add("videoItemSeed");
@@ -116,7 +116,7 @@ public static class DbInitializer
         }
     }
 
-    private static async Task<bool> VideoItemSeedAsync(LocalizeDbContext dbContext, string sysInitId, CancellationToken ct)
+    private static async Task<bool> VideoItemSeedAsync(LocalizeDbContext dbContext, CancellationToken ct)
     {
        
         try
@@ -132,18 +132,16 @@ public static class DbInitializer
                     var videoItem = new VideoItem
                     {
                         Id = v.Id!,
-                        VideoTopicId = v.VideoTopicId,
-                        Description = v.Title,
+                        VideoContextId = v.VideoContextId,
+                        Description = "Localized Video",
                         Language = v.Language,
-                        Topic = v.Topic,
-                        Title = v.Title,
+                        ContextText = v.ContextText,
                         VideoUri = v.VideoUri,
                         IsActive = true,
                         CreatedByUserId = v.CreatedByUserId,
                         DateCreated = DateTime.UtcNow,
                         DateUpdated = DateTime.UtcNow,
                         UpdatedByUserId = v.UpdatedByUserId,
-                        UID = v.Id,
                         VideoType = v.VideoType,
                         UserId = v.UserId,
                     };
@@ -165,42 +163,40 @@ public static class DbInitializer
 
         return false;
     }
-    private static async Task<bool> VideoTopicSeedAsync(LocalizeDbContext dbContext, string sysInitId, CancellationToken ct)
+    private static async Task<bool> VideoTopicSeedAsync(LocalizeDbContext dbContext, CancellationToken ct)
     {
         
         try
         {
             Console.WriteLine($"Seeding videos roles...");
-            var videoTopics = new List<VideoTopic>();
-            var topicSeeds = await VideoTopicSeed.GetDefaultVideoTopicAsync(ct);
+            var videoContexts = new List<VideoContext>();
+            var topicSeeds = await VideoContextSeed.GetDefaultVideoContextsAsync(ct);
 
             foreach (var v in topicSeeds)
             {
-                if (!await dbContext.VideoTopics.AnyAsync(i => i.Id == v.Id, ct))
+                if (!await dbContext.VideoContexts.AnyAsync(i => i.Id == v.Id, ct))
                 {
-                    var videoTopic = new VideoTopic
+                    var videoTopic = new VideoContext
                     {
                         Id = v.Id!,
                         TargetLanguage = v.TargetLanguage,
-                        Title = v.Title,
-                        Topic = v.Topic,
-                        Description = v.Title,
+                        ContextText = v.ContextText,
+                        Description = "Text for translation",
                         IsActive = true,
                         CreatedByUserId = v.CreatedByUserId,
                         DateCreated = DateTime.UtcNow,
                         DateUpdated = DateTime.UtcNow,
                         UpdatedByUserId = v.CreatedByUserId,
-                        UID = $"{v.Id}-{v.Title}",
                         UserId = v.UserId,
 
                     };
-                    videoTopics.Add(videoTopic);
+                    videoContexts.Add(videoTopic);
                 }
             }
 
-            if (videoTopics.Any())
+            if (videoContexts.Any())
             {
-                await dbContext.VideoTopics.AddRangeAsync(videoTopics, ct);
+                await dbContext.VideoContexts.AddRangeAsync(videoContexts, ct);
                 return true;
             }
         }

@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Lacalizer.WebAPI.Migrations
 {
     [DbContext(typeof(LocalizeDbContext))]
-    [Migration("20260528110646_InitIdentity")]
-    partial class InitIdentity
+    [Migration("20260606024747_AddInitialMig")]
+    partial class AddInitialMig
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -33,7 +33,7 @@ namespace Lacalizer.WebAPI.Migrations
                     b.Property<string>("Author")
                         .HasColumnType("text");
 
-                    b.Property<string>("Content")
+                    b.Property<string>("ContextText")
                         .HasColumnType("text");
 
                     b.Property<string>("CreatedByUserId")
@@ -70,10 +70,6 @@ namespace Lacalizer.WebAPI.Migrations
                         .HasMaxLength(150)
                         .HasColumnType("character varying(150)");
 
-                    b.Property<string>("UID")
-                        .HasMaxLength(250)
-                        .HasColumnType("character varying(250)");
-
                     b.Property<string>("UpdatedByUserId")
                         .HasMaxLength(128)
                         .HasColumnType("character varying(128)");
@@ -82,10 +78,10 @@ namespace Lacalizer.WebAPI.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("VideoItemId")
+                    b.Property<string>("VideoContextId")
                         .HasColumnType("text");
 
-                    b.Property<string>("VideoTopicId")
+                    b.Property<string>("VideoItemId")
                         .HasColumnType("text");
 
                     b.HasKey("Id");
@@ -175,6 +171,65 @@ namespace Lacalizer.WebAPI.Migrations
                     b.ToTable("AspNetUsers", "auth");
                 });
 
+            modelBuilder.Entity("Lacalizer.WebAPI.Entites.Videos.VideoContext", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("text");
+
+                    b.Property<string>("ContextText")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("CreatedByUserId")
+                        .HasMaxLength(128)
+                        .HasColumnType("character varying(128)");
+
+                    b.Property<DateTimeOffset?>("DateCreated")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTimeOffset?>("DateDeleted")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTimeOffset?>("DateUpdated")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("DeletedByUserId")
+                        .HasMaxLength(128)
+                        .HasColumnType("character varying(128)");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(250)
+                        .HasColumnType("character varying(250)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("Tags")
+                        .HasMaxLength(150)
+                        .HasColumnType("character varying(150)");
+
+                    b.Property<string>("TargetLanguage")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("UpdatedByUserId")
+                        .HasMaxLength(128)
+                        .HasColumnType("character varying(128)");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("VideoContexts", "video");
+                });
+
             modelBuilder.Entity("Lacalizer.WebAPI.Entites.Videos.VideoItem", b =>
                 {
                     b.Property<string>("Id")
@@ -182,6 +237,10 @@ namespace Lacalizer.WebAPI.Migrations
 
                     b.Property<int>("CommentCounts")
                         .HasColumnType("integer");
+
+                    b.Property<string>("ContextText")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.Property<string>("CreatedByUserId")
                         .HasMaxLength(128)
@@ -227,18 +286,6 @@ namespace Lacalizer.WebAPI.Migrations
                         .HasMaxLength(150)
                         .HasColumnType("character varying(150)");
 
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("Topic")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("UID")
-                        .HasMaxLength(250)
-                        .HasColumnType("character varying(250)");
-
                     b.Property<string>("UpdatedByUserId")
                         .HasMaxLength(128)
                         .HasColumnType("character varying(128)");
@@ -247,7 +294,7 @@ namespace Lacalizer.WebAPI.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("VideoTopicId")
+                    b.Property<string>("VideoContextId")
                         .HasColumnType("text");
 
                     b.Property<int>("VideoType")
@@ -261,76 +308,9 @@ namespace Lacalizer.WebAPI.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.HasIndex("VideoTopicId");
+                    b.HasIndex("VideoContextId");
 
                     b.ToTable("VideoItems", "video");
-                });
-
-            modelBuilder.Entity("Lacalizer.WebAPI.Entites.Videos.VideoTopic", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("text");
-
-                    b.Property<string>("CreatedByUserId")
-                        .HasMaxLength(128)
-                        .HasColumnType("character varying(128)");
-
-                    b.Property<DateTimeOffset?>("DateCreated")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<DateTimeOffset?>("DateDeleted")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<DateTimeOffset?>("DateUpdated")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("DeletedByUserId")
-                        .HasMaxLength(128)
-                        .HasColumnType("character varying(128)");
-
-                    b.Property<string>("Description")
-                        .HasMaxLength(250)
-                        .HasColumnType("character varying(250)");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("boolean");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("boolean");
-
-                    b.Property<string>("Tags")
-                        .HasMaxLength(150)
-                        .HasColumnType("character varying(150)");
-
-                    b.Property<string>("TargetLanguage")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("Topic")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("UID")
-                        .HasMaxLength(250)
-                        .HasColumnType("character varying(250)");
-
-                    b.Property<string>("UpdatedByUserId")
-                        .HasMaxLength(128)
-                        .HasColumnType("character varying(128)");
-
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("VideoTopics", "video");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -482,6 +462,17 @@ namespace Lacalizer.WebAPI.Migrations
                     b.Navigation("VideoItem");
                 });
 
+            modelBuilder.Entity("Lacalizer.WebAPI.Entites.Videos.VideoContext", b =>
+                {
+                    b.HasOne("Lacalizer.WebAPI.Entites.Users.ApplicationUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("Lacalizer.WebAPI.Entites.Videos.VideoItem", b =>
                 {
                     b.HasOne("Lacalizer.WebAPI.Entites.Users.ApplicationUser", "User")
@@ -490,24 +481,13 @@ namespace Lacalizer.WebAPI.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Lacalizer.WebAPI.Entites.Videos.VideoTopic", "VideoTopic")
+                    b.HasOne("Lacalizer.WebAPI.Entites.Videos.VideoContext", "VideoContext")
                         .WithMany("VideoItems")
-                        .HasForeignKey("VideoTopicId");
+                        .HasForeignKey("VideoContextId");
 
                     b.Navigation("User");
 
-                    b.Navigation("VideoTopic");
-                });
-
-            modelBuilder.Entity("Lacalizer.WebAPI.Entites.Videos.VideoTopic", b =>
-                {
-                    b.HasOne("Lacalizer.WebAPI.Entites.Users.ApplicationUser", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
+                    b.Navigation("VideoContext");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -561,14 +541,14 @@ namespace Lacalizer.WebAPI.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("Lacalizer.WebAPI.Entites.Videos.VideoContext", b =>
+                {
+                    b.Navigation("VideoItems");
+                });
+
             modelBuilder.Entity("Lacalizer.WebAPI.Entites.Videos.VideoItem", b =>
                 {
                     b.Navigation("Comments");
-                });
-
-            modelBuilder.Entity("Lacalizer.WebAPI.Entites.Videos.VideoTopic", b =>
-                {
-                    b.Navigation("VideoItems");
                 });
 #pragma warning restore 612, 618
         }

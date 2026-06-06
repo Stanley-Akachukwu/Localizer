@@ -58,7 +58,7 @@ public class CommentQueries : ICommentQueries
                     Id = v.Id,
                     VideoItemId = v.Id,
                     Author = v.Author, 
-                    Content = v.Content, 
+                    Content = v.ContextText, 
                     ParentId = v.ParentId 
                 })
                 .FirstOrDefaultAsync(ct);
@@ -109,7 +109,7 @@ public class CommentQueries : ICommentQueries
                     Id = v.Id,
                     VideoItemId = v.Id,
                     Author = v.Author,
-                    Content = v.Content,
+                    Content = v.ContextText,
                     ParentId = v.ParentId
                 })
                 .ToListAsync(ct);

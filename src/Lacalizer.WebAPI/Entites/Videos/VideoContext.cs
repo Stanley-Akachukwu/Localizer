@@ -2,9 +2,9 @@
 
 namespace Lacalizer.WebAPI.Entites.Videos;
 
-public class VideoTopic : BaseEntity<string>
+public class VideoContext : BaseEntity<string>
 {
-    public VideoTopic()
+    public VideoContext()
     {
         Id = NUlid.Ulid.NewUlid().ToString();
     }
@@ -12,7 +12,6 @@ public class VideoTopic : BaseEntity<string>
     public string UserId { get; set; }
     public ApplicationUser User { get; set; }
     public string TargetLanguage { get; set; } = string.Empty;
-    public string Title { get; set; } = string.Empty;
-    public string Topic { get; set; } = string.Empty;
+    public string ContextText { get; set; } = string.Empty;
     public ICollection<VideoItem>? VideoItems { get; set; }
 }

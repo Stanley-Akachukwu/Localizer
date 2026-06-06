@@ -7,7 +7,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Lacalizer.WebAPI.Migrations
 {
     /// <inheritdoc />
-    public partial class InitIdentity : Migration
+    public partial class AddInitialMig : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -184,17 +184,15 @@ namespace Lacalizer.WebAPI.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "VideoTopics",
+                name: "VideoContexts",
                 schema: "video",
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "text", nullable: false),
                     UserId = table.Column<string>(type: "text", nullable: false),
                     TargetLanguage = table.Column<string>(type: "text", nullable: false),
-                    Title = table.Column<string>(type: "text", nullable: false),
-                    Topic = table.Column<string>(type: "text", nullable: false),
+                    ContextText = table.Column<string>(type: "text", nullable: false),
                     Description = table.Column<string>(type: "character varying(250)", maxLength: 250, nullable: true),
-                    UID = table.Column<string>(type: "character varying(250)", maxLength: 250, nullable: true),
                     IsActive = table.Column<bool>(type: "boolean", nullable: false),
                     CreatedByUserId = table.Column<string>(type: "character varying(128)", maxLength: 128, nullable: true),
                     DateCreated = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: true),
@@ -207,9 +205,9 @@ namespace Lacalizer.WebAPI.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_VideoTopics", x => x.Id);
+                    table.PrimaryKey("PK_VideoContexts", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_VideoTopics_AspNetUsers_UserId",
+                        name: "FK_VideoContexts_AspNetUsers_UserId",
                         column: x => x.UserId,
                         principalSchema: "auth",
                         principalTable: "AspNetUsers",
@@ -225,17 +223,15 @@ namespace Lacalizer.WebAPI.Migrations
                     Id = table.Column<string>(type: "text", nullable: false),
                     UserId = table.Column<string>(type: "text", nullable: false),
                     Language = table.Column<string>(type: "text", nullable: false),
-                    Title = table.Column<string>(type: "text", nullable: false),
-                    Topic = table.Column<string>(type: "text", nullable: false),
+                    ContextText = table.Column<string>(type: "text", nullable: false),
                     VideoUri = table.Column<string>(type: "text", nullable: false),
-                    VideoTopicId = table.Column<string>(type: "text", nullable: true),
+                    VideoContextId = table.Column<string>(type: "text", nullable: true),
                     VideoType = table.Column<int>(type: "integer", nullable: false),
                     LikeCounts = table.Column<int>(type: "integer", nullable: false),
                     CommentCounts = table.Column<int>(type: "integer", nullable: false),
                     ShareCounts = table.Column<int>(type: "integer", nullable: false),
                     ParticipantCounts = table.Column<int>(type: "integer", nullable: false),
                     Description = table.Column<string>(type: "character varying(250)", maxLength: 250, nullable: true),
-                    UID = table.Column<string>(type: "character varying(250)", maxLength: 250, nullable: true),
                     IsActive = table.Column<bool>(type: "boolean", nullable: false),
                     CreatedByUserId = table.Column<string>(type: "character varying(128)", maxLength: 128, nullable: true),
                     DateCreated = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: true),
@@ -257,10 +253,10 @@ namespace Lacalizer.WebAPI.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_VideoItems_VideoTopics_VideoTopicId",
-                        column: x => x.VideoTopicId,
+                        name: "FK_VideoItems_VideoContexts_VideoContextId",
+                        column: x => x.VideoContextId,
                         principalSchema: "video",
-                        principalTable: "VideoTopics",
+                        principalTable: "VideoContexts",
                         principalColumn: "Id");
                 });
 
@@ -272,12 +268,11 @@ namespace Lacalizer.WebAPI.Migrations
                     Id = table.Column<string>(type: "text", nullable: false),
                     UserId = table.Column<string>(type: "text", nullable: false),
                     VideoItemId = table.Column<string>(type: "text", nullable: true),
-                    VideoTopicId = table.Column<string>(type: "text", nullable: true),
+                    VideoContextId = table.Column<string>(type: "text", nullable: true),
                     ParentId = table.Column<string>(type: "text", nullable: true),
                     Author = table.Column<string>(type: "text", nullable: true),
-                    Content = table.Column<string>(type: "text", nullable: true),
+                    ContextText = table.Column<string>(type: "text", nullable: true),
                     Description = table.Column<string>(type: "character varying(250)", maxLength: 250, nullable: true),
-                    UID = table.Column<string>(type: "character varying(250)", maxLength: 250, nullable: true),
                     IsActive = table.Column<bool>(type: "boolean", nullable: false),
                     CreatedByUserId = table.Column<string>(type: "character varying(128)", maxLength: 128, nullable: true),
                     DateCreated = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: true),
@@ -363,22 +358,22 @@ namespace Lacalizer.WebAPI.Migrations
                 column: "VideoItemId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_VideoContexts_UserId",
+                schema: "video",
+                table: "VideoContexts",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_VideoItems_UserId",
                 schema: "video",
                 table: "VideoItems",
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_VideoItems_VideoTopicId",
+                name: "IX_VideoItems_VideoContextId",
                 schema: "video",
                 table: "VideoItems",
-                column: "VideoTopicId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_VideoTopics_UserId",
-                schema: "video",
-                table: "VideoTopics",
-                column: "UserId");
+                column: "VideoContextId");
         }
 
         /// <inheritdoc />
@@ -417,7 +412,7 @@ namespace Lacalizer.WebAPI.Migrations
                 schema: "video");
 
             migrationBuilder.DropTable(
-                name: "VideoTopics",
+                name: "VideoContexts",
                 schema: "video");
 
             migrationBuilder.DropTable(

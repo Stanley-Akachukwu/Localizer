@@ -44,7 +44,7 @@ public partial class ThreadedCommentView : ContentView
         var reply = new VideoComment
         {
             Author = "You",
-            Content = parent.ReplyText,
+            ContentText = parent.ReplyText,
             CreatedAt = DateTime.UtcNow,
             Depth = parent.Depth + 1,
             Parent = parent

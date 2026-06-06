@@ -1,9 +1,8 @@
 ﻿using Lacalizer.Mobile.Models;
+using Lacalizer.Mobile.Services.Users;
 using Lacalizer.Shared.Dtos;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
-using System.Net.Http.Json;
-using System.Text.Json;
 
 namespace Lacalizer.Mobile.Services.Videos;
 
@@ -19,12 +18,12 @@ public interface IContextService
 
 public class ContextService : IContextService
 {
-    private readonly HttpClient _httpClient;
+    private readonly IApiClient _apiClient;
     private readonly IMemoryCache _cache;
     private IConfiguration _config;
-    public ContextService(HttpClient httpClient, IMemoryCache cache, IConfiguration config)
+    public ContextService(IApiClient apiClient, IMemoryCache cache, IConfiguration config)
     {
-        _httpClient = httpClient;
+        _apiClient = apiClient;
         _cache = cache;
         _config = config;
        // _client.BaseAddress = new Uri(_config["ApiSettings:BaseUrl"]);
@@ -39,25 +38,14 @@ public class ContextService : IContextService
         {
             var url = $"api/contexts?PageIndex={pageIndex}&PageSize={pageSize}&contextId={contextItemId}";
 
-            using var response = await _httpClient.GetAsync(url, ct);
-            response.EnsureSuccessStatusCode();
+            var response = await _apiClient
+       .GetAsync<LocalizerApiResponse<PaginatedItems<ContextModel>>>(url, ct);
 
-            var content = await response.Content.ReadAsStringAsync(ct);
-            if (string.IsNullOrWhiteSpace(content))
+
+            if (response?.Data?.Data is null || response?.Data?.Data is null)
                 return new LocalizerApiResponse<PaginatedItems<ContextModel>>();
 
-            var options = new JsonSerializerOptions
-            {
-                PropertyNameCaseInsensitive = true
-            };
-
-            var rsp = await response.Content
-                .ReadFromJsonAsync<LocalizerApiResponse<PaginatedItems<ContextModel>>>(options, ct);
-
-            if (rsp is null || rsp.Data is null)
-                return new LocalizerApiResponse<PaginatedItems<ContextModel>>();
-
-            var items = rsp.Data.Data
+            var items = response?.Data.Data
                 .Select(c => new ContextModel
                 {
                     Id = c?.Id?.ToString(),
@@ -94,28 +82,11 @@ public class ContextService : IContextService
     {
         var request = new SaveContextRequest(context.ContextText, userId);
 
-        var url = "api/contexts/saveContext";
-
         try
         {
-            using var response = await _httpClient.PostAsJsonAsync(url, request, ct);
+            var result = await _apiClient.PostAsync<SaveContextRequest, ContextModel>("api/contexts/saveContext",request);
 
-            response.EnsureSuccessStatusCode();
-
-            var options = new JsonSerializerOptions
-            {
-                PropertyNameCaseInsensitive = true
-            };
-
-            var rsp = await response.Content
-                .ReadFromJsonAsync<LocalizerApiResponse<CreateContextResult>>(options, ct);
-            if (rsp.Data is not null && rsp.IsSuccess)
-            {
-                context.Id = rsp.Data.Id;
-                context.ContextText = rsp.Data.ContextText;
-            }
-
-            return await Task.FromResult(context);
+            return await Task.FromResult(result);
         }
         catch (Exception ex)
         {

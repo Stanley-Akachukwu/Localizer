@@ -141,7 +141,7 @@ public record VideoPaginationQuery(
     int PageSize = 10,
     string? Language = null,
     string? Title = null,
-    VideoType VideoType = VideoType.TOPIC,
+    VideoType VideoType = VideoType.CONTEXT,
     DateTimeOffset? DateCreated = null,
     string? VideoTopicId = null
 ) : PaginationQuery(PageIndex, PageSize);

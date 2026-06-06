@@ -8,9 +8,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Lacalizer.WebAPI.Apis;
 
-public static class LocalizeContextApi
+public static class VideoContextApi
 {
-    public static RouteGroupBuilder MapLocalizeContextAPI(this IEndpointRouteBuilder app)
+    public static RouteGroupBuilder MapVideoContextAPI(this IEndpointRouteBuilder app)
     {
         var vApi = app.NewVersionedApi("contexts");
 

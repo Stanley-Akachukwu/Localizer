@@ -2,7 +2,6 @@
 using CommunityToolkit.Mvvm.Input;
 using Lacalizer.Mobile.Models;
 using Lacalizer.Mobile.Navigation;
-using Lacalizer.Mobile.Services.Comments;
 using Lacalizer.Mobile.Services.Videos;
 using Lacalizer.Mobile.Views;
 using System.Collections.ObjectModel;
@@ -31,9 +30,9 @@ public partial class ContextsViewModel : ObservableObject
     private long totalCount;
    
     [ObservableProperty]
-    private string selectedTopic;
+    private string selectedContext;
     [ObservableProperty]
-    private string videoTopicId;
+    private string videoContextId;
     [ObservableProperty]
     private string videoItemId;
     [ObservableProperty]

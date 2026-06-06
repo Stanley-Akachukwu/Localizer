@@ -89,7 +89,7 @@ public partial class ReelVideoGroupViewModel : ObservableObject
 
                 BottomRight = firstFour.ElementAtOrDefault(3),
 
-                CenterText = firstFour.FirstOrDefault()?.Topic
+                CenterText = firstFour.FirstOrDefault()?.ContextText
                              ?? "Translate this"
             };
         }

@@ -1,10 +1,9 @@
 ﻿using Lacalizer.Mobile.Models;
+using Lacalizer.Mobile.Services.Users;
 using Lacalizer.Shared.Dtos;
 using Lacalizer.Shared.Enums;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
-using System.Net.Http.Json;
-using System.Text.Json;
 
 namespace Lacalizer.Mobile.Services.Videos;
 
@@ -19,15 +18,14 @@ public interface IVideoService
 
 public class VideoService : IVideoService
 {
-    private readonly HttpClient _client;
+    private readonly IApiClient _apiClient;
     private readonly IMemoryCache _cache;
     private IConfiguration _config;
-    public VideoService(HttpClient client, IMemoryCache cache, IConfiguration config)
+    public VideoService(IApiClient apiClient, IMemoryCache cache, IConfiguration config)
     {
-        _client = client;
+        _apiClient = apiClient;
         _cache = cache;
         _config = config; 
-        _client.BaseAddress = new Uri(_config["ApiSettings:BaseUrl"]!);
     }
 
     public async Task<List<ReelVideoModel>> GetTopicVideosAsync(
@@ -37,37 +35,27 @@ public class VideoService : IVideoService
     {
         try
         {
-            string cacheKey = $"videos-{pageIndex}-{pageSize}-{VideoType.TOPIC}";
+            string cacheKey = $"videos-{pageIndex}-{pageSize}-{VideoType.CONTEXT}";
 
             if (_cache.TryGetValue(cacheKey, out List<ReelVideoModel> cachedVideos))
                 return cachedVideos!;
 
-            var url = $"api/videoitems?PageIndex={pageIndex}&PageSize={pageSize}&VideoType={VideoType.TOPIC}";
+            var url = $"api/videoitems?PageIndex={pageIndex}&PageSize={pageSize}&VideoType={VideoType.CONTEXT}";
 
-            using var response = await _client.GetAsync(url, ct);
-            response.EnsureSuccessStatusCode();
+            
+            var response = await _apiClient
+      .GetAsync<LocalizerApiResponse<PaginatedItems<VideoDto>>>(url, ct);
 
-            var content = await response.Content.ReadAsStringAsync(ct);
-            if (string.IsNullOrWhiteSpace(content))
+
+            if (response?.Data?.Data is null || response?.Data?.Data is null)
                 return new List<ReelVideoModel>();
 
-            var options = new JsonSerializerOptions
-            {
-                PropertyNameCaseInsensitive = true
-            };
 
-            var rsp = await response.Content
-                .ReadFromJsonAsync<LocalizerApiResponse<PaginatedItems<VideoDto>>>(options, ct);
-
-            if (rsp is null || rsp.Data is null)
-                return new List<ReelVideoModel>();
-
-            var items = rsp.Data.Data
+            var items = response?.Data.Data
                 .Select(v => new ReelVideoModel(
-                    v.Title!,
-                    v.Topic!,
+                    v.ContextText!,
                     v.VideoUri!,
-                    v.VideoTopicId!,v.SavedLikes,v.SavedComments,v.SavedShares, v.SavedParticipants,v.Id!, null!, null!, null!,null!))
+                    v.VideoContextId!,v.SavedLikes,v.SavedComments,v.SavedShares, v.SavedParticipants,v.Id!, null!, null!, null!,null!))
                 .ToList();
 
             _cache.Set(cacheKey, items, TimeSpan.FromMinutes(10));
@@ -86,37 +74,25 @@ public class VideoService : IVideoService
 
     public async Task<List<ParticipationVideoModel>> GetParticipationVideosAsync(
     int pageIndex,
-    int pageSize,string? videoTopicId,
+    int pageSize,string? videoContextId,
     CancellationToken ct = default)
     {
         try
         {
-            var url = $"api/videoitems?PageIndex={pageIndex}&PageSize={pageSize}&VideoType={VideoType.PARTICIPATION}&VideoTopicId={videoTopicId}";
+            var url = $"api/videoitems?PageIndex={pageIndex}&PageSize={pageSize}&VideoType={VideoType.PARTICIPATION}&VideoContextId={videoContextId}";
+            var response = await _apiClient
+               .GetAsync<LocalizerApiResponse<PaginatedItems<VideoDto>>>(url, ct);
 
-            using var response = await _client.GetAsync(url, ct);
-            response.EnsureSuccessStatusCode();
 
-            var content = await response.Content.ReadAsStringAsync(ct);
-            if (string.IsNullOrWhiteSpace(content))
+            if (response?.Data?.Data is null || response?.Data?.Data is null)
                 return new List<ParticipationVideoModel>();
 
-            var options = new JsonSerializerOptions
-            {
-                PropertyNameCaseInsensitive = true
-            };
 
-            var rsp = await response.Content
-                .ReadFromJsonAsync<LocalizerApiResponse<PaginatedItems<VideoDto>>>(options, ct);
-
-            if (rsp is null || rsp.Data is null)
-                return new List<ParticipationVideoModel>();
-
-            var items = rsp.Data.Data
+            var items = response?.Data.Data
                 .Select(v => new ParticipationVideoModel(
-                    v.Title!,
-                    v.Topic!,
+                    v.ContextText!,
                     v.VideoUri!,
-                    v.VideoTopicId!, v.SavedLikes, v.SavedComments, v.SavedShares, v.SavedParticipants, v.Id!, null!, null!, null!, null!))
+                    v.VideoContextId!, v.SavedLikes, v.SavedComments, v.SavedShares, v.SavedParticipants, v.Id!, null!, null!, null!, null!))
                 .ToList();
             return items;
         }
@@ -135,28 +111,15 @@ public class VideoService : IVideoService
     {
         try
         {
-            var url = "api/videoitems";
+            var response = await _apiClient.PostAsync<VideoCreateRequest, LocalizerApiResponse<VideoDto>>("api/videoitems", request);
 
-            using var response = await _client.PostAsJsonAsync(url, request, ct);
-
-            response.EnsureSuccessStatusCode();
-
-            var options = new JsonSerializerOptions
-            {
-                PropertyNameCaseInsensitive = true
-            };
-
-            var rsp = await response.Content
-                .ReadFromJsonAsync<LocalizerApiResponse<VideoDto>>(options, ct);
-
-            if (rsp == null || rsp.Data == null)
+            if (response == null || response.Data == null)
                 return null;
 
             return new ReelVideoModel(
-                rsp.Data.Title!,
-                rsp.Data.Topic!,
-                rsp.Data.VideoUri!,
-                rsp.Data.Id!, rsp.Data.SavedLikes, rsp.Data.SavedComments, rsp.Data.SavedShares, rsp.Data.SavedParticipants, rsp.Data.Id!, null!, null!, null!, null!);
+                response.Data.ContextText!,
+                response.Data.VideoUri!,
+                response.Data.Id!, response.Data.SavedLikes, response.Data.SavedComments, response.Data.SavedShares, response.Data.SavedParticipants, response.Data.Id!, null!, null!, null!, null!);
         }
         catch (TaskCanceledException)
         {
@@ -175,19 +138,12 @@ public class VideoService : IVideoService
 
         try
         {
-            using var response = await _client.PostAsJsonAsync(url, request, ct);
+            var response = await _apiClient.PostAsync<LikeVideoRequest, LocalizerApiResponse<int>>("api/videoitems", request);
 
-            response.EnsureSuccessStatusCode();
+            if (response == null || response.Data == null)
+                return null;
 
-            var options = new JsonSerializerOptions
-            {
-                PropertyNameCaseInsensitive = true
-            };
-
-            var rsp = await response.Content
-                .ReadFromJsonAsync<LocalizerApiResponse<int>>(options, ct);
-
-            return rsp?.Data;
+            return response?.Data;
         }
         catch (Exception)
         {
@@ -198,23 +154,15 @@ public class VideoService : IVideoService
     public async Task<int?> SaveParticipationCountAsync(string videoItemId, CancellationToken ct = default)
     {
         var request = new LocalizeParticipationRequest(videoItemId);
-        var url = "api/videoitems/saveParticipation";
 
         try
         {
-            using var response = await _client.PostAsJsonAsync(url, request, ct);
+            var response = await _apiClient.PostAsync<LocalizeParticipationRequest, LocalizerApiResponse<int>>("api/videoitems/saveParticipation", request);
 
-            response.EnsureSuccessStatusCode();
+            if (response == null || response.Data == null)
+                return null;
 
-            var options = new JsonSerializerOptions
-            {
-                PropertyNameCaseInsensitive = true
-            };
-
-            var rsp = await response.Content
-                .ReadFromJsonAsync<LocalizerApiResponse<int>>(options, ct);
-
-            return rsp!.Data;
+            return response?.Data;
         }
         catch (Exception)
         {
@@ -223,7 +171,7 @@ public class VideoService : IVideoService
     }
 }
 
-public record VideoCreateRequest(string Title, string Topic, string VideoUri, string Language ,string TopicId);
+public record VideoCreateRequest(string ContextText, string VideoUri, string Language ,string VideoContextId);
 public record LikeVideoRequest(string videoItemId);
 public record LocalizeParticipationRequest(string videoItemId);
 

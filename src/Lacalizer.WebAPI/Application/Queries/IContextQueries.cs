@@ -1,6 +1,6 @@
 ﻿using Lacalizer.Shared.Dtos;
 using Lacalizer.WebAPI.Apis;
-using Lacalizer.WebAPI.Entites.Contexts;
+using Lacalizer.WebAPI.Entites.Videos;
 using Lacalizer.WebAPI.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
@@ -51,7 +51,7 @@ public class ContextQueries : IContextQueries
 
         try
         {
-            var dto = await _dbContext.LocalizeContexts
+            var dto = await _dbContext.VideoContexts
                 .Where(v => v.Id == contextItemId)
                 .Select(v => new SingleContextDto
                 {
@@ -88,7 +88,7 @@ public class ContextQueries : IContextQueries
                 StatusCodes.Status400BadRequest);
         try
         {
-            IQueryable<LocalizeContext> query = _dbContext.LocalizeContexts.Where(c => c.Id == req.contextItemId);
+            IQueryable<VideoContext> query = _dbContext.VideoContexts.Where(c => c.Id == req.contextItemId);
 
             var totalCount = await query.CountAsync(ct);
 

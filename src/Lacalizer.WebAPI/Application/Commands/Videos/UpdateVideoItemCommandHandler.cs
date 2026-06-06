@@ -8,8 +8,7 @@ namespace Lacalizer.WebAPI.Application.Commands.Videos;
 public record UpdateVideoItemCommand(
     string Id,
     string Language,
-    string Title,
-    string Topic,
+    string ContextText,
     string BlobName) : IRequest<LocalizerApiResponse<UpdateVideoItemResult>>;
 public class UpdateVideoItemResult
 {
@@ -34,8 +33,7 @@ public class UpdateVideoItemCommandHandler : IRequestHandler<UpdateVideoItemComm
         }
 
         existing.Language = request.Language;
-        existing.Title = request.Title;
-        existing.Topic = request.Topic;
+        existing.ContextText = request.ContextText;
         existing.VideoUri = request.BlobName;
 
         _db.VideoItems.Update(existing);
@@ -61,8 +59,7 @@ public class UpdateVideoItemCommandValidator : AbstractValidator<UpdateVideoItem
     {
         RuleFor(x => x.Id).NotEmpty();
         RuleFor(x => x.Language).NotEmpty();
-        RuleFor(x => x.Title).NotEmpty();
-        RuleFor(x => x.Topic).NotEmpty();
+        RuleFor(x => x.ContextText).NotEmpty();
         RuleFor(x => x.BlobName).NotEmpty();
     }
 }

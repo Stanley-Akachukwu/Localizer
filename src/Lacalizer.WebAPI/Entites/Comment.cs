@@ -13,8 +13,8 @@ public class Comment : BaseEntity<string>
     public ApplicationUser User { get; set; }
     public string? VideoItemId { get; set; }
     public VideoItem? VideoItem { get; set; }
-    public string? VideoTopicId { get; set; }
+    public string? VideoContextId { get; set; }
     public string? ParentId { get; set; }
     public string? Author { get; set; }
-    public string? Content { get; set; }
+    public string? ContextText { get; set; }
 }

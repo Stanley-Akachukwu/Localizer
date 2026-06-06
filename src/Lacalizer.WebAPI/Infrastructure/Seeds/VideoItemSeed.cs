@@ -16,24 +16,22 @@ public static class VideoItemSeed
                     Id = "1KAZM0HZ2JZPFBW643KT15T4G",
                     UserId = "01SYSTEMUSER00000000000001",
                     Language = "English",
-                    VideoType = VideoType.TOPIC,
-                    Title = "Eze Adi",
-                    Topic = "Eze Adi hurried over his breakfast of cassava served with cold bitter-leaf soup. \r\nIt was all that remained of last night's supper.",
+                    VideoType = VideoType.CONTEXT,
+                    ContextText = "Eze Adi hurried over his breakfast of cassava served with cold bitter-leaf soup. \r\nIt was all that remained of last night's supper.",
                     VideoUri = "https://github.com/ewerspej/maui-samples/blob/main/assets/bigbuckbunny.mp4?raw=true",
                     CreatedByUserId = SystemUserId.ToString(),
-                    VideoTopicId = "TOPIC01KAZM0HZ2JZPFBW643KT15T4G"
+                    VideoContextId = "TOPIC01KAZM0HZ2JZPFBW643KT15T4G"
                 },
                 new VideoItem()
                 {
                     Id = "01KAZM0HZ2JZPFBW643KTHT234",
                      UserId = "01SYSTEMUSER00000000000001",
                     Language = "French",
-                    VideoType = VideoType.TOPIC,
-                    Title = "Eze Adi",
-                    Topic = "Then he put away the bowls from which he and his mother had eaten, and set off to the village of Ama, three miles away. Eze was going to school for the first time.",
+                    VideoType = VideoType.CONTEXT,
+                    ContextText = "Then he put away the bowls from which he and his mother had eaten, and set off to the village of Ama, three miles away. Eze was going to school for the first time.",
                     VideoUri = "https://github.com/ewerspej/maui-samples/blob/main/assets/bigbuckbunny.mp4?raw=true",
                     CreatedByUserId = SystemUserId.ToString(),
-                    VideoTopicId = "TOPIC01KAZM0HZ2JZPFBW643KT15T4G",
+                    VideoContextId = "TOPIC01KAZM0HZ2JZPFBW643KT15T4G",
 
                 },
                 new VideoItem()
@@ -41,12 +39,11 @@ public static class VideoItemSeed
                     Id = "TOPIC01KAZM0HZ2JZPFBW643KT4THKE",
                      UserId = "01SYSTEMUSER00000000000001",
                     Language = "Spanish",
-                    VideoType = VideoType.TOPIC,
-                    Title = "Machine",
-                    Topic = "A simulator is a machine, program, or device that imitates a real-life situation, typically for training, experimentation, or entertainment.",
+                    VideoType = VideoType.CONTEXT,
+                    ContextText = "A simulator is a machine, program, or device that imitates a real-life situation, typically for training, experimentation, or entertainment.",
                     VideoUri = "https://github.com/ewerspej/maui-samples/blob/main/assets/bigbuckbunny.mp4?raw=true",
                     CreatedByUserId = SystemUserId.ToString(),
-                    VideoTopicId = "TOPIC01KAZM0HZ2JZPFBW643KT15T4G"
+                    VideoContextId = "TOPIC01KAZM0HZ2JZPFBW643KT15T4G"
 
                 },
                

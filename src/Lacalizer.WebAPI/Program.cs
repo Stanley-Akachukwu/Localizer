@@ -81,7 +81,7 @@ app.UseAuthorization();
 app.MapAuthAPI();
 app.MapVideoItemAPI();
 app.MapCommentAPI();
-app.MapLocalizeContextAPI();
+app.MapVideoContextAPI();
 app.MapDefaultEndpoints();
 
 app.CreateLocalizeDbIfNotExists();

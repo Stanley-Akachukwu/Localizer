@@ -12,11 +12,10 @@ public class VideoItem : BaseEntity<string>
     public string UserId { get; set; }
     public ApplicationUser User { get; set; }
     public string Language { get; set; } = string.Empty;
-    public string Title { get; set; } = string.Empty;
-    public string Topic { get; set; } = string.Empty;
+    public string ContextText { get; set; } = string.Empty;
     public string VideoUri { get; set; } = string.Empty;
-    public string? VideoTopicId { get; set; } = NUlid.Ulid.Empty.ToString();
-    public VideoTopic? VideoTopic { get; set; } 
+    public string? VideoContextId { get; set; } = NUlid.Ulid.Empty.ToString();
+    public VideoContext? VideoContext { get; set; } 
     public VideoType VideoType { get; set; } = VideoType.PARTICIPATION;
     public int LikeCounts { get; set; }
     public int CommentCounts { get; set; }

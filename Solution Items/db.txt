@@ -1,5 +1,5 @@
 EntityFrameworkCore\Add-Migration InitIdentity -Context LocalizeContext -IgnoreChanges
-EntityFrameworkCore\Add-Migration AddVideoContextMig  -Context LocalizeContext 
+EntityFrameworkCore\Add-Migration AddInitialMig  -Context LocalizeDbContext 
 
 
 EntityFrameworkCore\Update-Database -Context LocalizeContext
