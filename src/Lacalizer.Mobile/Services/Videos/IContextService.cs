@@ -13,7 +13,7 @@ public interface IContextService
     int pageIndex,
     int pageSize, string contextId,
     CancellationToken ct = default);
-    Task<ContextModel> PostContextAsync(ContextModel contextModel, string userId, CancellationToken ct = default);
+    Task<ContextModel> PostContextAsync(ContextModel contextModel, string userId, string targetLanguage, CancellationToken ct = default);
 }
 
 public class ContextService : IContextService
@@ -26,7 +26,6 @@ public class ContextService : IContextService
         _apiClient = apiClient;
         _cache = cache;
         _config = config;
-       // _client.BaseAddress = new Uri(_config["ApiSettings:BaseUrl"]);
     }
 
     
@@ -78,9 +77,9 @@ public class ContextService : IContextService
         }
     }
 
-    public async Task<ContextModel> PostContextAsync(ContextModel context, string userId, CancellationToken ct = default)
+    public async Task<ContextModel> PostContextAsync(ContextModel context, string userId, string targetLanguage, CancellationToken ct = default)
     {
-        var request = new SaveContextRequest(context.ContextText, userId);
+        var request = new SaveContextRequest(context.ContextText, userId, targetLanguage);
 
         try
         {
@@ -96,4 +95,4 @@ public class ContextService : IContextService
     }
 
 }
-public record SaveContextRequest(string ContextText, string userId);
+public record SaveContextRequest(string ContextText, string? createdByUserid, string targetLanguage);

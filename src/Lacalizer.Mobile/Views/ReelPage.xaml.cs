@@ -20,33 +20,53 @@ public partial class ReelPage : ContentPage
     {
         base.OnAppearing();
 
+        //try
+        //{
+        //    if (_vm?.LoadVideosCommand == null)
+        //        return;
+
+        //    _vm.Videos ??= new ObservableCollection<ReelVideoModel>();
+
+        //    if (_vm.Videos.Count == 0)
+        //    {
+        //        await _vm.LoadVideosCommand.ExecuteAsync(null);
+
+        //        if (_vm.Videos.Count == 0)
+        //        {
+        //            bool createContext = await Shell.Current.DisplayAlert(
+        //                "No Available Videos",
+        //                "No available video to participate in.\n\nMake a new context?",
+        //                "Create Context",
+        //                "Cancel");
+
+        //            if (createContext)
+        //            {
+        //                await Shell.Current.GoToAsync(nameof(ContextsPage));
+        //            }
+
+        //            return;
+        //        }
+        //    }
+        //}
+        //catch (Exception ex)
+        //{
+        //    Console.WriteLine($"Error loading videos: {ex}");
+        //}
+
         try
         {
-            if (_vm?.LoadVideosCommand == null)
-                return;
+            bool createContext = await Shell.Current.DisplayAlert(
+                                   "No Available Videos",
+                                   "No available video to participate in.\n\nMake a new context?",
+                                   "Create Context",
+                                   "Cancel");
 
-            _vm.Videos ??= new ObservableCollection<ReelVideoModel>();
-
-            if (_vm.Videos.Count == 0)
+            if (createContext)
             {
-                await _vm.LoadVideosCommand.ExecuteAsync(null);
-
-                if (_vm.Videos.Count == 0)
-                {
-                    bool createContext = await Shell.Current.DisplayAlert(
-                        "No Available Videos",
-                        "No available video to participate in.\n\nMake a new context?",
-                        "Create Context",
-                        "Cancel");
-
-                    if (createContext)
-                    {
-                        await Shell.Current.GoToAsync(nameof(ContextsPage));
-                    }
-
-                    return;
-                }
+                await Shell.Current.GoToAsync(nameof(ContextsPage));
             }
+
+            return;
         }
         catch (Exception ex)
         {

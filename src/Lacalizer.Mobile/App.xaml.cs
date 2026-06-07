@@ -1,6 +1,4 @@
-﻿using Lacalizer.Mobile.Services.Users;
-using Lacalizer.Mobile.Views;
-using Localizer.Mobile.Services.Device.Platform;
+﻿using Localizer.Mobile.Services.Device.Platform;
 using Localizer.Mobile.Services.Settings;
 using System.ComponentModel;
 
@@ -8,13 +6,10 @@ namespace Lacalizer.Mobile;
 
 public partial class App : Application
 {
-    public App(SessionService sessionService)
+    public App()
     {
         InitializeComponent();
-       // ClearCache();
-
-
-        CheckAuthentication(sessionService);
+       ClearCache();
 
         AppDomain.CurrentDomain.UnhandledException += (s, e) =>
         {
@@ -51,16 +46,7 @@ public partial class App : Application
         }
     }
    
-    private async void CheckAuthentication(
-        SessionService sessionService)
-    {
-        var isLoggedIn = await sessionService.IsLoggedInAsync();
-
-        if (!isLoggedIn)
-        {
-            await Shell.Current.GoToAsync(nameof(LoginPage));
-        }
-    }
+    
     protected override Window CreateWindow(IActivationState? activationState) => new(new AppShell());
 
     private void OnSettingsPropertyChanged(object sender, PropertyChangedEventArgs e)

@@ -1,4 +1,7 @@
 ﻿
+
+using Lacalizer.Mobile.Models;
+
 namespace Lacalizer.Mobile.Services.Users;
 
 public class AuthStateProvider
@@ -17,7 +20,24 @@ public class AuthStateProvider
         _tokenProvider = tokenProvider;
         _currentUser = currentUser;
     }
+    public async Task<AuthState> GetStateAsync()
+    {
+        await _currentUser.LoadAsync();
 
+        return new AuthState
+        {
+            IsAuthenticated = await IsAuthenticatedAsync(),
+            UserId = _currentUser.UserId,
+            Email = _currentUser.Email,
+            Username = _currentUser.Username
+        };
+    }
+    public async Task<bool> IsAuthenticatedAsync()
+    {
+        var token = await _tokenProvider.GetTokenAsync();
+
+        return !string.IsNullOrWhiteSpace(token);
+    }
     public async Task InitializeAsync()
     {
         await _currentUser.LoadAsync();

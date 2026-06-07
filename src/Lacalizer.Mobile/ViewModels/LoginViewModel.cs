@@ -10,7 +10,6 @@ namespace Lacalizer.Mobile.ViewModels;
 public partial class LoginViewModel : ObservableObject
 {
     private readonly AuthService _authService;
-    private readonly SessionService _sessionService;
     private readonly INavigationService _navigationService;
 
     [ObservableProperty]
@@ -24,11 +23,9 @@ public partial class LoginViewModel : ObservableObject
 
     public LoginViewModel(
         AuthService authService,
-        SessionService sessionService,
         INavigationService navigationService)
     {
         _authService = authService;
-        _sessionService = sessionService;
         _navigationService = navigationService;
     }
 

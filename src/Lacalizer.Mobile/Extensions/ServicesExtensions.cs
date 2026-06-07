@@ -65,14 +65,20 @@ public static class ServicesExtensions
 
         builder.Services.AddMemoryCache();
 
-         
 
         builder.Services.AddTransient<CachedJwtHandler>();
+
+        builder.Services.AddHttpClient<IApiClient, ApiClient>(client =>
+        {
+            client.BaseAddress = new Uri(baseUrl);
+        })
+        .AddHttpMessageHandler<CachedJwtHandler>();
+
+        //builder.Services.AddTransient<CachedJwtHandler>();
         builder.Services.AddSingleton<ITokenProvider, TokenProvider>();
         builder.Services.AddSingleton<ICurrentUserService, CurrentUserService>();
         builder.Services.AddSingleton<AuthStateProvider>();
 
-        builder.Services.AddScoped<IApiClient, ApiClient>();
 
         builder.Services.AddScoped<IVideoService, VideoService>();
         builder.Services.AddScoped<ICommentService, CommentService>();

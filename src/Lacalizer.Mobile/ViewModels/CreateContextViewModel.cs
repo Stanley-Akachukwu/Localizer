@@ -1,7 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Lacalizer.Mobile.Models;
-using Lacalizer.Mobile.Services;
 using Lacalizer.Mobile.Services.Users;
 using Lacalizer.Mobile.Services.Videos;
 
@@ -10,19 +9,19 @@ namespace Lacalizer.Mobile.ViewModels;
 public partial class CreateContextViewModel : ObservableObject
 {
     private readonly IContextService _contextService;
-    private readonly SessionService _sessionService;
-    private readonly ICurrentUser _currentUser;
-    public CreateContextViewModel(IContextService contextService, SessionService sessionService, ICurrentUser currentUser)
+    private readonly AuthStateProvider _authStateProvider;
+    public CreateContextViewModel(IContextService contextService)
     {
         _contextService = contextService;
-        _sessionService = sessionService;
-        _currentUser = currentUser;
     }
     [ObservableProperty]
     private string contextText = string.Empty;
 
     [ObservableProperty]
     private string userId = string.Empty;
+
+    [ObservableProperty]
+    private string targetLanguage = "Igbo";
 
     [RelayCommand]
     private async Task Save()
@@ -34,11 +33,15 @@ public partial class CreateContextViewModel : ObservableObject
             ContextText = contextText
         };
 
-      //var token =  await _sessionService.GetTokenAsync();
-      //  var userId = _currentUser.UserId;
-      //  var email = _currentUser.Email;
+        var authState = await _authStateProvider.GetStateAsync();
 
-        var created = await _contextService.PostContextAsync(contextModel, userId);
+        if (authState.IsAuthenticated)
+        {
+            var userId = authState.UserId;
+            var email = authState.Email;
+        }
+
+        var created = await _contextService.PostContextAsync(contextModel, userId, targetLanguage);
         await Shell.Current.DisplayAlert(
             "Success",
             "Context created successfully",
