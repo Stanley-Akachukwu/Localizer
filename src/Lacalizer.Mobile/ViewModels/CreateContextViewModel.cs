@@ -10,9 +10,12 @@ public partial class CreateContextViewModel : ObservableObject
 {
     private readonly IContextService _contextService;
     private readonly AuthStateProvider _authStateProvider;
-    public CreateContextViewModel(IContextService contextService)
+    public CreateContextViewModel(
+    IContextService contextService,
+    AuthStateProvider authStateProvider)
     {
         _contextService = contextService;
+        _authStateProvider = authStateProvider;
     }
     [ObservableProperty]
     private string contextText = string.Empty;
@@ -35,10 +38,20 @@ public partial class CreateContextViewModel : ObservableObject
 
         var authState = await _authStateProvider.GetStateAsync();
 
-        if (authState.IsAuthenticated)
+        if (authState.IsAuthenticated &&
+            !string.IsNullOrWhiteSpace(authState.UserId) &&
+            !string.IsNullOrWhiteSpace(authState.Email))
         {
             var userId = authState.UserId;
             var email = authState.Email;
+
+            // continue normally
+        }
+        else
+        {
+            await _authStateProvider.LogoutAsync(); // optional cleanup
+            await Shell.Current.GoToAsync("//LoginPage");
+            return;
         }
 
         var created = await _contextService.PostContextAsync(contextModel, userId, targetLanguage);

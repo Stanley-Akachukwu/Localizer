@@ -44,6 +44,8 @@ builder.Services.AddMediatR(cfg =>
 builder.Services.AddScoped<IValidationService, ValidationService>();
 builder.Services.AddScoped<IVideoItemQueries, VideoItemQueries>();
 builder.Services.AddScoped<ICommentQueries, CommentQueries>();
+builder.Services.AddScoped<IContextQueries, ContextQueries>();
+
 builder.Services.AddScoped<JwtTokenGenerator>();
 
 if (builder.Environment.IsDevelopment())

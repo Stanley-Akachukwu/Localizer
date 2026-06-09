@@ -2,6 +2,7 @@
 using CommunityToolkit.Mvvm.Input;
 using Lacalizer.Mobile.Models;
 using Lacalizer.Mobile.Navigation;
+using Lacalizer.Mobile.Services.Users;
 using Lacalizer.Mobile.Services.Videos;
 using Lacalizer.Mobile.Views;
 using System.Collections.ObjectModel;
@@ -12,6 +13,18 @@ public partial class ContextsViewModel : ObservableObject
 {
     private readonly IContextService _contextService;
     private readonly INavigationService _navigationService;
+
+    private readonly AuthStateProvider _authStateProvider;
+
+    public ContextsViewModel(
+      IContextService contextService,
+      INavigationService navigationService,
+       AuthStateProvider authStateProvider)
+    {
+        _contextService = contextService;
+        _authStateProvider = authStateProvider;
+    }
+   
     public ObservableCollection<ContextModel> Contexts { get; } = new();
 
     [ObservableProperty]
@@ -38,13 +51,7 @@ public partial class ContextsViewModel : ObservableObject
     [ObservableProperty]
     private ReelVideoModel selectedVideo;
 
-    public ContextsViewModel(
-        IContextService contextService,
-        INavigationService navigationService)
-    {
-        _contextService = contextService;
-        _navigationService = navigationService;
-    }
+  
 
     [RelayCommand]
     public async Task LoadContexts()
@@ -55,6 +62,24 @@ public partial class ContextsViewModel : ObservableObject
         try
         {
             IsBusy = true;
+
+            var authState = await _authStateProvider.GetStateAsync();
+
+            if (authState.IsAuthenticated &&
+                !string.IsNullOrWhiteSpace(authState.UserId) &&
+                !string.IsNullOrWhiteSpace(authState.Email))
+            {
+                var userId = authState.UserId;
+                var email = authState.Email;
+
+                // continue normally
+            }
+            else
+            {
+                await _authStateProvider.LogoutAsync(); // optional cleanup
+                await Shell.Current.GoToAsync("//LoginPage");
+                return;
+            }
 
             var response = await _contextService.GetContextsAsync(PageIndex,PageSize,string.Empty);
 
