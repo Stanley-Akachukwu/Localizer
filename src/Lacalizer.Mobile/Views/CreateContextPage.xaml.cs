@@ -4,8 +4,7 @@ namespace Lacalizer.Mobile.Views;
 
 public partial class CreateContextPage : ContentPage
 {
-    public CreateContextPage(
-        CreateContextViewModel vm)
+    public CreateContextPage(CreateContextViewModel vm)
     {
         InitializeComponent();
 

@@ -76,8 +76,7 @@ public partial class ContextsViewModel : ObservableObject
             }
             else
             {
-                await _authStateProvider.LogoutAsync(); // optional cleanup
-                await Shell.Current.GoToAsync("//LoginPage");
+                await Shell.Current.GoToAsync("LoginPage");
                 return;
             }
 

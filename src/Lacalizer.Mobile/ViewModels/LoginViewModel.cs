@@ -10,7 +10,6 @@ namespace Lacalizer.Mobile.ViewModels;
 public partial class LoginViewModel : ObservableObject
 {
     private readonly AuthService _authService;
-    private readonly INavigationService _navigationService;
 
     [ObservableProperty]
     private string phoneNumber;
@@ -26,7 +25,6 @@ public partial class LoginViewModel : ObservableObject
         INavigationService navigationService)
     {
         _authService = authService;
-        _navigationService = navigationService;
     }
 
     [RelayCommand]
@@ -53,15 +51,20 @@ public partial class LoginViewModel : ObservableObject
                 return;
             }
 
-            //await _sessionService.SaveTokenAsync("sample-token");
-
+            
             await Shell.Current.GoToAsync(nameof(MainPage));
+        }
+        catch (Exception ex)
+        {
+
         }
         finally
         {
             IsBusy = false;
         }
+       
     }
+
 
     [RelayCommand]
     private async Task GoToRegister()
