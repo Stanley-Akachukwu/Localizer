@@ -37,15 +37,15 @@ public partial class LoginViewModel : ObservableObject
         {
             IsBusy = true;
 
-            var success = await _authService.LoginAsync(
+            var result = await _authService.LoginAsync(
                 PhoneNumber,
                 Password);
 
-            if (!success)
+            if (!result.Success)
             {
                 await Shell.Current.DisplayAlert(
                     "Error",
-                    "Invalid credentials",
+                    result.Error,
                     "OK");
 
                 return;

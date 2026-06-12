@@ -44,7 +44,7 @@ public class AuthStateProvider
         Notify();
     }
 
-    public async Task LoginAsync(string token)
+    public async Task SaveTokenAsync(string token)
     {
         await _tokenProvider.SetTokenAsync(token);
         await _currentUser.LoadAsync();

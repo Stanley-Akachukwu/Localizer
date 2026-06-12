@@ -10,7 +10,8 @@
     x:Name="Main"
     x:DataType="viewModels:MainViewModel"
     Shell.BackgroundColor="DarkGreen"
-    Shell.ForegroundColor="White">
+    Shell.ForegroundColor="White"
+    Shell.NavBarIsVisible="False">
 
     <!-- 🔹 RESOURCES (UNCHANGED) -->
     <ContentPage.Resources>

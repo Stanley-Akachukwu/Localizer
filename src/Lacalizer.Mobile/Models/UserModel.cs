@@ -13,6 +13,8 @@ public class LoginResponse
 {
     public string Token { get; set; } = "";
     public DateTime Expiration { get; set; }
+    public string Error { get; set; } = "";
+    public bool Success => !string.IsNullOrWhiteSpace(Token);   
 }
 
 public class ApiResponse

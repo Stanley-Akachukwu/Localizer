@@ -54,7 +54,12 @@ public class SaveContextCommandHandler : IRequestHandler<SaveContextCommand, Loc
         }
         catch (Exception ex)
         {
-            throw;
+            return new LocalizerApiResponse<CreateContextResult>
+            {
+                IsSuccess = true,
+                ErrorMessage = ex.Message,
+                ResponseMessage = "An error occurred while adding the video context.",
+            };
         }
     }
 }

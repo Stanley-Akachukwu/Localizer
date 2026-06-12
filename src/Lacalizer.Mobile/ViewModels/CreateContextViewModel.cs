@@ -42,23 +42,43 @@ public partial class CreateContextViewModel : ObservableObject
             !string.IsNullOrWhiteSpace(authState.UserId) &&
             !string.IsNullOrWhiteSpace(authState.Email))
         {
-            var userId = authState.UserId;
-            var email = authState.Email;
+            try
+            {
+              var rsp =  await _contextService.PostContextAsync(
+                    contextModel,
+                    authState.UserId,
+                    targetLanguage);
+                if (rsp != null)
+                {
+                    if (!rsp.IsSuccess)
+                    {
+                        await Shell.Current.DisplayAlert(
+                            "Error",
+                            rsp.ErrorMessage ?? "An error occurred while creating the context.",
+                            "OK");
+                        return;
+                    }
+                }
 
-            // continue normally
+                await Shell.Current.DisplayAlert(
+                    "Success",
+                    "Context created successfully.",
+                    "OK");
+
+                await Shell.Current.GoToAsync("..");
+            }
+            catch (Exception ex)
+            {
+                await Shell.Current.DisplayAlert(
+                    "Error",
+                    ex.Message,
+                    "OK");
+            }
         }
         else
         {
             await Shell.Current.GoToAsync("LoginPage");
             return;
         }
-
-        var created = await _contextService.PostContextAsync(contextModel, userId, targetLanguage);
-        await Shell.Current.DisplayAlert(
-            "Success",
-            "Context created successfully",
-            "OK");
-
-        await Shell.Current.GoToAsync("..");
     }
 }

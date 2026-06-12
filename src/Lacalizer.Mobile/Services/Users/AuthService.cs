@@ -14,7 +14,7 @@ public class AuthService
         _authState = authState;
     }
 
-    public async Task<bool> LoginAsync(string phone, string password)
+    public async Task<LoginResponse> LoginAsync(string phone, string password)
     {
         var result = await _apiClient.PostAsync<LoginRequest, LoginResponse>(
             "api/auth/login",
@@ -25,10 +25,13 @@ public class AuthService
             });
 
         if (string.IsNullOrWhiteSpace(result?.Token))
-            return false;
+            return new LoginResponse
+            {
+                Error = $"{result?.Error}",
+            };
 
-        await _authState.LoginAsync(result.Token);
-        return true;
+        await _authState.SaveTokenAsync(result.Token);
+        return result;
     }
 
     public async Task<string> RegisterAsync(RegisterRequest request)

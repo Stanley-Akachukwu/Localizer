@@ -13,7 +13,7 @@ public interface IContextService
     int pageIndex,
     int pageSize, string contextId,
     CancellationToken ct = default);
-    Task<ContextModel> PostContextAsync(ContextModel contextModel, string userId, string targetLanguage, CancellationToken ct = default);
+    Task<LocalizerApiResponse<ContextModel>> PostContextAsync(ContextModel contextModel, string userId, string targetLanguage, CancellationToken ct = default);
 }
 
 public class ContextService : IContextService
@@ -77,22 +77,59 @@ public class ContextService : IContextService
         }
     }
 
-    public async Task<ContextModel> PostContextAsync(ContextModel context, string userId, string targetLanguage, CancellationToken ct = default)
+    public async Task<LocalizerApiResponse<ContextModel>> PostContextAsync(ContextModel context, string userId, string targetLanguage, CancellationToken ct = default)
     {
         var request = new SaveContextRequest(context.ContextText, userId, targetLanguage);
 
         try
         {
-            var result = await _apiClient.PostAsync<SaveContextRequest, ContextModel>("api/contexts/saveContext",request);
+            var result = await _apiClient.PostAsync<SaveContextRequest, LocalizerApiResponse<ContextModel>> ("api/contexts/saveContext",request);
+            if (result.IsSuccess)
+            {
+                return result;
+                //return new LocalizerApiResponse<ContextModel>
+                //{
+                //    ErrorMessage = result.ErrorMessage,
+                //    ResponseMessage = result.ResponseMessage,
+                //    IsSuccess = result.IsSuccess,
+                //    Data = new ContextModel
+                //    {
+                //        Id = result.Data?.Id,
+                //        ContextText = result.Data?.ContextText ?? string.Empty,
+                //        CreatedAt = result.Data?.CreatedAt ?? DateTimeOffset.UtcNow
+                //    }
+                //};
+            }
+            else
+            {
+                return new LocalizerApiResponse<ContextModel>
+                {
+                    ErrorMessage = result.ErrorMessage,
+                    ResponseMessage = result.ResponseMessage,
+                    IsSuccess = result.IsSuccess,
+                };
+            }
 
-            return await Task.FromResult(result);
         }
         catch (Exception ex)
         {
-            return await Task.FromResult(context);
+            return new LocalizerApiResponse<ContextModel>
+            {
+                ErrorMessage = ex.Message,
+                ResponseMessage= ex.Message,
+                IsSuccess = false,
+            };
         }
 
     }
 
 }
 public record SaveContextRequest(string ContextText, string? createdByUserid, string targetLanguage);
+//public class CreateContextResult
+//{
+//    public string? Id { get; set; }
+
+//    public string ContextText { get; set; } = string.Empty;
+
+//    public DateTimeOffset CreatedAt { get; set; }
+//}
