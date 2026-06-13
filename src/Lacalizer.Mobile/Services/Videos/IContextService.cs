@@ -83,22 +83,12 @@ public class ContextService : IContextService
 
         try
         {
+
+
             var result = await _apiClient.PostAsync<SaveContextRequest, LocalizerApiResponse<ContextModel>> ("api/contexts/saveContext",request);
             if (result.IsSuccess)
             {
                 return result;
-                //return new LocalizerApiResponse<ContextModel>
-                //{
-                //    ErrorMessage = result.ErrorMessage,
-                //    ResponseMessage = result.ResponseMessage,
-                //    IsSuccess = result.IsSuccess,
-                //    Data = new ContextModel
-                //    {
-                //        Id = result.Data?.Id,
-                //        ContextText = result.Data?.ContextText ?? string.Empty,
-                //        CreatedAt = result.Data?.CreatedAt ?? DateTimeOffset.UtcNow
-                //    }
-                //};
             }
             else
             {
@@ -106,7 +96,7 @@ public class ContextService : IContextService
                 {
                     ErrorMessage = result.ErrorMessage,
                     ResponseMessage = result.ResponseMessage,
-                    IsSuccess = result.IsSuccess,
+                    IsSuccess = false,
                 };
             }
 
@@ -125,11 +115,3 @@ public class ContextService : IContextService
 
 }
 public record SaveContextRequest(string ContextText, string? createdByUserid, string targetLanguage);
-//public class CreateContextResult
-//{
-//    public string? Id { get; set; }
-
-//    public string ContextText { get; set; } = string.Empty;
-
-//    public DateTimeOffset CreatedAt { get; set; }
-//}

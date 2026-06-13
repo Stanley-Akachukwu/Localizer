@@ -74,7 +74,6 @@ public static class ServicesExtensions
         })
         .AddHttpMessageHandler<CachedJwtHandler>();
 
-        //builder.Services.AddTransient<CachedJwtHandler>();
         builder.Services.AddSingleton<ITokenProvider, TokenProvider>();
         builder.Services.AddSingleton<ICurrentUserService, CurrentUserService>();
         builder.Services.AddSingleton<AuthStateProvider>();

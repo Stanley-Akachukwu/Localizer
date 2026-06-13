@@ -80,53 +80,60 @@ public class ContextQueries : IContextQueries
     }
 
     public async Task<LocalizerApiResponse<PaginatedItems<SingleContextDto>>> GetContextsAsync(
-        ContextPaginationQuery req, CancellationToken ct)
+    ContextPaginationQuery req, CancellationToken ct)
+{
+    if (req.PageIndex <= 0 || req.PageSize <= 0)
+        return LocalizerApiResponse<PaginatedItems<SingleContextDto>>.Failure(
+            "Invalid pagination parameters.",
+            StatusCodes.Status400BadRequest);
+
+    try
     {
-        if (req.PageIndex <= 0 || req.PageSize <= 0)
-            return LocalizerApiResponse<PaginatedItems<SingleContextDto>>.Failure(
-                "Invalid pagination parameters.",
-                StatusCodes.Status400BadRequest);
-        try
-        {
-            IQueryable<VideoContext> query = _dbContext.VideoContexts.Where(c => c.Id == req.contextItemId);
+        IQueryable<VideoContext> query = _dbContext.VideoContexts;
 
-            var totalCount = await query.CountAsync(ct);
-
-            if (totalCount == 0)
+            if (!string.IsNullOrWhiteSpace(req.contextItemId))
             {
-                return LocalizerApiResponse<PaginatedItems<SingleContextDto>>.Failure(
-                    "No videos found.",
-                    StatusCodes.Status404NotFound);
-            }
-
-            var items = await query
-                .OrderBy(v => v.DateCreated)
-                .Skip((req.PageIndex - 1) * req.PageSize)
-                .Take(req.PageSize)
-                .Select(v => new SingleContextDto
-                {
-                    Id = v.Id,
-                    ContextText = v.ContextText,
-                    CreatedAt = DateTime.UtcNow,
-                    CreatedByUserId = v.CreatedByUserId!
-                })
-                .ToListAsync(ct);
-
-            var paginatedResult = new PaginatedItems<SingleContextDto>(
-                req.PageIndex,
-                req.PageSize,
-                totalCount,
-                items);
-
-
-            return LocalizerApiResponse<PaginatedItems<SingleContextDto>>.Success(paginatedResult, StatusCodes.Status200OK);
+            query = query.Where(c => c.Id == req.contextItemId);
         }
-        catch (Exception ex)
+
+        var totalCount = await query.CountAsync(ct);
+
+        if (totalCount == 0)
         {
             return LocalizerApiResponse<PaginatedItems<SingleContextDto>>.Failure(
-                $"Internal server error: {ex.Message}",
-                StatusCodes.Status500InternalServerError);
+                "No videos found.",
+                StatusCodes.Status404NotFound);
         }
+
+        var items = await query
+            .OrderBy(v => v.DateCreated)
+            .Skip((req.PageIndex - 1) * req.PageSize)
+            .Take(req.PageSize)
+            .Select(v => new SingleContextDto
+            {
+                Id = v.Id,
+                ContextText = v.ContextText,
+                CreatedAt = v.DateCreated!.Value,  
+                CreatedByUserId = v.CreatedByUserId!
+            })
+            .ToListAsync(ct);
+
+        var paginatedResult = new PaginatedItems<SingleContextDto>(
+            req.PageIndex,
+            req.PageSize,
+            totalCount,
+            items);
+
+        return LocalizerApiResponse<PaginatedItems<SingleContextDto>>.Success(
+            paginatedResult,
+            StatusCodes.Status200OK);
     }
+    catch (Exception ex)
+    {
+        return LocalizerApiResponse<PaginatedItems<SingleContextDto>>.Failure(
+            $"Internal server error: {ex.Message}",
+            StatusCodes.Status500InternalServerError);
+    }
+}
 }
 

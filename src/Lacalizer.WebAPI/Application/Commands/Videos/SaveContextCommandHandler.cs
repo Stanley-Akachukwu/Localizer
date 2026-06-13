@@ -46,7 +46,7 @@ public class SaveContextCommandHandler : IRequestHandler<SaveContextCommand, Loc
                 {
                     Id = context.Id,
                     ContextText = context.ContextText,
-                    CreatedAt = context.DateCreated.Value
+                    CreatedAt = context.DateCreated.Value,
                 },
                 StatusCode = 201,
                 ResponseMessage = "Video context added successfully."
@@ -56,7 +56,7 @@ public class SaveContextCommandHandler : IRequestHandler<SaveContextCommand, Loc
         {
             return new LocalizerApiResponse<CreateContextResult>
             {
-                IsSuccess = true,
+                IsSuccess = false,
                 ErrorMessage = ex.Message,
                 ResponseMessage = "An error occurred while adding the video context.",
             };

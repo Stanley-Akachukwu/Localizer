@@ -42,15 +42,16 @@ public static class VideoContextApi
     }
 
 
-    private static Task<LocalizerApiResponse<CreateContextResult>> SaveContextAsync(
+    private static async Task<LocalizerApiResponse<CreateContextResult>> SaveContextAsync(
        SaveContextCommand cmd,
        IValidator<SaveContextCommand> validator,
        IValidationService validatorService,
        IMediator mediator)
     {
-        return MediatorValidationHelper.ExecuteAsync<
+        var result = await MediatorValidationHelper.ExecuteAsync<
             SaveContextCommand,
             CreateContextResult>(cmd, validator, validatorService, mediator);
+        return result;
     }
 }
 
