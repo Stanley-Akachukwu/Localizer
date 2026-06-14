@@ -133,13 +133,8 @@ public partial class ContextsViewModel : ObservableObject
             return;
 
         await _navigationService.GoToAsync(
-           $"{Routes.LocalizePage}?topic={context.ContextText}&videoTopicId={context.Id}&videoItemId={context.Id}"
+           $"{Routes.LocalizePage}?ContextText={context.ContextText}&VideoContextId={context.Id}&videoItemId={videoItemId}"
        );
-
-        //await Shell.Current.DisplayAlert(
-        //    "Localize",
-        //    context.ContextText,
-        //    "OK");
     }
 
     [RelayCommand]
@@ -149,3 +144,4 @@ public partial class ContextsViewModel : ObservableObject
             nameof(CreateContextPage));
     }
 }
+

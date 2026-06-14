@@ -12,7 +12,7 @@ namespace Lacalizer.WebAPI.Application.Commands.Videos;
 public record CreateParticipatoryVideoItemCommand(
     string Language,
     string ContextText,
-    string VideoUri, string TopicId) : IRequest<LocalizerApiResponse<CreateVideoItemResult>>;
+    string VideoUri, string VideoContextId,bool isContext) : IRequest<LocalizerApiResponse<CreateVideoItemResult>>;
 public class CreateVideoItemResult
 {
     public string Id { get; set; } = string.Empty;
@@ -31,15 +31,15 @@ public class CreateVideoItemCommandHandler : IRequestHandler<CreateParticipatory
     {
         var id = Ulid.NewUlid().ToString(); 
 
-        var videoTopic = await _db.VideoContexts
-                                  .FirstOrDefaultAsync(v => v.Id.Trim() == request.TopicId.Trim(), ct);
+        var videoContext = await _db.VideoContexts
+                                  .FirstOrDefaultAsync(v => v.Id.Trim() == request.VideoContextId.Trim(), ct);
 
-        if (videoTopic == null)
+        if (videoContext == null)
         {
             return new LocalizerApiResponse<CreateVideoItemResult>
             {
                 IsSuccess = false,
-                ErrorMessage = "Video topic not found.",
+                ErrorMessage = "Video context not found.",
                 StatusCode = 404
             };
         }
@@ -47,7 +47,7 @@ public class CreateVideoItemCommandHandler : IRequestHandler<CreateParticipatory
         var videoItem = new VideoItem
         {
             Id = id,
-            VideoContextId = videoTopic.Id,
+            VideoContextId = videoContext.Id,
             Language = request.Language,
             ContextText = request.ContextText,
             VideoUri = request.VideoUri,
@@ -57,9 +57,10 @@ public class CreateVideoItemCommandHandler : IRequestHandler<CreateParticipatory
             DateCreated = DateTime.UtcNow,
             DateUpdated = DateTime.UtcNow,
             UpdatedByUserId = SystemUserId.ToString(),
-            VideoType = VideoType.PARTICIPATION
+            VideoType = request.isContext == true? VideoType.CONTEXT: VideoType.PARTICIPATION,
         };
 
+        videoItem.ParticipantCounts++;
         await _db.VideoItems.AddAsync(videoItem, ct);
         await _db.SaveChangesAsync(ct);
 

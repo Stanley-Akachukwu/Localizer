@@ -171,7 +171,7 @@ public class VideoService : IVideoService
     }
 }
 
-public record VideoCreateRequest(string ContextText, string VideoUri, string Language ,string VideoContextId);
+public record VideoCreateRequest(string ContextText, string VideoUri, string Language ,string VideoContextId,bool isContext);
 public record LikeVideoRequest(string videoItemId);
 public record LocalizeParticipationRequest(string videoItemId);
 

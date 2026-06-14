@@ -145,10 +145,11 @@ public partial class LocalizeVewModel : ObservableObject
 
     private async Task SaveVideoItemAsync(string videoUrl)
     {
-        await _videoService
-            .CreateVideoAsync(new VideoCreateRequest(SelectedContext,videoUrl, TargetLanguage, VideoContextId));
-        await _videoService
-           .SaveParticipationCountAsync(VideoItemId);
+        var isContext = !string.IsNullOrEmpty(videoItemId);
+        var reelVideoModel =  await _videoService
+            .CreateVideoAsync(new VideoCreateRequest(SelectedContext,videoUrl, TargetLanguage, VideoContextId, isContext));
+        //await _videoService
+        //   .SaveParticipationCountAsync(VideoItemId);
     }
     
     [RelayCommand]

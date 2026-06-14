@@ -23,9 +23,16 @@
             ContentTemplate="{DataTemplate views:ReelPage}"
             Route="Reel" />
         </Tab>
-        
+
+        <Tab Title="Context"
+        Icon="contexts.png">
+            <ShellContent
+       ContentTemplate="{DataTemplate views:ContextsPage}"
+        Route="Contexts" />
+        </Tab>
+
         <Tab Title="Group"
-           Icon="start.png">
+           Icon="group.png">
             <ShellContent
          ContentTemplate="{DataTemplate views:ReelVideoGroupPage}"
           Route="GroupReels" />

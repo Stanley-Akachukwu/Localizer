@@ -1,15 +1,19 @@
 ﻿using FluentValidation;
 using Lacalizer.Shared.Dtos;
+using Lacalizer.Shared.Enums;
+using Lacalizer.WebAPI.Entites.Videos;
 using Lacalizer.WebAPI.Infrastructure;
 using MediatR;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using NUlid;
 
 namespace Lacalizer.WebAPI.Application.Commands.Videos;
  
 
 public record IncreaseParticipationCommand(
     int Likes,
-    string VideoItemId) : IRequest<LocalizerApiResponse<int>>;
+    string VideoItemId, string VideoContextId, string CreatedByUserId, string VideoUri) : IRequest<LocalizerApiResponse<int>>;
 
 public class IncreaseParticipationCommandHandler : IRequestHandler<IncreaseParticipationCommand, LocalizerApiResponse<int>>
 {
@@ -21,18 +25,15 @@ public class IncreaseParticipationCommandHandler : IRequestHandler<IncreaseParti
 
     public async Task<LocalizerApiResponse<int>> Handle(IncreaseParticipationCommand request, CancellationToken ct)
     {
+
+        var videoContext = await _db.VideoContexts
+                                .FirstOrDefaultAsync(v => v.Id.Trim() == request.VideoContextId.Trim(), ct);
         var videoItem = await _db.VideoItems
                                   .FirstOrDefaultAsync(v => v.Id.Trim() == request.VideoItemId.Trim(), ct);
 
-        if (videoItem == null)
+        if (videoItem == null && videoContext!=null)
         {
-            return new LocalizerApiResponse<int>
-            {
-                IsSuccess = false,
-                ErrorMessage = "Video item not found.",
-                StatusCode = 404,
-                Data = request.Likes
-            };
+            videoItem= await CreateVideoItem(videoContext, request, ct);
         }
         videoItem.ParticipantCounts++;
         _db.VideoItems.Update(videoItem);
@@ -46,6 +47,38 @@ public class IncreaseParticipationCommandHandler : IRequestHandler<IncreaseParti
             ResponseMessage = "Video item localizing participation increased successfully."
         };
     }
+
+    public async Task<VideoItem?> CreateVideoItem(
+     VideoContext? videoContext,
+     IncreaseParticipationCommand request,
+     CancellationToken ct)
+    {
+        if (videoContext is null)
+            return null;
+
+        var now = DateTime.UtcNow;
+
+        var videoItem = new VideoItem
+        {
+            Id = Ulid.NewUlid().ToString(),
+            VideoContextId = videoContext.Id,
+            Language = videoContext.TargetLanguage,
+            ContextText = videoContext.ContextText,
+            VideoUri = request.VideoUri!,
+            Description = "Localized",
+            IsActive = true,
+            CreatedByUserId = request.CreatedByUserId,
+            UpdatedByUserId = request.CreatedByUserId,
+            DateCreated = now,
+            DateUpdated = now,
+            VideoType = VideoType.CONTEXT
+        };
+
+        await _db.VideoItems.AddAsync(videoItem, ct);
+        await _db.SaveChangesAsync(ct);
+
+        return videoItem;
+    }
 }
 
 
@@ -54,5 +87,6 @@ public class IncreaseParticipationCommandValidator : AbstractValidator<IncreaseP
     public IncreaseParticipationCommandValidator()
     {
         RuleFor(x => x.VideoItemId).NotEmpty();
+        RuleFor(x => x.VideoContextId).NotEmpty();
     }
 }
