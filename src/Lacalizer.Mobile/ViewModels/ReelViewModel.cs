@@ -23,14 +23,14 @@ public partial class ReelViewModel : ObservableObject
     [ObservableProperty]
     private bool isLoading;
     [ObservableProperty]
-    private string selectedContext;
+    private string contextText;
     [ObservableProperty]
     private string videoContextId;
     [ObservableProperty]
     private string videoItemId;
     [ObservableProperty]
     private ReelVideoModel selectedVideo;
-    public ReelViewModel(IVideoService videoService, INavigationService navigationService, ICommentService commentService)
+    public ReelViewModel(IVideoService videoService, INavigationService navigationService, ICommentService commentService) 
     {
         _videoService = videoService;
         _navigationService = navigationService;
@@ -41,9 +41,18 @@ public partial class ReelViewModel : ObservableObject
     [RelayCommand]
     private async Task RecordVideoAsync()
     {
-        await _navigationService.GoToAsync(
-            $"{Routes.LocalizePage}?selectedContext={SelectedContext}&videoContextId={VideoContextId}&videoItemId={VideoItemId}"
-        );
+        try
+        {
+            await _navigationService.GoToAsync(
+      $"{Routes.LocalizePage}" +
+      $"?contextText={Uri.EscapeDataString(ContextText ?? string.Empty)}" +
+      $"&videoContextId={VideoContextId}" +
+      $"&videoItemId={VideoItemId ?? string.Empty}");
+        }
+        catch (Exception ex)
+        {
+            await Application.Current.MainPage.DisplayAlertAsync("Error", "Invalid request.", "OK");
+        }
     }
 
 

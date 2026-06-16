@@ -59,7 +59,7 @@ public partial class ReelPage : ContentPage
     {
         var itemIndex = e.CenterItemIndex;
         _vm.Videos[itemIndex].IsPlaying = true;
-        _vm.SelectedContext = _vm.Videos[itemIndex].ContextText;
+        _vm.ContextText = _vm.Videos[itemIndex].ContextText;
         _vm.VideoContextId = _vm.Videos[itemIndex].VideoContextId;
         _vm.VideoItemId = _vm.Videos[itemIndex].VideoItemId;
 

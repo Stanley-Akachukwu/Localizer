@@ -23,7 +23,7 @@ public partial class LocalizeVewModel : ObservableObject
     }
 
     [ObservableProperty]
-    private string selectedContext;
+    private string contextText;
 
     [ObservableProperty]
     private string videoContextId;
@@ -147,7 +147,7 @@ public partial class LocalizeVewModel : ObservableObject
     {
         var isContext = !string.IsNullOrEmpty(videoItemId);
         var reelVideoModel =  await _videoService
-            .CreateVideoAsync(new VideoCreateRequest(SelectedContext,videoUrl, TargetLanguage, VideoContextId, isContext));
+            .CreateVideoAsync(new VideoCreateRequest(ContextText, videoUrl, TargetLanguage, VideoContextId, isContext));
         //await _videoService
         //   .SaveParticipationCountAsync(VideoItemId);
     }

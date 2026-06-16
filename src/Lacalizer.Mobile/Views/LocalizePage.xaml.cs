@@ -19,12 +19,12 @@ public partial class LocalizePage : ContentPage
      
     public string ContextText
     {
-        get => (BindingContext as LocalizeVewModel)?.SelectedContext;
+        get => (BindingContext as LocalizeVewModel)?.ContextText;
         set
         {
             var vm = BindingContext as LocalizeVewModel;
             if (vm != null)
-                vm.SelectedContext = value;
+                vm.ContextText = value;
         }
     }
     public string VideoContextId

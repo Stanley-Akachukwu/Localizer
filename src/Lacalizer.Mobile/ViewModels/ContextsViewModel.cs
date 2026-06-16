@@ -6,6 +6,7 @@ using Lacalizer.Mobile.Services.Users;
 using Lacalizer.Mobile.Services.Videos;
 using Lacalizer.Mobile.Views;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 
 namespace Lacalizer.Mobile.ViewModels;
 
@@ -23,6 +24,7 @@ public partial class ContextsViewModel : ObservableObject
     {
         _contextService = contextService;
         _authStateProvider = authStateProvider;
+        _navigationService = navigationService;
     }
    
     public ObservableCollection<ContextModel> Contexts { get; } = new();
@@ -43,7 +45,7 @@ public partial class ContextsViewModel : ObservableObject
     private long totalCount;
    
     [ObservableProperty]
-    private string selectedContext;
+    private string contextText;
     [ObservableProperty]
     private string videoContextId;
     [ObservableProperty]
@@ -127,14 +129,16 @@ public partial class ContextsViewModel : ObservableObject
 
     [RelayCommand]
     public async Task Localize(
-        ContextModel context)
+         ContextModel context)
     {
         if (context == null)
             return;
 
         await _navigationService.GoToAsync(
-           $"{Routes.LocalizePage}?ContextText={context.ContextText}&VideoContextId={context.Id}&videoItemId={videoItemId}"
-       );
+   $"{Routes.LocalizePage}" +
+   $"?contextText={Uri.EscapeDataString(context.ContextText ?? string.Empty)}" +
+   $"&videoContextId={context.Id}" +
+   $"&videoItemId={VideoItemId ?? string.Empty}");
     }
 
     [RelayCommand]
