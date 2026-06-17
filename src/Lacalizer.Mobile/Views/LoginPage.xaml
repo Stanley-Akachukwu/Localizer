@@ -63,6 +63,18 @@
 
             </HorizontalStackLayout>
 
+            <Grid
+ BackgroundColor="#80000000"  
+     IsVisible="{Binding IsBusy}">
+                <ActivityIndicator
+     IsRunning="{Binding IsBusy}"
+     Color="White"
+     HorizontalOptions="Center"
+     VerticalOptions="Center"
+     WidthRequest="60"
+     HeightRequest="60"/>
+            </Grid>
+
         </VerticalStackLayout>
 
     </ScrollView>

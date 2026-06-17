@@ -56,7 +56,7 @@ public partial class LoginViewModel : ObservableObject
         }
         catch (Exception ex)
         {
-
+            await Shell.Current.DisplayAlert("Error", ex.Message, "OK");
         }
         finally
         {

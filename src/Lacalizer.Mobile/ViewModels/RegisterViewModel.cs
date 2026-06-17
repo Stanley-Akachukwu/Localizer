@@ -24,7 +24,10 @@ public partial class RegisterViewModel : ObservableObject
     private string email;
 
     [ObservableProperty]
+
     private string password;
+    [ObservableProperty]
+    private bool isBusy;
 
     public RegisterViewModel(AuthService authService)
     {
@@ -34,26 +37,41 @@ public partial class RegisterViewModel : ObservableObject
     [RelayCommand]
     private async Task Register()
     {
-        var (isValid, error) = PasswordValidator.Validate(Password);
-
-        if (!isValid)
-        {
-            await Shell.Current.DisplayAlert("Invalid Password", error, "OK");
+        if (IsBusy)
             return;
-        }
-
-        var request = new RegisterRequest
+        try
         {
-            FirstName = FirstName,
-            LastName = LastName,
-            PhoneNumber = PhoneNumber,
-            Email = Email,
-            Password = Password
-        };
 
-        var result = await _authService.RegisterAsync(request);
-        await Shell.Current.DisplayAlert("Success", result, "OK");
-        await Shell.Current.GoToAsync("..");
+            IsBusy = true;
+            var (isValid, error) = PasswordValidator.Validate(Password);
+
+            if (!isValid)
+            {
+                await Shell.Current.DisplayAlert("Invalid Password", error, "OK");
+                return;
+            }
+
+            var request = new RegisterRequest
+            {
+                FirstName = FirstName,
+                LastName = LastName,
+                PhoneNumber = PhoneNumber,
+                Email = Email,
+                Password = Password
+            };
+
+            var result = await _authService.RegisterAsync(request);
+            await Shell.Current.DisplayAlert("Success", result, "OK");
+            await Shell.Current.GoToAsync("..");
+        }
+        catch (Exception ex)
+        {
+            await Shell.Current.DisplayAlert("Error", ex.Message, "OK");
+        }
+        finally
+        {
+            IsBusy = false;
+        }
     }
 
 }
