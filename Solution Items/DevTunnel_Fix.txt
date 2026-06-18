@@ -1,12 +1,17 @@
 Note DevTunnels expires in 30 days. Always ensure you have active devtunnel. Follow the step below if you are getting error about devtunnel to update:
 
-1. On Powershell list the available tunnel: devtunnel list
+devtunnel list
 
-2. Run the following command to delete expire devtunnels: 
+Delete duplicates:
+devtunnel delete <tunnel-id>
 
-devtunnel list | Select-String "tunnel-" | ForEach-Object {
-    $id = ($_ -split "\s+")[0]
-    devtunnel delete $id
-}
+Create Unique:
+devtunnel create --name localizer-api-june
 
 3. Restart your aspire to create new devtunnel
+
+
+----------OR ChANGE YOUR DEV TUNNEL NAME TO UNIQUE NAME IN YOUR ASPIRE CONFIG FILE: Rename localizer-api-june" to "localizer-api-july" in your aspire config file and restart aspire.
+builder.AddDevTunnel("localizer-api-june")
+       .WithReference(localizerWebApi)
+       .WithAnonymousAccess();

@@ -41,9 +41,10 @@ try
             .WithEndpoint(name: "pgadmin-http", port: 8090, targetPort: 80)
             .WithReference(localizedb);// http://localhost:8090/browser/  
 
-        builder.AddDevTunnel("localizer-api")
-            .WithReference(localizerWebApi)
-            .WithAnonymousAccess();
+        //builder.AddDevTunnel("localizer-api-july")
+        //.WithReference(localizerWebApi)
+        //.WithAnonymousAccess();
+
     }
 
     builder.Build().Run();

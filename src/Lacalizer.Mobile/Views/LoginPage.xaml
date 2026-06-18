@@ -64,11 +64,11 @@
             </HorizontalStackLayout>
 
             <Grid
- BackgroundColor="#80000000"  
+ BackgroundColor="Transparent"  
      IsVisible="{Binding IsBusy}">
                 <ActivityIndicator
      IsRunning="{Binding IsBusy}"
-     Color="White"
+     Color="Black"
      HorizontalOptions="Center"
      VerticalOptions="Center"
      WidthRequest="60"
