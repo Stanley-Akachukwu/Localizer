@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 
 try
@@ -9,6 +10,9 @@ try
 
     // Database
     var localizedb = postgres.AddDatabase("localizedb");
+
+    var connectionString = builder.Configuration.GetConnectionString("localizedb");
+    Console.WriteLine("Postgres Connection: " + connectionString);
 
     // Blob Storage
     var storage = builder.AddAzureStorage("storage");
