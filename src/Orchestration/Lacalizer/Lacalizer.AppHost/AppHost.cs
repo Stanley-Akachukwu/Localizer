@@ -26,7 +26,6 @@ try
         .WithReference(localizedb)
         .WithReference(blobs);
 
-    // Development-only resources
     if (builder.Environment.IsDevelopment())
     {
         postgres.RunAsContainer(postgres =>
@@ -55,7 +54,6 @@ catch (Exception ex)
     Console.WriteLine("An error occurred while starting the Aspire application.");
     Console.WriteLine($"Message: {ex.Message}");
     Console.WriteLine($"StackTrace: {ex.StackTrace}");
-
     Console.ResetColor();
 }
  
