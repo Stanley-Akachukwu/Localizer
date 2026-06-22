@@ -10,12 +10,19 @@ using Lacalizer.WebAPI.Infrastructure;
 using Lacalizer.WebAPI.Models;
 using Lacalizer.WebAPI.Services.Validations;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Azure;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.AddServiceDefaults();
-builder.AddNpgsqlDbContext<LocalizeDbContext>("localizedb");
+//builder.AddNpgsqlDbContext<LocalizeDbContext>("localizedb");
+builder.Services.AddDbContext<LocalizeDbContext>(options =>
+{
+    options.UseNpgsql(
+    builder.Configuration.GetConnectionString("localizedb"));
+
+});
 builder.Services
     .AddIdentity<ApplicationUser, IdentityRole>()
     .AddEntityFrameworkStores<LocalizeDbContext>()

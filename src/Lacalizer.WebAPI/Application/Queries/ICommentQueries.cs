@@ -63,12 +63,12 @@ public class CommentQueries : ICommentQueries
                 })
                 .FirstOrDefaultAsync(ct);
 
-            //if (dto == null)
-            //{
-            //    return LocalizerApiResponse<SingleCommentDto>.Failure(
-            //        "Video not found.",
-            //        StatusCodes.Status404NotFound);
-            //}
+            if (dto == null)
+            {
+                return LocalizerApiResponse<SingleCommentDto>.Failure(
+                    "Video not found.",
+                    StatusCodes.Status404NotFound);
+            }
 
             return LocalizerApiResponse<SingleCommentDto>.Success(dto, StatusCodes.Status200OK);
         }
