@@ -5,21 +5,17 @@ try
 {
     var builder = DistributedApplication.CreateBuilder(args);
 
-    // PostgreSQL
     var postgres = builder.AddAzurePostgresFlexibleServer("postgres");
 
-    // Database
     var localizedb = postgres.AddDatabase("localizedb");
 
     var connectionString = builder.Configuration.GetConnectionString("localizedb");
     Console.WriteLine("Postgres Connection: " + connectionString);
 
-    // Blob Storage
     var storage = builder.AddAzureStorage("storage");
 
     var blobs = storage.AddBlobs("blobs");
 
-    // API
     var localizerWebApi = builder
         .AddProject<Projects.Lacalizer_WebAPI>("lacalizer-webapi")
         .WithExternalHttpEndpoints()
