@@ -44,11 +44,6 @@ try
             .WithBindMount("./pgadmin-data", "/var/lib/pgadmin")
             .WithEndpoint(name: "pgadmin-http", port: 8090, targetPort: 80)
             .WithReference(localizedb);// http://localhost:8090/browser/  
-
-        //builder.AddDevTunnel("localizer-api-july")
-        //.WithReference(localizerWebApi)
-        //.WithAnonymousAccess();
-
     }
 
     builder.Build().Run();
@@ -62,8 +57,6 @@ catch (Exception ex)
     Console.WriteLine($"StackTrace: {ex.StackTrace}");
 
     Console.ResetColor();
-
-    throw;
 }
  
 
