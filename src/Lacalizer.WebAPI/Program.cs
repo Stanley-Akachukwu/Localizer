@@ -16,13 +16,8 @@ using Microsoft.Extensions.Azure;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.AddServiceDefaults();
-//builder.AddNpgsqlDbContext<LocalizeDbContext>("localizedb");
-builder.Services.AddDbContext<LocalizeDbContext>(options =>
-{
-    options.UseNpgsql(
-    builder.Configuration.GetConnectionString("localizedb"));
+builder.AddNpgsqlDbContext<LocalizeDbContext>("localizedb");
 
-});
 builder.Services
     .AddIdentity<ApplicationUser, IdentityRole>()
     .AddEntityFrameworkStores<LocalizeDbContext>()

@@ -4,11 +4,9 @@ try
 {
     var builder = DistributedApplication.CreateBuilder(args);
 
-    //var postgres = builder.AddAzurePostgresFlexibleServer("postgres");
+    var postgres = builder.AddAzurePostgresFlexibleServer("postgres");
 
-    //var localizedb = postgres.AddDatabase("localizedb");
-
-    var localizedb = builder.AddConnectionString("localizedb");
+    var localizedb = postgres.AddDatabase("localizedb");
 
     var connectionString = builder.Configuration.GetConnectionString("localizedb");
     Console.WriteLine("Postgres Connection: " + connectionString);
