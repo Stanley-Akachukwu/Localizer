@@ -8,6 +8,13 @@ try
 
     var localizedb = postgres.AddDatabase("localizedb");
 
+    //var db = builder.AddAzurePostgresFlexibleServer("postgres")
+    //.RunAsContainer(postgres =>
+    //{
+    //    postgres.WithDataVolume();
+    //});
+    //var updashdb = db.AddDatabase("localizedb");
+
     var connectionString = builder.Configuration.GetConnectionString("localizedb");
     Console.WriteLine("Postgres Connection: " + connectionString);
 

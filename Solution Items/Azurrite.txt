@@ -22,4 +22,103 @@ azurite `
 New-NetFirewallRule -DisplayName "Azurite Queue" -Direction Inbound -Protocol TCP -LocalPort 10001 -Action Allow
 New-NetFirewallRule -DisplayName "Azurite Table" -Direction Inbound -Protocol TCP -LocalPort 10002 -Action Allow
 
+--------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+--------------------------------------------------------------------------------------------------------------------------------------------------
+az containerapp update --name lacalizer-webapi --resource-group rg-localizer --set-env-vars ConnectionStrings__localize-postgres-db="Host=localize-postgres-db.postgres.database.azure.com;Database=localize-postgres-db;Port=5432;User Id=stanley01akachukwu;Password=lcl10@H928329;Ssl Mode=Disable;"
+
+ "Host=localize-postgres-db.postgres.database.azure.com;Port=5432;Database=postgres;Username=stanley01akachukwu;Password=lcl10@H928329;SSL Mode=Require;Trust Server Certificate=true"
+
+
+
+
+
+Azure Db
+Host=postgres;Port=5432;Database=updashdb;Username=updashuser;Password=1up2dsh3pcl56jmp;Ssl Mode=Disable;
+
+az monitor log-analytics workspace delete --resource-group <rg-name> --workspace-name <workspace-name> --yes
+
+
+
+
+az containerapp update --name updash-securities-api --resource-group rg-updash-dev-deploy --set-env-vars ConnectionStrings__updashdb="Host=updashdb;Database=updashdb;Port=5432;User Id=updashuser;Password=1up2dsh3pcl56jmp;Ssl Mode=Disable;"
+az containerapp update --name updash-store-api --resource-group rg-updash-dev-deploy --set-env-vars ConnectionStrings__updashdb="Host=updashdb;Database=updashdb;Port=5432;User Id=updashuser;Password=1up2dsh3pcl56jmp;Ssl Mode=Disable;"
+az containerapp update --name updash-order-api --resource-group rg-updash-dev-deploy --set-env-vars ConnectionStrings__updashdb="Host=updashdb;Database=updashdb;Port=5432;User Id=updashuser;Password=1up2dsh3pcl56jmp;Ssl Mode=Disable;"
+
+ 
+az containerapp update --name messaging --resource-group rg-updash-dev-deploy --set-env-vars RABBITMQ_DEFAULT_USER=updash RABBITMQ_DEFAULT_PASS=Azure2026RBT
+az containerapp update --name updash-securities-api --resource-group rg-updash-dev-deploy --set-env-vars ConnectionStrings__messaging="amqp://updash:Azure2026RBT@messaging:5672"
+az containerapp update --name updash-store-api --resource-group rg-updash-dev-deploy --set-env-vars ConnectionStrings__messaging="amqp://updash:Azure2026RBT@messaging:5672"
+az containerapp update --name updash-order-api --resource-group rg-updash-dev-deploy --set-env-vars ConnectionStrings__messaging="amqp://updash:Azure2026RBT@messaging:5672"
+
+
+az containerapp revision list --name updash-securities-api --resource-group rg-updash-dev-deploy --output table 
+az containerapp revision list --name updash-store-api --resource-group rg-updash-dev-deploy --output table 
+az containerapp revision list --name updash-order-api --resource-group rg-updash-dev-deploy --output table 
+
+
+
+ az containerapp revision restart --name updash-securities-api --resource-group rg-updash-dev-deploy --revision updash-securities-api--0000277
+ az containerapp revision restart --name updash-store-api --resource-group rg-updash-dev-deploy --revision updash-store-api--0000267 
+  az containerapp revision restart --name updash-order-api --resource-group rg-updash-dev-deploy --revision updash-order-api--0000217
+
+ 
+ 
+  Show logs:
+az containerapp logs show --name updash-securities-api --resource-group rg-updash-dev-deploy --follow 
+az containerapp logs show --name updash-store-api --resource-group rg-updash-dev-deploy --follow 
+ -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ 
+ Query fo Public IP : How to get the outbound IPs:
+az containerapp env show --name cae-nqpzrsw4eirbi --resource-group rg-updash-dev-deploy --query outboundIpAddresses
+
+Result of get the outbound IPs Query:
+Give 20.87.252.225 to your SMS provider as the public IP to whitelist for outbound calls.
+If you later migrate your environment to a VNET, the configuration for outbound IP may change (and a NAT Gateway would be required).
+
+
+-----------------------------------------------Storage Account Cons string------------------------------------
+DefaultEndpointsProtocol=https;AccountName=updashstaccount01;AccountKey=uytFuaHnFOaNHdVo5nxL0+VT9pmeb67i3itmPAFD5Dmz53g+Z7nX/Foaeioa+utNjZPmwtHllA0j+ASt5bilgw==;EndpointSuffix=core.windows.net
+
+az containerapp update --name updash-store-api --resource-group rg-updash-dev-deploy --set-env-vars ConnectionStrings__updashdb="Host=updashdb.internal.bravehill-fc0ff067.southafricanorth.azurecontainerapps.io;Database=updashdb;Port=5432;User Id=updashuser;Password=1up2dsh3pcl56jmp;Ssl Mode=Disable;"
+
+
+---------VOLUM MOUNT-----------------
+
+https://learn.microsoft.com/en-us/azure/container-apps/storage-mounts?tabs=smb&pivots=azure-portal
+
+Always create new SMB from Container Apps Environment
+
+From the Container Apps Environment:
+
+
+Name: updashdb-smb-share.
+
+Storage account name: updashstaccount01 (The name of the storage account that contains the file share.)
+
+Storage account key: uytFuaHnFOaNHdVo5nxL0+VT9pmeb67i3itmPAFD5Dmz53g+Z7nX/Foaeioa+utNjZPmwtHllA0j+ASt5bilgw==  (The access key for the storage account.)
+
+File share: updashdb-share (The name of the file share.)
+
+
+Access mode: Read/Write
+
+
+--------------------------------
+Environment Variables	
+POSTGRES_USER=admin	
+POSTGRES_PASSWORD=MySecurePassword123	
+POSTGRES_DB=updash	
+PGDATA=/data/pgdata
+
+-------------------------------
+Mount Path	/data
+Volume Type	Azure Files or Persistent Storage (Read/Write)
+
+Volume Name: updashdb-share-vol
+
+File share name: updashdb-smb-share
+
 
