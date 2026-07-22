@@ -109,7 +109,7 @@ public partial class LocalizeVewModel : ObservableObject
                 _config["Storage:LocalConnectionString"];
 #else
         var connectionString =
-            _config["Storage:ProductionConnectionString"];
+            _config["ConnectionStrings:blobs"];
 #endif
 
 

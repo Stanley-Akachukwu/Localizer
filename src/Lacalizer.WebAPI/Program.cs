@@ -15,11 +15,17 @@ using Microsoft.Extensions.Azure;
 
 var builder = WebApplication.CreateBuilder(args);
 
-//builder.AddServiceDefaults();
-//builder.AddNpgsqlDbContext<LocalizeDbContext>("localizedb");
+builder.AddServiceDefaults();
+
 builder.Services.AddDbContext<LocalizeDbContext>(options =>
     options.UseNpgsql(
         builder.Configuration.GetConnectionString("localizedb")));
+
+builder.Services.AddAzureClients(clientBuilder =>
+{
+    clientBuilder.AddBlobServiceClient(
+        builder.Configuration.GetConnectionString("blobs"));
+});
 
 builder.Services
     .AddIdentity<ApplicationUser, IdentityRole>()

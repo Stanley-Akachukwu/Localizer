@@ -11,6 +11,6 @@ step 1: azd init
 ------------------------------------------------------------------------------------------------------------------------
 Deployed Resources: https://portal.azure.com/#@FCMB.onmicrosoft.com/resource/subscriptions/53b47206-24b3-497e-a941-a508e10598f9/resourceGroups/rg-localizer/overview
 
-Aspire Dashboard: https://aspire-dashboard.ext.gentlestone-249e9646.southafricanorth.azurecontainerapps.io/
+Aspire Dashboard: 
 
-Web API Swagger: https://lacalizer-webapi.gentlestone-249e9646.southafricanorth.azurecontainerapps.io/swagger/index.html
+Web API Swagger: 
