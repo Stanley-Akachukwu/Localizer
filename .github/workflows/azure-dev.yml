@@ -1,4 +1,4 @@
-# Run when commits are pushed to view-model-enhancement
+# Run when commits are pushed to main
 on:
   workflow_dispatch:
   push:
