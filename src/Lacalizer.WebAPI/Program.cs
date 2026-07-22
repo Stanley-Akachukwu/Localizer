@@ -15,8 +15,11 @@ using Microsoft.Extensions.Azure;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.AddServiceDefaults();
-builder.AddNpgsqlDbContext<LocalizeDbContext>("localizedb");
+//builder.AddServiceDefaults();
+//builder.AddNpgsqlDbContext<LocalizeDbContext>("localizedb");
+builder.Services.AddDbContext<LocalizeDbContext>(options =>
+    options.UseNpgsql(
+        builder.Configuration.GetConnectionString("localizedb")));
 
 builder.Services
     .AddIdentity<ApplicationUser, IdentityRole>()
@@ -41,6 +44,11 @@ builder.Services.AddApiVersioning(options =>
 builder.Services.AddMediatR(cfg =>
 {
     cfg.RegisterServicesFromAssembly(typeof(CreateVideoItemCommandHandler).Assembly);
+});
+builder.Services.AddRouting(options =>
+{
+    options.LowercaseUrls = true;
+    options.LowercaseQueryStrings = true;  
 });
 
 builder.Services.AddScoped<IValidationService, ValidationService>();

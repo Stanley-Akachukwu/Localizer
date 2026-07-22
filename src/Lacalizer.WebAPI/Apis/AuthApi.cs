@@ -14,7 +14,7 @@ public static class AuthApi
 
         var vApi = app.NewVersionedApi("auths");
         var group = vApi.MapGroup("api/auth")
-         .WithTags("auth");
+         .WithTags("Authentication");
         
 
         group.MapPost("/register", Register);
