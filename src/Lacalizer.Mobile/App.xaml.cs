@@ -1,5 +1,6 @@
 ﻿using Localizer.Mobile.Services.Device.Platform;
 using Localizer.Mobile.Services.Settings;
+using MetroLog.Maui;
 using System.ComponentModel;
 
 namespace Lacalizer.Mobile;
@@ -10,6 +11,9 @@ public partial class App : Application
     {
         InitializeComponent();
        ClearCache();
+        LogController.InitializeNavigation(
+           page => MainPage!.Navigation.PushModalAsync(page),
+           () => MainPage!.Navigation.PopModalAsync());
 
         AppDomain.CurrentDomain.UnhandledException += (s, e) =>
         {

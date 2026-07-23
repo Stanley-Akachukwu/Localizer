@@ -3,6 +3,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Lacalizer.Mobile.Models;
 using Lacalizer.Mobile.Services.Users;
+using Microsoft.Extensions.Logging;
 
 namespace Lacalizer.Mobile.ViewModels;
 
@@ -10,6 +11,7 @@ namespace Lacalizer.Mobile.ViewModels;
 public partial class RegisterViewModel : ObservableObject
 {
     private readonly AuthService _authService;
+    private readonly ILogger<RegisterViewModel> _logger;
 
     [ObservableProperty]
     private string firstName;
@@ -29,9 +31,10 @@ public partial class RegisterViewModel : ObservableObject
     [ObservableProperty]
     private bool isBusy;
 
-    public RegisterViewModel(AuthService authService)
+    public RegisterViewModel(AuthService authService, ILogger<RegisterViewModel> logger)
     {
         _authService = authService;
+        _logger = logger;
     }
 
     [RelayCommand]
@@ -39,15 +42,20 @@ public partial class RegisterViewModel : ObservableObject
     {
         if (IsBusy)
             return;
+
         try
         {
-
             IsBusy = true;
+
             var (isValid, error) = PasswordValidator.Validate(Password);
 
             if (!isValid)
             {
-                await Shell.Current.DisplayAlert("Invalid Password", error, "OK");
+                await Shell.Current.DisplayAlert(
+                    "Invalid Password",
+                    error,
+                    "OK");
+
                 return;
             }
 
@@ -61,19 +69,42 @@ public partial class RegisterViewModel : ObservableObject
             };
 
             var result = await _authService.RegisterAsync(request);
-            await Shell.Current.DisplayAlert("Success", result, "OK");
+
+            if (!result.Success)
+            {
+                var message = result.Errors.Any()
+                    ? string.Join(Environment.NewLine, result.Errors)
+                    : result.Message;
+
+                await Shell.Current.DisplayAlert(
+                    "Registration Failed",
+                    message,
+                    "OK");
+
+                return;
+            }
+
+            await Shell.Current.DisplayAlert(
+                "Success",
+                result.Message,
+                "OK");
+
             await Shell.Current.GoToAsync("..");
         }
         catch (Exception ex)
         {
-            await Shell.Current.DisplayAlert("Error", ex.Message, "OK");
+            _logger.LogError(ex, "An unexpected error occurred during registration.");
+
+            await Shell.Current.DisplayAlert(
+                "Error",
+                "An unexpected error occurred. Please try again.",
+                "OK");
         }
         finally
         {
             IsBusy = false;
         }
     }
-
 }
 
 public static class PasswordValidator

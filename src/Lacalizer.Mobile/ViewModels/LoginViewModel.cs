@@ -3,6 +3,7 @@ using CommunityToolkit.Mvvm.Input;
 using Lacalizer.Mobile.Navigation;
 using Lacalizer.Mobile.Services.Users;
 using Lacalizer.Mobile.Views;
+using Microsoft.Extensions.Logging;
 
 namespace Lacalizer.Mobile.ViewModels;
 
@@ -10,6 +11,7 @@ namespace Lacalizer.Mobile.ViewModels;
 public partial class LoginViewModel : ObservableObject
 {
     private readonly AuthService _authService;
+    private readonly ILogger<LoginViewModel> _logger;
 
     [ObservableProperty]
     private string phoneNumber;
@@ -22,10 +24,13 @@ public partial class LoginViewModel : ObservableObject
 
     public LoginViewModel(
         AuthService authService,
-        INavigationService navigationService)
+        INavigationService navigationService,
+        ILogger<LoginViewModel> logger)
     {
         _authService = authService;
+        _logger = logger;
     }
+
 
     [RelayCommand]
     private async Task Login()
@@ -37,34 +42,42 @@ public partial class LoginViewModel : ObservableObject
         {
             IsBusy = true;
 
+            _logger.LogInformation("Calling authentication service.");
+
             var result = await _authService.LoginAsync(
                 PhoneNumber,
                 Password);
 
             if (!result.Success)
             {
+                var message = result.Errors.Any()
+                    ? string.Join(Environment.NewLine, result.Errors)
+                    : result.Message;
+
                 await Shell.Current.DisplayAlert(
-                    "Error",
-                    result.Error,
+                    "Login Failed",
+                    message,
                     "OK");
 
                 return;
             }
 
-            
-            await Shell.Current.GoToAsync(nameof(MainPage));
+            await Shell.Current.GoToAsync($"//{nameof(MainPage)}");
         }
         catch (Exception ex)
         {
-            await Shell.Current.DisplayAlert("Error", ex.Message, "OK");
+            _logger.LogError(ex, "An unexpected error occurred during login.");
+
+            await Shell.Current.DisplayAlert(
+                "Error",
+                "An unexpected error occurred. Please try again.",
+                "OK");
         }
         finally
         {
             IsBusy = false;
         }
-       
     }
-
 
     [RelayCommand]
     private async Task GoToRegister()

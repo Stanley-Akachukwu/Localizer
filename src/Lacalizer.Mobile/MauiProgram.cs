@@ -4,6 +4,7 @@ using epj.Expander.Maui;
 using epj.RouteGenerator;
 using Lacalizer.Mobile.Extensions;
 using Localizer.Mobile.Services;
+using MetroLog.MicrosoftExtensions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Mopups.Hosting;
@@ -36,7 +37,16 @@ public static class MauiProgram
                 fonts.AddFont("Strande2.ttf", "Strande2");
             });
 
-
+        // Configure Client-Side Logging
+        builder.Logging
+            .AddTraceLogger(_ => { })
+            .AddInMemoryLogger(_ => { }) // Required for the built-in UI
+            .AddStreamingFileLogger(options =>
+            {
+                options.RetainDays = 7; // Keep a week of logs
+                options.MinLevel = LogLevel.Information;
+            });
+        // Configure Client-Side Logging
         var getAssembly = Assembly.GetExecutingAssembly();
         using var appjson = getAssembly.GetManifestResourceStream("Lacalizer.Mobile.appsettings.json");
         var newConfig = new ConfigurationBuilder()

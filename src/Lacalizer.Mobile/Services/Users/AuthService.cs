@@ -1,5 +1,6 @@
 ﻿
 using Lacalizer.Mobile.Models;
+using Microsoft.Extensions.Logging;
 
 namespace Lacalizer.Mobile.Services.Users;
 
@@ -7,40 +8,152 @@ public class AuthService
 {
     private readonly IApiClient _apiClient;
     private readonly AuthStateProvider _authState;
-
-    public AuthService(IApiClient apiClient, AuthStateProvider authState)
+    private readonly ILogger<AuthService> _logger;
+    public AuthService(IApiClient apiClient, AuthStateProvider authState, ILogger<AuthService> logger)
     {
         _apiClient = apiClient;
         _authState = authState;
+        _logger = logger;
     }
+
+
 
     public async Task<LoginResponse> LoginAsync(string phone, string password)
     {
-        var result = await _apiClient.PostAsync<LoginRequest, LoginResponse>(
-            "api/auth/login",
-            new LoginRequest
-            {
-                PhoneNumber = phone,
-                Password = password
-            });
-
-        if (string.IsNullOrWhiteSpace(result?.Token))
+        if (string.IsNullOrWhiteSpace(phone))
+        {
             return new LoginResponse
             {
-                Error = $"{result?.Error}",
+                Success = false,
+                Message = "Phone number is required."
             };
+        }
 
-        await _authState.SaveTokenAsync(result.Token);
-        return result;
+        if (string.IsNullOrWhiteSpace(password))
+        {
+            return new LoginResponse
+            {
+                Success = false,
+                Message = "Password is required."
+            };
+        }
+
+        try
+        {
+            var result = await _apiClient.PostAsync<LoginRequest, LoginResponse>(
+                "api/auth/login",
+                new LoginRequest
+                {
+                    PhoneNumber = phone,
+                    Password = password
+                });
+
+            if (result == null)
+            {
+                return new LoginResponse
+                {
+                    Success = false,
+                    Message = "The server returned an empty response."
+                };
+            }
+
+            if (!result.Success)
+            {
+                return result;
+            }
+
+            await _authState.SaveTokenAsync(result.Token!);
+
+            return result;
+        }
+        catch (HttpRequestException ex)
+        {
+            _logger.LogError(ex,
+                "HTTP error occurred while logging in user {Phone}.",
+                phone);
+
+            return new LoginResponse
+            {
+                Success = false,
+                Message = "Unable to connect to the server."
+            };
+        }
+        catch (TaskCanceledException ex)
+        {
+            _logger.LogError(ex,
+                "Login request timed out for user {Phone}.",
+                phone);
+
+            return new LoginResponse
+            {
+                Success = false,
+                Message = "The request timed out."
+            };
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex,
+                "Unexpected error occurred while logging in user {Phone}.",
+                phone);
+
+            return new LoginResponse
+            {
+                Success = false,
+                Message = "An unexpected error occurred."
+            };
+        }
     }
 
-    public async Task<string> RegisterAsync(RegisterRequest request)
+    public async Task<RegisterResponse> RegisterAsync(RegisterRequest request)
     {
-        var result = await _apiClient.PostAsync<RegisterRequest, ApiResponse>(
-            "api/auth/register",
-            request);
+        try
+        {
+            var result = await _apiClient.PostAsync<RegisterRequest, RegisterResponse>(
+                "api/auth/register",
+                request);
 
-        return result?.Message ?? "Unknown response";
+            return result ?? new RegisterResponse
+            {
+                Success = false,
+                Message = "The server returned an empty response."
+            };
+        }
+        catch (HttpRequestException ex)
+        {
+            _logger.LogError(ex,
+                "HTTP error occurred while registering user {Phone}.",
+                request.PhoneNumber);
+
+            return new RegisterResponse
+            {
+                Success = false,
+                Message = "Unable to connect to the server."
+            };
+        }
+        catch (TaskCanceledException ex)
+        {
+            _logger.LogError(ex,
+                "Registration request timed out for user {Phone}.",
+                request.PhoneNumber);
+
+            return new RegisterResponse
+            {
+                Success = false,
+                Message = "The request timed out."
+            };
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex,
+                "Unexpected error occurred while registering user {Phone}.",
+                request.PhoneNumber);
+
+            return new RegisterResponse
+            {
+                Success = false,
+                Message = "An unexpected error occurred."
+            };
+        }
     }
 }
 

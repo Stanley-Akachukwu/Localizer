@@ -9,18 +9,25 @@ public class UserModel
     public string Password { get; set; } = "";
 }
 
+ 
 public class LoginResponse
 {
-    public string Token { get; set; } = "";
-    public DateTime Expiration { get; set; }
-    public string Error { get; set; } = "";
-    public bool Success => !string.IsNullOrWhiteSpace(Token);   
+    public bool Success { get; set; }
+
+    public string? Token { get; set; }
+
+    public DateTime? Expiration { get; set; }
+
+    public string Message { get; set; } = string.Empty;
+
+    public List<string> Errors { get; set; } = [];
 }
 
-public class ApiResponse
+public class RegisterResponse
 {
     public bool Success { get; set; }
     public string? Message { get; set; }
+    public List<string> Errors { get; set; } = [];
 }
 public class AuthState
 {

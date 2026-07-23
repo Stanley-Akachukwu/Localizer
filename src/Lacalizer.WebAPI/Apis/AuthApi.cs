@@ -24,52 +24,51 @@ public static class AuthApi
         return app;
     }
 
+
     private static async Task<IResult> Register(
-     RegisterRequest request,
-     UserManager<ApplicationUser> userManager,
-     RoleManager<IdentityRole> roleManager)
+    RegisterRequest request,
+    UserManager<ApplicationUser> userManager,
+    RoleManager<IdentityRole> roleManager)
     {
         try
         {
-            var existingUser = await userManager.Users
-                .FirstOrDefaultAsync(x =>
-                    x.PhoneNumber == request.PhoneNumber);
-
             const string roleName = "User";
 
-            if (existingUser != null)
+            if (await userManager.Users.AnyAsync(u => u.PhoneNumber == request.PhoneNumber))
             {
-                //return Results.BadRequest(new
-                //{
-                //    Message = "Phone already exists"
-                //});
-
-                // ✅ Ensure role exists
-
-                var roleExists = await roleManager.RoleExistsAsync(roleName);
-
-                if (!roleExists)
+                return Results.BadRequest(new RegisterResponse
                 {
-                    var createRoleResult = await roleManager
-                        .CreateAsync(new IdentityRole(roleName));
+                    Success = false,
+                    Message = "A user with this phone number already exists."
+                });
+            }
 
-                    if (!createRoleResult.Succeeded)
+            if (!string.IsNullOrWhiteSpace(request.Email) &&
+                await userManager.Users.AnyAsync(u => u.Email == request.Email))
+            {
+                return Results.BadRequest(new RegisterResponse
+                {
+                    Success = false,
+                    Message = "A user with this email already exists."
+                });
+            }
+
+            if (!await roleManager.RoleExistsAsync(roleName))
+            {
+                var createRoleResult = await roleManager.CreateAsync(new IdentityRole(roleName));
+
+                if (!createRoleResult.Succeeded)
+                {
+                    return Results.BadRequest(new RegisterResponse
                     {
-                        return Results.BadRequest(new
-                        {
-                            Message = "Failed to create user role",
-                            Errors = createRoleResult.Errors
-                                .Select(x => x.Description)
-                        });
-                    }
-                    return Results.Ok(new
-                    {
-                        Message = "Registration successful"
+                        Success = false,
+                        Message = "Unable to create the default user role.",
+                        Errors = createRoleResult.Errors
+                            .Select(e => e.Description)
+                            .ToList()
                     });
                 }
             }
-
-           
 
             var user = new ApplicationUser
             {
@@ -80,44 +79,51 @@ public static class AuthApi
                 UserName = request.PhoneNumber
             };
 
-            var result = await userManager
-                .CreateAsync(user, request.Password);
+            var createUserResult = await userManager.CreateAsync(user, request.Password);
 
-            if (!result.Succeeded)
+            if (!createUserResult.Succeeded)
             {
-                return Results.BadRequest(new
+                return Results.BadRequest(new RegisterResponse
                 {
-                    Message = "Registration failed",
-                    Errors = result.Errors.Select(x => x.Description)
+                    Success = false,
+                    Message = "User registration failed.",
+                    Errors = createUserResult.Errors
+                        .Select(e => e.Description)
+                        .ToList()
                 });
             }
 
-            var roleResult = await userManager
-                .AddToRoleAsync(user, roleName);
+            var addRoleResult = await userManager.AddToRoleAsync(user, roleName);
 
-            if (!roleResult.Succeeded)
+            if (!addRoleResult.Succeeded)
             {
-                return Results.BadRequest(new
+                await userManager.DeleteAsync(user);
+
+                return Results.BadRequest(new RegisterResponse
                 {
-                    Message = "User created but role assignment failed",
-                    Errors = roleResult.Errors
-                        .Select(x => x.Description)
+                    Success = false,
+                    Message = "User registration failed while assigning the user role.",
+                    Errors = addRoleResult.Errors
+                        .Select(e => e.Description)
+                        .ToList()
                 });
             }
 
-            return Results.Ok(new
+            return Results.Ok(new RegisterResponse
             {
-                Message = "Registration successful"
+                Success = true,
+                Message = "Registration completed successfully."
             });
         }
         catch (Exception ex)
         {
             return Results.Problem(
-                title: "An error occurred while processing the registration request.",
+                title: "Registration Failed",
                 detail: ex.Message,
                 statusCode: StatusCodes.Status500InternalServerError);
         }
     }
+
 
     private static async Task<IResult> Login(
     LoginRequest request,
@@ -127,35 +133,46 @@ public static class AuthApi
         try
         {
             var user = await userManager.Users
-                .FirstOrDefaultAsync(x =>
-                    x.PhoneNumber == request.PhoneNumber);
+                .FirstOrDefaultAsync(u => u.PhoneNumber == request.PhoneNumber);
 
             if (user == null)
             {
-                return Results.NotFound(new
+                return Results.NotFound(new LoginResponse
                 {
-                    Message = "User does not exist."
+                    Success = false,
+                    Message = "No account was found with the supplied phone number."
                 });
             }
 
-            var validPassword = await userManager
-                .CheckPasswordAsync(user, request.Password);
+            var validPassword = await userManager.CheckPasswordAsync(user, request.Password);
 
             if (!validPassword)
             {
-                return Results.Unauthorized();
+                return Results.BadRequest(new LoginResponse
+                {
+                    Success = false,
+                    Message = "Invalid phone number or password."
+                });
             }
 
             var token = jwtGenerator.Generate(user);
 
-            return Results.Ok(token);
+            return Results.Ok(new LoginResponse
+            {
+                Success = true,
+                Token = token.Token,
+                Expiration = token.Expiration,
+                Message = "Login successful."
+            });
         }
         catch (Exception ex)
         {
             return Results.Problem(
-                title: "An error occurred while processing the login request.",
+                title: "Login Failed",
                 detail: ex.Message,
                 statusCode: StatusCodes.Status500InternalServerError);
         }
     }
 }
+
+
